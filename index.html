@@ -725,17 +725,17 @@ button,input,textarea{font-family:inherit;}
   .score-row{gap:6px;}
 }
 </style>
-<link id="theme-css" rel="stylesheet" href="themes/dark.css">
+<link id="theme-css" rel="stylesheet" href="themes/studio.css">
 <script>
-const THEMES=['dark','light','vivid'];
+const THEMES=['studio','playful','gallery'];
 function applyTheme(t){
-  if(!THEMES.includes(t)) t='dark';
+  if(!THEMES.includes(t)) t='studio';
   document.documentElement.dataset.theme=t;
   document.getElementById('theme-css').href='themes/'+t+'.css';
   try{localStorage.setItem('ns-theme',t);}catch(e){}
   document.querySelectorAll('.theme-switch button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===t)));
 }
-applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return localStorage.getItem('ns-theme');}catch(e){return null;}})()||'dark');
+applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return localStorage.getItem('ns-theme');}catch(e){return null;}})());
 </script>
 </head>
 <body>
@@ -780,9 +780,9 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <div class="wordmark">New<span>Speak</span></div>
   <div class="spacer"></div>
   <div class="theme-switch" role="group" aria-label="デザイン案の切り替え">
-    <button type="button" data-theme="dark" onclick="applyTheme('dark')">A<span class="ts-label">洗練ダーク</span></button>
-    <button type="button" data-theme="light" onclick="applyTheme('light')">B<span class="ts-label">ミニマル</span></button>
-    <button type="button" data-theme="vivid" onclick="applyTheme('vivid')">C<span class="ts-label">ビビッド</span></button>
+    <button type="button" data-theme="studio" onclick="applyTheme('studio')">A<span class="ts-label">スタジオ</span></button>
+    <button type="button" data-theme="playful" onclick="applyTheme('playful')">B<span class="ts-label">プレイフル</span></button>
+    <button type="button" data-theme="gallery" onclick="applyTheme('gallery')">C<span class="ts-label">ギャラリー</span></button>
   </div>
   <button class="back-btn" id="back-btn" onclick="goBack()">
     <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
