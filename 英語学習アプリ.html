@@ -1,0 +1,2087 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NewSpeak — 英語力を鍛える国際ニュースアプリ</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #09090f;
+  --surface: #111118;
+  --surface2: #16161f;
+  --surface3: #1c1c28;
+  --border: #222232;
+  --border2: #2a2a3e;
+  --accent: #c8a96e;
+  --accent2: #e8c88a;
+  --accent-dim: rgba(200,169,110,0.12);
+  --accent-glow: rgba(200,169,110,0.06);
+  --text: #f0ede8;
+  --text-sub: #9896a8;
+  --text-dim: #48475a;
+  --mode-disc: #5b8af0;
+  --mode-faci: #7b6cf0;
+  --mode-inte: #4fb8a0;
+  --score-hi: #c8a96e;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top,0px);
+  padding-bottom: env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+
+/* ─── App shell ─── */
+#app{display:flex;flex-direction:column;height:100vh;max-width:860px;margin:0 auto;}
+
+/* ─── Header ─── */
+header{
+  padding:18px 28px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+  background:var(--bg);flex-shrink:0;
+}
+.wordmark{
+  font-family:'EB Garamond',serif;font-size:24px;font-weight:600;
+  letter-spacing:-.5px;color:var(--accent2);
+}
+.wordmark span{color:var(--text-sub);font-weight:400;font-style:italic;}
+header .spacer{flex:1;}
+.back-btn{
+  display:none;align-items:center;gap:6px;
+  background:none;border:none;color:var(--text-sub);
+  font-size:13px;cursor:pointer;padding:6px 10px;border-radius:8px;
+  transition:all .15s;
+}
+.back-btn:hover{background:var(--surface2);color:var(--text);}
+.back-btn svg{width:16px;height:16px;fill:currentColor;}
+.back-btn.show{display:flex;}
+.progress-dots{display:flex;gap:5px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .3s;}
+.dot.on{background:var(--accent);}
+.dot.done{background:var(--text-dim);}
+
+/* ─── Screen system ─── */
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden;}
+.screen.active{display:flex;}
+
+/* ════════════════════════════════════
+   SCREEN 1 — Category
+════════════════════════════════════ */
+#s-cat{overflow-y:auto;}
+.cat-hero{
+  padding:28px 28px 16px;
+  border-bottom:1px solid var(--border);
+}
+.cat-hero-title{
+  font-family:'EB Garamond',serif;
+  font-size:32px;font-weight:600;line-height:1.2;
+  color:var(--text);letter-spacing:-.5px;
+}
+.cat-hero-title em{color:var(--accent);font-style:italic;}
+.cat-hero-sub{font-size:14px;color:var(--text-sub);margin-top:6px;line-height:1.6;}
+
+/* Search bar */
+.search-wrap{
+  position:relative;margin-top:16px;
+}
+.search-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;fill:var(--text-dim);pointer-events:none;
+}
+#cat-search{
+  width:100%;padding:11px 14px 11px 40px;
+  border-radius:10px;border:1.5px solid var(--border2);
+  background:var(--surface2);color:var(--text);
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  outline:none;transition:border-color .18s;
+}
+#cat-search:focus{border-color:var(--accent);}
+#cat-search::placeholder{color:var(--text-dim);}
+.search-clear{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  display:none;background:none;border:none;cursor:pointer;
+  color:var(--text-dim);font-size:18px;line-height:1;padding:2px;
+  transition:color .15s;
+}
+.search-clear:hover{color:var(--text-sub);}
+.search-clear.show{display:block;}
+
+/* Topic chips strip */
+.topic-strip{
+  padding:12px 28px 0;
+  display:flex;gap:7px;overflow-x:auto;flex-shrink:0;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.topic-strip::-webkit-scrollbar{display:none;}
+.topic-chip{
+  padding:5px 14px;border-radius:20px;white-space:nowrap;
+  border:1px solid var(--border2);background:var(--surface);
+  font-size:12px;color:var(--text-sub);cursor:pointer;
+  transition:all .16s;flex-shrink:0;
+}
+.topic-chip:hover{border-color:var(--border);color:var(--text);}
+.topic-chip.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);font-weight:500;}
+
+/* Search results list */
+#search-results{
+  display:none;flex-direction:column;gap:8px;
+  padding:12px 28px 20px;
+}
+#search-results.show{display:flex;}
+.result-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:12px;
+  border:1px solid var(--border2);background:var(--surface);
+  cursor:pointer;transition:all .18s;
+}
+.result-item:hover{border-color:var(--accent);background:var(--surface2);}
+.result-item.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+.result-icon{font-size:22px;flex-shrink:0;width:36px;text-align:center;}
+.result-body{flex:1;min-width:0;}
+.result-title{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.result-meta{display:flex;gap:8px;margin-top:3px;align-items:center;}
+.result-cat{font-size:11px;color:var(--accent);font-weight:500;}
+.result-topic{font-size:11px;color:var(--text-dim);}
+.result-check{width:20px;height:20px;border-radius:50%;background:var(--accent);display:none;align-items:center;justify-content:center;flex-shrink:0;}
+.result-check svg{width:12px;height:12px;fill:var(--bg);}
+.result-item.selected .result-check{display:flex;}
+.search-loading{display:flex;align-items:center;gap:8px;padding:12px 16px;font-size:12px;color:var(--text-dim);}
+.search-spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.result-live-tag{background:var(--accent-dim);color:var(--accent);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;border:1px solid var(--accent);letter-spacing:.5px;}
+.no-results{text-align:center;padding:32px;color:var(--text-dim);font-size:14px;}
+
+/* API Key banner */
+.yesterday-banner{
+  margin:12px 28px 0;padding:12px 16px;border-radius:12px;
+  border:1.5px solid var(--accent);background:var(--accent-dim);
+  display:none;align-items:center;gap:12px;cursor:pointer;
+  transition:opacity .15s;
+}
+.yesterday-banner:hover{opacity:.85;}
+.yesterday-banner.show{display:flex;}
+.yesterday-icon{font-size:20px;flex-shrink:0;}
+.yesterday-body{flex:1;}
+.yesterday-title{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.3px;}
+.yesterday-article{font-size:13px;color:var(--text);margin-top:2px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.yesterday-meta{font-size:11px;color:var(--text-dim);margin-top:3px;}
+.yesterday-arrow{color:var(--accent);font-size:18px;flex-shrink:0;}
+.api-banner{
+  margin:16px 28px 0;padding:14px 16px;
+  border-radius:12px;border:1px solid var(--border2);
+  background:var(--surface);display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.api-banner-icon{font-size:18px;flex-shrink:0;}
+.api-banner-body{flex:1;min-width:180px;}
+.api-banner-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.api-banner-sub{font-size:11px;color:var(--text-dim);line-height:1.4;}
+.api-key-row{display:flex;gap:6px;margin-top:8px;}
+.api-key-input{
+  flex:1;padding:8px 12px;border-radius:8px;
+  border:1.5px solid var(--border2);background:var(--surface2);
+  color:var(--text);font-size:12px;font-family:monospace;
+  outline:none;transition:border-color .18s;
+}
+.api-key-input:focus{border-color:var(--accent);}
+.api-key-input::placeholder{color:var(--text-dim);}
+.api-key-btn{
+  padding:8px 14px;border-radius:8px;border:none;
+  background:linear-gradient(135deg,#c8a96e,#e0ba78);
+  color:#0a0808;font-size:12px;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:opacity .15s;flex-shrink:0;
+}
+.api-key-btn:hover{opacity:.85;}
+.api-status{display:flex;align-items:center;gap:6px;font-size:11px;margin-top:6px;}
+.api-dot{width:7px;height:7px;border-radius:50%;background:var(--text-dim);}
+.api-dot.ok{background:#6ecf8e;}
+.api-dot.err{background:#e05555;}
+.api-dot.loading{background:var(--accent);animation:tts-pulse 1s infinite;}
+
+.cat-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;padding:16px 28px 32px;
+}
+.cat-card{
+  position:relative;overflow:hidden;
+  border-radius:14px;border:1px solid var(--border2);
+  background:var(--surface);
+  aspect-ratio:1/.72;
+  cursor:pointer;transition:all .22s;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:16px 14px 14px;
+}
+.cat-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,transparent 30%,rgba(0,0,0,.72));
+  z-index:0;
+}
+.cat-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.cat-card:hover .cat-glyph{opacity:1;}
+.cat-card.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 8px 28px rgba(200,169,110,.18);}
+.cat-glyph{
+  position:absolute;top:14px;left:14px;z-index:1;
+  font-size:28px;opacity:.7;transition:opacity .2s;
+}
+.cat-bg{
+  position:absolute;inset:0;z-index:0;
+  opacity:.18;font-size:72px;display:flex;align-items:center;justify-content:center;
+  filter:blur(1px);
+}
+.cat-name{
+  position:relative;z-index:1;
+  font-size:15px;font-weight:600;color:var(--text);
+  letter-spacing:.1px;
+}
+.cat-name-en{
+  position:relative;z-index:1;
+  font-size:10px;color:var(--accent);text-transform:uppercase;
+  letter-spacing:1.5px;margin-bottom:4px;font-weight:500;
+}
+.cat-check{
+  position:absolute;top:10px;right:10px;z-index:2;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--accent);display:none;
+  align-items:center;justify-content:center;
+}
+.cat-check svg{width:12px;height:12px;fill:var(--bg);}
+.cat-card.selected .cat-check{display:flex;}
+
+/* color accents per category */
+.cat-card[data-cat="主要"]::before{background:linear-gradient(160deg,rgba(180,80,80,.15) 0%,rgba(0,0,0,.75));}
+.cat-card[data-cat="国内"]::before{background:linear-gradient(160deg,rgba(80,120,180,.15) 0%,rgba(0,0,0,.75));}
+.cat-card[data-cat="国際"]::before{background:linear-gradient(160deg,rgba(70,150,120,.15) 0%,rgba(0,0,0,.75));}
+.cat-card[data-cat="経済"]::before{background:linear-gradient(160deg,rgba(200,169,110,.15) 0%,rgba(0,0,0,.75));}
+.cat-card[data-cat="エンタメ"]::before{background:linear-gradient(160deg,rgba(160,80,160,.15) 0%,rgba(0,0,0,.75));}
+.cat-card[data-cat="スポーツ"]::before{background:linear-gradient(160deg,rgba(80,160,80,.15) 0%,rgba(0,0,0,.75));}
+.cat-card[data-cat="IT"]::before{background:linear-gradient(160deg,rgba(80,130,200,.15) 0%,rgba(0,0,0,.75));}
+.cat-card[data-cat="科学"]::before{background:linear-gradient(160deg,rgba(100,180,200,.15) 0%,rgba(0,0,0,.75));}
+.cat-card[data-cat="ライフ"]::before{background:linear-gradient(160deg,rgba(200,120,80,.15) 0%,rgba(0,0,0,.75));}
+
+/* ════════════════════════════════════
+   SCREEN 2 — Mode + Level
+════════════════════════════════════ */
+#s-mode{overflow-y:auto;gap:0;}
+.section-pad{padding:28px 28px;}
+.section-title{
+  font-size:11px;font-weight:600;color:var(--text-sub);
+  text-transform:uppercase;letter-spacing:1.8px;margin-bottom:16px;
+}
+
+.mode-cards{display:flex;flex-direction:column;gap:10px;}
+.mode-card{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px 20px;border-radius:14px;
+  border:1.5px solid var(--border2);background:var(--surface);
+  cursor:pointer;transition:all .2s;
+}
+.mode-card:hover{border-color:var(--border);background:var(--surface2);}
+.mode-card.selected-disc{border-color:var(--mode-disc);background:rgba(91,138,240,.07);}
+.mode-card.selected-faci{border-color:var(--mode-faci);background:rgba(123,108,240,.07);}
+.mode-card.selected-inte{border-color:var(--mode-inte);background:rgba(79,184,160,.07);}
+.mode-icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.mode-icon.disc{background:rgba(91,138,240,.15);}
+.mode-icon.faci{background:rgba(123,108,240,.15);}
+.mode-icon.inte{background:rgba(79,184,160,.15);}
+.mode-body{flex:1;}
+.mode-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.mode-desc{font-size:13px;color:var(--text-sub);line-height:1.55;}
+.mode-tag{
+  display:inline-block;margin-top:6px;
+  font-size:11px;padding:2px 10px;border-radius:20px;
+  color:var(--accent);border:1px solid var(--accent-dim);
+  background:var(--accent-glow);
+}
+
+.level-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.level-btn{
+  padding:12px 8px;border-radius:12px;text-align:center;
+  border:1.5px solid var(--border2);background:var(--surface);
+  cursor:pointer;transition:all .18s;
+}
+.level-btn:hover{border-color:var(--border);}
+.level-btn.selected{border-color:var(--accent);background:var(--accent-dim);}
+.level-flag{font-size:18px;margin-bottom:4px;}
+.level-name{font-size:12px;font-weight:600;color:var(--text);}
+.level-hint{font-size:10px;color:var(--text-sub);margin-top:2px;line-height:1.3;}
+
+.divider{height:1px;background:var(--border);margin:0 28px;}
+
+.cta-wrap{padding:20px 28px 28px;}
+.btn-gold{
+  width:100%;padding:15px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#c8a96e,#e0ba78);
+  color:#0a0808;font-size:15px;font-weight:700;
+  cursor:pointer;transition:opacity .18s;letter-spacing:.2px;
+}
+.btn-gold:hover{opacity:.88;}
+.btn-gold:disabled{opacity:.35;cursor:not-allowed;}
+
+/* ════════════════════════════════════
+   SCREEN 3 — Session
+════════════════════════════════════ */
+#s-session{overflow:hidden;}
+
+/* Article strip */
+.article-strip{
+  padding:16px 24px 14px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  background:var(--surface);
+}
+.article-strip-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.strip-source{font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;}
+.strip-cat{font-size:11px;padding:2px 10px;border-radius:20px;background:var(--surface3);color:var(--text-sub);}
+.strip-mode-badge{
+  margin-left:auto;font-size:11px;padding:3px 12px;border-radius:20px;
+  font-weight:600;
+}
+.badge-disc{background:rgba(91,138,240,.18);color:#7aaaf5;}
+.badge-faci{background:rgba(123,108,240,.18);color:#a99cf5;}
+.badge-inte{background:rgba(79,184,160,.18);color:#6ed4be;}
+.strip-title{font-family:'EB Garamond',serif;font-size:17px;font-weight:600;line-height:1.35;color:var(--text);}
+.strip-expand{
+  display:flex;align-items:center;gap:4px;margin-top:6px;
+  font-size:12px;color:var(--text-dim);cursor:pointer;width:fit-content;
+  transition:color .15s;background:none;border:none;
+}
+.strip-expand:hover{color:var(--text-sub);}
+.strip-expand svg{width:14px;height:14px;fill:currentColor;transition:transform .2s;}
+.strip-expand.open svg{transform:rotate(180deg);}
+.article-full{
+  display:none;margin-top:10px;padding:12px 14px;
+  background:var(--surface3);border-radius:10px;
+  font-size:13px;color:var(--text-sub);line-height:1.7;
+}
+.article-full.show{display:block;}
+.article-points-mini{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.article-points-mini li{font-size:12px;color:var(--text-dim);margin-bottom:3px;padding-left:12px;position:relative;list-style:none;}
+.article-points-mini li::before{content:'·';position:absolute;left:0;color:var(--accent);}
+
+/* Chat */
+#chat{flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:14px;}
+.msg{display:flex;gap:10px;max-width:100%;}
+.msg.user{flex-direction:row-reverse;}
+.av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--surface3);}
+.msg.ai .av{background:linear-gradient(135deg,#2a2a40,#1e1e30);border:1px solid var(--border2);}
+.bubble{
+  padding:11px 15px;border-radius:16px;
+  font-size:14px;line-height:1.7;
+  max-width:calc(100% - 48px);
+}
+.msg.ai .bubble{background:var(--surface2);border-bottom-left-radius:4px;color:var(--text);}
+.msg.user .bubble{background:rgba(200,169,110,.13);border:1px solid rgba(200,169,110,.2);border-bottom-right-radius:4px;color:var(--text);}
+/* AI message column wrapper */
+.msg-col{display:flex;flex-direction:column;gap:5px;max-width:calc(100% - 48px);}
+.msg-col .bubble{max-width:100%;}
+.bubble.hidden{color:transparent;background:var(--surface3);user-select:none;text-shadow:none;filter:blur(6px);transition:filter .25s,color .25s;}
+/* Action buttons row */
+.msg-actions{display:flex;gap:6px;padding-left:2px;}
+.action-btn{
+  width:28px;height:28px;border-radius:7px;
+  border:1px solid var(--border2);background:var(--surface);
+  color:var(--text-dim);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;
+}
+.action-btn svg{width:14px;height:14px;stroke:currentColor;}
+.action-btn:hover{background:var(--surface2);color:var(--text);border-color:var(--accent);}
+.action-btn.shadow-mode{background:rgba(91,138,240,0.15);border-color:#5b8af0;color:#5b8af0;}
+.shadow-hint{font-size:11px;color:#5b8af0;padding:2px 6px;border-radius:5px;background:rgba(91,138,240,0.1);display:none;align-items:center;gap:4px;}
+.shadow-hint.show{display:flex;}
+.action-btn.speaking{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);animation:tts-pulse 1.5s infinite;}
+@keyframes tts-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.typing{display:flex;gap:4px;align-items:center;padding:4px 0;}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--text-dim);animation:pulse 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}
+.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes pulse{0%,80%,100%{opacity:.2;}40%{opacity:1;}}
+
+/* Feedback card */
+/* ── 単語帳 ── */
+.vocab-fab{
+  position:fixed;bottom:90px;right:20px;
+  width:46px;height:46px;border-radius:50%;
+  border:none;background:linear-gradient(135deg,#c8a96e,#e0ba78);
+  color:#0a0808;font-size:20px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(200,169,110,0.4);
+  display:none;align-items:center;justify-content:center;
+  z-index:100;transition:transform .15s;
+}
+.vocab-fab:hover{transform:scale(1.08);}
+.vocab-fab.show{display:flex;}
+.vocab-fab .vocab-count{
+  position:absolute;top:-4px;right:-4px;
+  background:#e05555;color:#fff;border-radius:50%;
+  width:18px;height:18px;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.vocab-panel{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:860px;
+  background:var(--surface);border-top:1px solid var(--border2);
+  border-radius:20px 20px 0 0;
+  padding:20px 24px 32px;z-index:200;
+  max-height:60vh;overflow-y:auto;
+  display:none;flex-direction:column;gap:12px;
+  box-shadow:0 -8px 32px rgba(0,0,0,.5);
+}
+.vocab-panel.show{display:flex;}
+.vocab-panel-header{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.vocab-panel-title{font-family:"EB Garamond",serif;font-size:20px;font-weight:600;color:var(--accent2);flex:1;}
+.vocab-close{background:none;border:none;color:var(--text-dim);font-size:22px;cursor:pointer;padding:0 4px;}
+.vocab-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);}
+.vocab-word{font-size:15px;font-weight:600;color:var(--accent2);flex:1;}
+.vocab-note{font-size:12px;color:var(--text-sub);margin-top:3px;line-height:1.5;}
+.vocab-date{font-size:10px;color:var(--text-dim);margin-top:2px;}
+.vocab-del{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;}
+.vocab-del:hover{color:#e05555;}
+.vocab-empty{font-size:13px;color:var(--text-dim);text-align:center;padding:24px 0;}
+.add-vocab-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:700;color:var(--accent);
+  background:var(--accent-dim);border:1px solid var(--accent);
+  border-radius:6px;padding:3px 8px;cursor:pointer;
+  margin-top:6px;transition:opacity .15s;letter-spacing:.3px;
+}
+.add-vocab-btn:hover{opacity:.8;}
+/* ── 単語帳 ── */
+.feedback-card{
+  margin:4px 0;padding:16px 18px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:14px;width:100%;
+}
+.feedback-title{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.score-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.score-item{flex:1;min-width:90px;text-align:center;padding:10px 8px;background:var(--surface2);border-radius:10px;}
+.score-num{font-family:'EB Garamond',serif;font-size:28px;font-weight:600;color:var(--accent2);}
+.score-max{font-size:11px;color:var(--text-dim);}
+.score-label{font-size:11px;color:var(--text-sub);margin-top:3px;}
+.bar-wrap{margin-bottom:8px;}
+.bar-label-row{display:flex;justify-content:space-between;margin-bottom:4px;}
+.bar-label{font-size:12px;color:var(--text-sub);}
+.bar-val{font-size:12px;color:var(--accent);font-weight:600;}
+.bar{height:4px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width .6s ease;}
+.feedback-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.feedback-section-title{font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.feedback-text{font-size:13px;color:var(--text-sub);line-height:1.65;}
+.correction-block{
+  margin-top:8px;padding:10px 12px;border-radius:8px;
+  background:var(--surface3);font-size:13px;line-height:1.6;
+}
+.orig{color:#e07070;text-decoration:line-through;margin-bottom:3px;}
+.fixed{color:#6ecf8e;}
+.reason{color:var(--text-dim);font-size:12px;margin-top:3px;}
+
+/* Suggestions */
+#sugg-row{display:flex;gap:7px;flex-wrap:wrap;padding:6px 24px 2px;flex-shrink:0;}
+.sugg{
+  padding:6px 14px;border-radius:20px;font-size:12px;
+  border:1px solid var(--border2);background:var(--surface);
+  color:var(--text-sub);cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.sugg:hover{border-color:var(--accent);color:var(--accent);}
+
+/* Input */
+.input-bar{
+  padding:12px 20px 16px;
+  display:flex;gap:8px;align-items:flex-end;
+  border-top:1px solid var(--border);flex-shrink:0;
+}
+.input-col{
+  flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;
+}
+textarea{
+  width:100%;padding:11px 14px;border-radius:10px;
+  border:1.5px solid var(--border2);background:var(--surface2);
+  color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;
+  resize:none;outline:none;max-height:110px;min-height:44px;
+  line-height:1.5;transition:border-color .18s;
+}
+textarea:focus{border-color:var(--accent);}
+textarea::placeholder{color:var(--text-dim);}
+textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
+
+/* 録音中ステータスバー */
+.voice-status{
+  display:none;align-items:center;gap:8px;
+  font-size:12px;color:var(--text-sub);
+  padding:0 2px;
+}
+.voice-status.show{display:flex;}
+.voice-pulse{
+  width:8px;height:8px;border-radius:50%;background:#e05555;flex-shrink:0;
+  animation:vpulse 1s ease-in-out infinite;
+}
+@keyframes vpulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
+.voice-wave{
+  display:flex;gap:2px;align-items:center;height:16px;
+}
+.voice-wave span{
+  display:block;width:3px;border-radius:3px;background:#e05555;
+  animation:vwave 0.8s ease-in-out infinite;
+}
+.voice-wave span:nth-child(1){animation-delay:0s;}
+.voice-wave span:nth-child(2){animation-delay:.1s;}
+.voice-wave span:nth-child(3){animation-delay:.2s;}
+.voice-wave span:nth-child(4){animation-delay:.3s;}
+.voice-wave span:nth-child(5){animation-delay:.2s;}
+.voice-wave span:nth-child(6){animation-delay:.1s;}
+@keyframes vwave{
+  0%,100%{height:4px;}
+  50%{height:14px;}
+}
+.voice-timer{font-family:'EB Garamond',serif;font-size:13px;color:#e05555;min-width:32px;}
+.voice-cancel{
+  margin-left:auto;font-size:11px;color:var(--text-dim);
+  background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:6px;
+  transition:color .15s;
+}
+.voice-cancel:hover{color:var(--text-sub);}
+
+/* ボタン群 */
+.btn-row{display:flex;gap:8px;flex-shrink:0;align-items:flex-end;}
+.mic-btn{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  background:var(--surface2);
+  border:1.5px solid var(--border2);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .18s;
+}
+.mic-btn:hover{border-color:var(--text-sub);}
+.mic-btn.listening{
+  background:#2a1010;border-color:#e05555;
+  animation:micglow .8s ease-in-out infinite alternate;
+}
+@keyframes micglow{
+  from{box-shadow:0 0 0 0 rgba(224,85,85,.3);}
+  to{box-shadow:0 0 0 6px rgba(224,85,85,0);}
+}
+.mic-btn svg{width:20px;height:20px;transition:color .18s;color:var(--text-sub);}
+.mic-btn:hover svg{color:var(--text);}
+.mic-btn.listening svg{color:#e05555;}
+.mic-btn.unsupported{opacity:.3;cursor:not-allowed;}
+.send-btn{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,#c8a96e,#e0ba78);
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .15s;
+}
+.send-btn:hover{opacity:.85;}
+.send-btn svg{width:18px;height:18px;fill:#0a0808;}
+
+/* ─── End session button ─── */
+.end-session-btn{
+  display:flex;align-items:center;gap:5px;
+  background:none;border:1.5px solid var(--border2);
+  color:var(--text-dim);border-radius:10px;
+  font-size:12px;font-weight:600;padding:0 12px;height:44px;
+  cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;
+  letter-spacing:.2px;
+}
+.end-session-btn:hover{border-color:var(--accent);color:var(--accent);}
+.end-session-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;flex-shrink:0;}
+
+/* ─── Summary screen ─── */
+#s-summary{overflow-y:auto;}
+.summary-wrap{padding:28px;max-width:600px;margin:0 auto;width:100%;}
+.summary-header{margin-bottom:28px;text-align:center;}
+.summary-emoji{font-size:48px;margin-bottom:12px;}
+.summary-title{font-family:'EB Garamond',serif;font-size:26px;font-weight:600;color:var(--accent2);margin-bottom:4px;}
+.summary-sub{font-size:13px;color:var(--text-sub);}
+.score-ring-wrap{display:flex;justify-content:center;margin:20px 0;}
+.score-ring{
+  width:100px;height:100px;border-radius:50%;
+  border:4px solid var(--border2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--surface);position:relative;
+}
+.score-ring.score-hi{border-color:var(--accent);}
+.score-ring.score-mid{border-color:#5b8af0;}
+.score-ring.score-lo{border-color:#6b7280;}
+.score-num{font-family:'EB Garamond',serif;font-size:36px;font-weight:600;color:var(--text);line-height:1;}
+.score-label{font-size:11px;color:var(--text-sub);margin-top:2px;}
+.summary-section{margin-bottom:20px;}
+.summary-section-title{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--text-dim);margin-bottom:10px;
+}
+.improve-item{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:12px 14px;background:var(--surface2);
+  border-radius:10px;margin-bottom:8px;
+  border:1px solid var(--border);
+}
+.improve-num{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--accent-dim);color:var(--accent);
+  font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.improve-text{font-size:14px;color:var(--text);line-height:1.55;}
+.summary-actions{display:flex;gap:10px;margin-top:24px;}
+.summary-actions .btn-gold{flex:1;}
+.summary-actions .btn-outline{
+  flex:1;padding:14px;border-radius:12px;
+  border:1.5px solid var(--border2);background:none;
+  color:var(--text-sub);font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .18s;
+}
+.summary-actions .btn-outline:hover{border-color:var(--text-sub);color:var(--text);}
+
+/* ─── Streak + Score history on home ─── */
+.stats-bar{
+  display:flex;align-items:stretch;gap:10px;
+  padding:0 0 14px;
+}
+.stat-card{
+  flex:1;background:var(--surface2);border-radius:12px;
+  border:1px solid var(--border);padding:12px 14px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.stat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);}
+.stat-value{font-family:'EB Garamond',serif;font-size:26px;font-weight:600;color:var(--accent2);line-height:1;}
+.stat-sub{font-size:11px;color:var(--text-sub);}
+.sparkline-wrap{margin-top:6px;}
+.sparkline-svg{width:100%;height:32px;display:block;}
+
+/* Overlay loader */
+#loader{
+  display:none;position:fixed;inset:0;
+  background:rgba(9,9,15,.88);backdrop-filter:blur(8px);
+  z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+}
+#loader.show{display:flex;}
+.spin{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:rot .7s linear infinite;}
+@keyframes rot{to{transform:rotate(360deg);}}
+.load-text{font-size:13px;color:var(--text-sub);}
+
+/* Responsive */
+@media(max-width:600px){
+  header{padding:12px 16px;}
+  .cat-hero{padding:20px 16px 14px;}
+  .cat-hero-title{font-size:24px;}
+  .topic-strip{padding:10px 16px 0;}
+  #search-results{padding:10px 16px 16px;}
+  .cat-grid{grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 16px 24px;}
+  .cat-card{padding:12px 10px 10px;}
+  .cat-glyph{font-size:22px;}
+  .cat-name{font-size:13px;}
+  .section-pad{padding:20px 16px;}
+  .divider{margin:0 16px;}
+  .cta-wrap{padding:16px 16px 24px;}
+  .article-strip{padding:12px 16px 10px;}
+  #chat{padding:12px 16px;}
+  #sugg-row{padding:4px 16px 0;}
+  .input-bar{padding:10px 14px 14px;}
+  .score-row{gap:6px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ─── Header ─── -->
+<header>
+  <div class="wordmark">New<span>Speak</span></div>
+  <div class="spacer"></div>
+  <button class="back-btn" id="back-btn" onclick="goBack()">
+    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    戻る
+  </button>
+  <div class="progress-dots">
+    <div class="dot on" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+  </div>
+</header>
+
+<!-- ════ SCREEN 1 — カテゴリー ════ -->
+<div class="screen active" id="s-cat">
+  <div class="cat-hero">
+    <div class="cat-hero-title">今日は何を<br><em>学びますか？</em></div>
+    <div class="cat-hero-sub">カテゴリーを選ぶか、キーワードで記事を直接検索</div>
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <input type="text" id="cat-search" placeholder="トピックを検索… 例: AI、気候変動、スタートアップ" oninput="onSearch(this.value)" autocomplete="off">
+      <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
+    </div>
+  </div>
+
+  <!-- Topic chips -->
+  <div class="topic-strip" id="topic-strip">
+    <div class="topic-chip active" data-topic="all" onclick="filterTopic(this)">すべて</div>
+    <div class="topic-chip" data-topic="AI・テック" onclick="filterTopic(this)">🤖 AI・テック</div>
+    <div class="topic-chip" data-topic="地政学" onclick="filterTopic(this)">🌍 地政学</div>
+    <div class="topic-chip" data-topic="経済・投資" onclick="filterTopic(this)">📈 経済・投資</div>
+    <div class="topic-chip" data-topic="社会・労働" onclick="filterTopic(this)">👥 社会・労働</div>
+    <div class="topic-chip" data-topic="環境・科学" onclick="filterTopic(this)">🌱 環境・科学</div>
+    <div class="topic-chip" data-topic="スポーツ・文化" onclick="filterTopic(this)">🏆 スポーツ・文化</div>
+    <div class="topic-chip" data-topic="ビジネス" onclick="filterTopic(this)">💼 ビジネス</div>
+    <div class="topic-chip" data-topic="医療・健康" onclick="filterTopic(this)">🏥 医療・健康</div>
+  </div>
+
+  <!-- Stats bar (streak + score history) -->
+  <div class="stats-bar" id="stats-bar" style="display:none;padding:0 28px 14px;">
+    <div class="stat-card">
+      <div class="stat-label">🔥 連続学習</div>
+      <div class="stat-value" id="streak-val">0</div>
+      <div class="stat-sub">日連続</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">📊 スコア推移</div>
+      <div class="sparkline-wrap">
+        <svg class="sparkline-svg" id="sparkline-svg" viewBox="0 0 160 32" preserveAspectRatio="none">
+          <polyline id="sparkline-line" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points=""/>
+        </svg>
+      </div>
+      <div class="stat-sub" id="sparkline-sub">まだデータなし</div>
+    </div>
+  </div>
+
+  <!-- Yesterday article banner -->
+  <div class="yesterday-banner" id="yesterday-banner" onclick="useYesterdayArticle()">
+    <div class="yesterday-icon">🔁</div>
+    <div class="yesterday-body">
+      <div class="yesterday-title">昨日の記事でもう一度練習しますか？</div>
+      <div class="yesterday-article" id="yesterday-title"></div>
+      <div class="yesterday-meta" id="yesterday-meta"></div>
+    </div>
+    <div class="yesterday-arrow">›</div>
+  </div>
+
+  <!-- Guardian API banner -->
+  <div class="api-banner" id="api-banner">
+    <div class="api-banner-icon">🔑</div>
+    <div class="api-banner-body">
+      <div class="api-banner-title">Guardian API で最新ニュースを取得</div>
+      <div class="api-banner-sub">APIキーを入力すると毎日最新の英語記事で練習できます。<br>取得先: <strong>open-platform.theguardian.com</strong></div>
+      <div class="api-key-row">
+        <input class="api-key-input" id="api-key-input" type="password" placeholder="APIキーを入力… (例: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)" autocomplete="off">
+        <button class="api-key-btn" onclick="saveApiKey()">保存して取得</button>
+      </div>
+      <div class="api-status" id="api-status">
+        <div class="api-dot" id="api-dot"></div>
+        <span id="api-status-text">APIキー未設定 — ハードコード記事を使用中</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search / filter results -->
+  <div id="search-results"></div>
+
+  <div class="cat-grid" id="cat-grid">
+    <div class="cat-card" data-cat="主要" onclick="selectCat(this)">
+      <div class="cat-bg">📰</div>
+      <div class="cat-glyph">📰</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">Top News</div>
+      <div class="cat-name">主要</div>
+    </div>
+    <div class="cat-card" data-cat="国内" onclick="selectCat(this)">
+      <div class="cat-bg">🗾</div>
+      <div class="cat-glyph">🗾</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">Domestic</div>
+      <div class="cat-name">国内</div>
+    </div>
+    <div class="cat-card" data-cat="国際" onclick="selectCat(this)">
+      <div class="cat-bg">🌏</div>
+      <div class="cat-glyph">🌏</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">World</div>
+      <div class="cat-name">国際</div>
+    </div>
+    <div class="cat-card" data-cat="経済" onclick="selectCat(this)">
+      <div class="cat-bg">📈</div>
+      <div class="cat-glyph">📈</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">Economy</div>
+      <div class="cat-name">経済</div>
+    </div>
+    <div class="cat-card" data-cat="エンタメ" onclick="selectCat(this)">
+      <div class="cat-bg">🎬</div>
+      <div class="cat-glyph">🎬</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">Entertainment</div>
+      <div class="cat-name">エンタメ</div>
+    </div>
+    <div class="cat-card" data-cat="スポーツ" onclick="selectCat(this)">
+      <div class="cat-bg">⚽</div>
+      <div class="cat-glyph">⚽</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">Sports</div>
+      <div class="cat-name">スポーツ</div>
+    </div>
+    <div class="cat-card" data-cat="IT" onclick="selectCat(this)">
+      <div class="cat-bg">💻</div>
+      <div class="cat-glyph">💻</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">Technology</div>
+      <div class="cat-name">IT</div>
+    </div>
+    <div class="cat-card" data-cat="科学" onclick="selectCat(this)">
+      <div class="cat-bg">🔬</div>
+      <div class="cat-glyph">🔬</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">Science</div>
+      <div class="cat-name">科学</div>
+    </div>
+    <div class="cat-card" data-cat="ライフ" onclick="selectCat(this)">
+      <div class="cat-bg">🌿</div>
+      <div class="cat-glyph">🌿</div>
+      <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="cat-name-en">Lifestyle</div>
+      <div class="cat-name">ライフ</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 2 — Mode + Level ════ -->
+<div class="screen" id="s-mode">
+  <div class="section-pad">
+    <div class="section-title">練習モードを選ぶ</div>
+    <div class="mode-cards">
+      <div class="mode-card" data-mode="discussion" onclick="selectMode(this)">
+        <div class="mode-icon disc">💬</div>
+        <div class="mode-body">
+          <div class="mode-name">ディスカッション</div>
+          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝える力を養う。</div>
+          <div class="mode-tag">Discussion</div>
+        </div>
+      </div>
+      <div class="mode-card" data-mode="facilitation" onclick="selectMode(this)">
+        <div class="mode-icon faci">🎙️</div>
+        <div class="mode-body">
+          <div class="mode-name">ファシリテーション</div>
+          <div class="mode-desc">AIが参加者役になり、あなたが議題を進行する。会議・プレゼンのスピーキング力を鍛える。</div>
+          <div class="mode-tag">Facilitation</div>
+        </div>
+      </div>
+      <div class="mode-card" data-mode="interview" onclick="selectMode(this)">
+        <div class="mode-icon inte">🤝</div>
+        <div class="mode-body">
+          <div class="mode-name">面接スピーチ</div>
+          <div class="mode-desc">記事をテーマに英語面接を模擬体験。外資・海外就職を目指す人に最適な実践練習。</div>
+          <div class="mode-tag">Interview</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-pad" style="padding-bottom:0;">
+    <div class="section-title">英語レベルを選ぶ</div>
+    <div class="level-row">
+      <div class="level-btn" data-level="beginner" onclick="selectLevel(this)">
+        <div class="level-flag">🇯🇵</div>
+        <div class="level-name">初級</div>
+        <div class="level-hint">日本語サポートあり</div>
+      </div>
+      <div class="level-btn" data-level="intermediate" onclick="selectLevel(this)">
+        <div class="level-flag">🌐</div>
+        <div class="level-name">中級</div>
+        <div class="level-hint">英語メイン+補足</div>
+      </div>
+      <div class="level-btn" data-level="advanced" onclick="selectLevel(this)">
+        <div class="level-flag">🇬🇧</div>
+        <div class="level-name">上級</div>
+        <div class="level-hint">フル英語</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-wrap">
+    <button class="btn-gold" id="start-btn" disabled onclick="startSession()">
+      セッションを開始する →
+    </button>
+  </div>
+</div>
+
+<!-- ════ SCREEN 3 — Session ════ -->
+<div class="screen" id="s-session">
+  <div class="article-strip" id="article-strip">
+    <div class="article-strip-meta">
+      <span class="strip-source" id="a-source"></span>
+      <span class="strip-cat" id="a-cat"></span>
+      <span class="strip-mode-badge" id="a-mode-badge"></span>
+    </div>
+    <div class="strip-title" id="a-title"></div>
+    <button class="strip-expand" id="expand-btn" onclick="toggleExpand()">
+      <span>記事の詳細を見る</span>
+      <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+    </button>
+    <div class="article-full" id="article-full">
+      <div id="a-summary"></div>
+      <div class="article-points-mini" id="a-points-mini"></div>
+    </div>
+  </div>
+
+  <div id="chat"></div>
+  <div id="sugg-row"></div>
+
+  <div class="input-bar">
+    <div class="input-col">
+      <textarea id="inp" placeholder="英語で入力 または 🎤 で話す…" rows="1"
+        onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
+      <div class="voice-status" id="voice-status">
+        <div class="voice-pulse"></div>
+        <div class="voice-wave">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <span class="voice-timer" id="voice-timer">0:00</span>
+        <button class="voice-cancel" onclick="cancelVoice()">キャンセル</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="end-session-btn" onclick="endSession()" title="セッションを終了してスコアを確認">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 9 12 12 15 9"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+        終了
+      </button>
+      <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" title="音声入力">
+        <svg id="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:var(--text-sub)">
+          <rect x="9" y="1" width="6" height="11" rx="3"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+      <button class="send-btn" onclick="send()">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 4 — Summary ════ -->
+<div class="screen" id="s-summary">
+  <div class="summary-wrap">
+    <div class="summary-header">
+      <div class="summary-emoji" id="summary-emoji">🎉</div>
+      <div class="summary-title">セッション完了！</div>
+      <div class="summary-sub" id="summary-date"></div>
+    </div>
+    <div class="score-ring-wrap">
+      <div class="score-ring" id="score-ring">
+        <div class="score-num" id="score-num">—</div>
+        <div class="score-label">/ 100</div>
+      </div>
+    </div>
+    <div class="summary-section">
+      <div class="summary-section-title">改善すべき表現 TOP 3</div>
+      <div id="improve-list"></div>
+    </div>
+    <div class="summary-actions">
+      <button class="btn-outline" onclick="goHome()">ホームに戻る</button>
+      <button class="btn-gold" onclick="restartSession()">もう一度練習</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<div id="loader"><div class="spin"></div><div class="load-text" id="load-txt">記事を選定中…</div></div>
+
+<script>
+// ══ State ══
+let state = { cat: null, mode: null, level: null, article: null, history: [], busy: false };
+let sample = null;
+let expandOpen = false;
+let guardianApiKey = null;
+
+// ══ Guardian API category map ══
+const GUARDIAN_CAT_MAP = {
+  '主要':'news','国内':'world','国際':'world','経済':'business',
+  'エンタメ':'culture','スポーツ':'sport','IT':'technology','科学':'science','ライフ':'lifeandstyle'
+};
+const CAT_EMOJIS = {'主要':'📰','国内':'🗾','国際':'🌏','経済':'📈','エンタメ':'🎬','スポーツ':'⚽','IT':'💻','科学':'🔬','ライフ':'🌿'};
+
+// ══ Init capability ══
+(async()=>{
+  sample = await claude.use('sample');
+  // Restore saved API key
+  try{
+    const saved = localStorage.getItem('guardian_api_key');
+    if(saved){ guardianApiKey=saved; document.getElementById('api-key-input').value=saved; setApiStatus('ok','Guardian API 接続済み ✓'); fetchGuardianAll(); }
+    loadYesterdayBanner();
+    renderStatsBar();
+  }catch(e){}
+})();
+
+// ══ ① 昨日の記事バナー ══
+function saveLastArticle(article, cat, mode){
+  try{
+    localStorage.setItem('ns_last_article', JSON.stringify({
+      article, cat, mode, date: new Date().toDateString()
+    }));
+  }catch(e){}
+}
+
+function loadYesterdayBanner(){
+  try{
+    const raw = localStorage.getItem('ns_last_article');
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    // Show if saved on a previous day OR earlier today (more than 0 minutes ago = always show for testing)
+    const banner = document.getElementById('yesterday-banner');
+    document.getElementById('yesterday-title').textContent = data.article.title;
+    const modeLabel = {discussion:'ディスカッション', facilitation:'ファシリテーション', interview:'面接スピーチ'}[data.mode] || data.mode;
+    document.getElementById('yesterday-meta').textContent = `${data.cat} · ${modeLabel} · ${data.date}`;
+    banner._savedData = data;
+    banner.classList.add('show');
+  }catch(e){}
+}
+
+function useYesterdayArticle(){
+  const banner = document.getElementById('yesterday-banner');
+  if(!banner._savedData) return;
+  const {article, cat, mode} = banner._savedData;
+  state.cat = cat;
+  state.article = article;
+  state.mode = mode;
+  banner.classList.remove('show');
+  goToMode();
+}
+
+function saveApiKey(){
+  const key = document.getElementById('api-key-input').value.trim();
+  if(!key){ alert('APIキーを入力してください'); return; }
+  guardianApiKey = key;
+  try{ localStorage.setItem('guardian_api_key', key); }catch(e){}
+  setApiStatus('loading','記事を取得中…');
+  fetchGuardianAll();
+}
+
+function setApiStatus(state, text){
+  const dot = document.getElementById('api-dot');
+  const txt = document.getElementById('api-status-text');
+  dot.className = 'api-dot' + (state==='ok'?' ok':state==='err'?' err':state==='loading'?' loading':'');
+  txt.textContent = text;
+}
+
+async function fetchGuardianAll(){
+  if(!guardianApiKey) return;
+  const cats = Object.keys(GUARDIAN_CAT_MAP);
+  let fetched = 0;
+  const promises = cats.map(async cat => {
+    try{
+      const section = GUARDIAN_CAT_MAP[cat];
+      const url = `https://content.guardianapis.com/search?section=${section}&page-size=5&order-by=newest&api-key=${guardianApiKey}`;
+      const res = await fetch(url);
+      if(!res.ok) throw new Error(res.status);
+      const data = await res.json();
+      const items = (data.response?.results||[]).filter(r=>r.type==='article');
+      if(items.length){
+        const newArticles = items.map(r=>({
+          source:'The Guardian',
+          emoji: CAT_EMOJIS[cat]||'📰',
+          topic: cat,
+          keywords: r.webTitle.toLowerCase().split(/\W+/).filter(w=>w.length>3),
+          title: r.webTitle,
+          summary: r.webTitle, // Guardian free tier doesn't return body; AI will elaborate
+          points:['記事の背景と文脈','主な論点と影響','あなたの意見は？'],
+          url: r.webUrl,
+          live: true
+        }));
+        // Prepend live articles, keep static as fallback
+        ARTICLES[cat] = [...newArticles, ...ARTICLES[cat]];
+        newArticles.forEach(a => ALL_ARTICLES.unshift({...a, cat}));
+        fetched++;
+      }
+    }catch(e){ console.error('Guardian fetch failed for', cat, e.message, e); }
+  });
+  await Promise.all(promises);
+  if(fetched>0){
+    setApiStatus('ok', `Guardian API 接続済み — ${fetched}カテゴリ最新記事取得済み ✓`);
+  } else {
+    setApiStatus('err','取得失敗 — APIキーを確認してください');
+    guardianApiKey = null;
+    try{ localStorage.removeItem('guardian_api_key'); }catch(e){}
+  }
+}
+
+// ══ Articles DB (with topic + emoji + keywords) ══
+const ARTICLES = {
+  主要:[
+    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギー政策との整合性']},
+    {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。各国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
+  ],
+  国内:[
+    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
+    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
+  ],
+  国際:[
+    {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
+    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+  ],
+  経済:[
+    {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
+    {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した。大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
+  ],
+  エンタメ:[
+    {source:'Variety',emoji:'🎵',topic:'スポーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
+    {source:'The Hollywood Reporter',emoji:'🎬',topic:'ビジネス',keywords:['ストリーミング','映画','メディア','Netflix','streaming','content','動画配信','サブスク','subscription','データセンター','クラウド','コンテンツ','OTT'],title:'Streaming Wars Enter New Phase as Studios Merge Content Libraries',summary:'大手スタジオのコンテンツライブラリ統合が進み、ストリーミング戦争が新局面へ。消費者の選択肢が変わる中、クリエイターへの報酬体系の見直しを求める声も上がっている。',points:['コンテンツの多様性','クリエイターエコノミー','日本コンテンツのグローバル展開']}
+  ],
+  スポーツ:[
+    {source:'ESPN',emoji:'🏅',topic:'スポーツ・文化',keywords:['オリンピック','スポーツ','テクノロジー','Olympic','LA','2028','eスポーツ','esports','AI審判','データ分析','athletics'],title:'Olympic Games 2028 LA: Technology and Inclusion Take Center Stage',summary:'2028年ロサンゼルス五輪に向けて、テクノロジー活用とインクルージョンが重点テーマに。AI審判システムの導入やeスポーツの正式種目化をめぐる議論が活発化している。',points:['スポーツとテクノロジーの融合','公平性と新技術','五輪の商業化と純粋性']},
+    {source:'Sky Sports',emoji:'⚽',topic:'ビジネス',keywords:['サッカー','プレミアリーグ','スポーツビジネス','Premier League','salary','移籍','transfer','UEFA','FFP','ビジネス','経営'],title:'Premier League Clubs Face New Salary Cap Rules Amid Financial Fair Play Reforms',summary:'プレミアリーグがファイナンシャル・フェアプレー改革として新たな給与上限規制を導入。クラブ経営の透明性が高まる一方、競争力への影響を懸念する声もある。',points:['スポーツ経営と持続可能性','ビッグクラブ vs 中小クラブ','日本人選手への影響']}
+  ],
+  IT:[
+    {source:'TechCrunch',emoji:'🧠',topic:'AI・テック',keywords:['AI','GPT','OpenAI','人工知能','テクノロジー','LLM','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','生成AI','generative','半導体','電力','電気代','energy'],title:'OpenAI Launches GPT-6 with Real-Time Reasoning and Multimodal Capabilities',summary:'OpenAIがリアルタイム推論とマルチモーダル機能を持つGPT-6を発表。産業界への影響が広がる中、AI安全性とガバナンスをめぐる議論が一層重要性を増している。',points:['AIの進化と雇用','AI規制の国際標準','日本のAI産業戦略']},
+    {source:'Wired',emoji:'🔐',topic:'AI・テック',keywords:['量子コンピュータ','暗号','セキュリティ','quantum','encryption','cybersecurity','データセンター','data center','ハッキング','hacking','サイバー攻撃','デジタル','インフラ','infrastructure'],title:'Quantum Computing Breakthrough Threatens Current Encryption Standards',summary:'量子コンピューティングの突破口となる研究成果が発表され、現行の暗号化標準が脅威にさらされる可能性が浮上。各国政府とテック企業は「量子後」セキュリティへの移行を急いでいる。',points:['サイバーセキュリティの将来','量子技術の軍事利用','デジタルインフラ保護']}
+  ],
+  科学:[
+    {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
+    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
+  ],
+  ライフ:[
+    {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
+    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
+  ]
+};
+
+// ══ Flat article list for search ══
+const ALL_ARTICLES = [];
+Object.entries(ARTICLES).forEach(([cat, arr]) => arr.forEach(a => ALL_ARTICLES.push({...a, cat})));
+
+// ══ Search & Filter state ══
+let searchMode = false; // true = show results list, false = show cat grid
+let activeTopic = 'all';
+let selectedResultArticle = null;
+
+let _searchTimer = null;
+let guardianSearchResults = []; // temp store for API search results
+
+function onSearch(val){
+  const clear = document.getElementById('search-clear');
+  clear.classList.toggle('show', val.length > 0);
+  if(val.trim().length === 0){
+    exitSearchMode();
+    return;
+  }
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => doSearch(val), 400);
+}
+
+async function doSearch(val){
+  const q = val.toLowerCase();
+  // Local results first
+  const localHits = ALL_ARTICLES.filter(a =>
+    a.title.toLowerCase().includes(q) ||
+    a.summary.toLowerCase().includes(q) ||
+    (a.keywords||[]).some(k => k.toLowerCase().includes(q)) ||
+    a.cat.includes(q) ||
+    (a.topic||'').toLowerCase().includes(q)
+  );
+  showResults(localHits, val, true); // show local + loading spinner
+
+  if(!guardianApiKey){ return; } // no API key — local only
+
+  try {
+    const url = `https://content.guardianapis.com/search?q=${encodeURIComponent(val)}&page-size=10&order-by=relevance&show-fields=trailText&format=json&api-key=${guardianApiKey}`;
+    const res = await fetch(url, {mode:'cors'});
+    if(!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const items = (data.response?.results||[]).filter(r => r.type==='article');
+    guardianSearchResults = items.map(r => ({
+      source:'The Guardian',
+      emoji:'🌐',
+      topic: r.sectionName || '国際',
+      cat: sectionToCat(r.sectionId) || '国際',
+      keywords: r.webTitle.toLowerCase().split(/\W+/).filter(w=>w.length>3),
+      title: r.webTitle,
+      summary: r.fields?.trailText || r.webTitle,
+      points:['記事の背景と文脈','主な論点と影響','あなたの意見は？'],
+      url: r.webUrl,
+      live: true,
+      _fromApiSearch: true
+    }));
+    // Merge: remove duplicates already in localHits by title
+    const localTitles = new Set(localHits.map(a=>a.title));
+    const newApiHits = guardianSearchResults.filter(a => !localTitles.has(a.title));
+    showResults([...localHits, ...newApiHits], val, false);
+  } catch(e) {
+    console.warn('Guardian keyword search failed', e);
+    showResults(localHits, val, false);
+  }
+}
+
+function sectionToCat(sectionId){
+  const map = {
+    'news':'主要','world':'国際','business':'経済','technology':'IT',
+    'science':'科学','sport':'スポーツ','culture':'エンタメ','lifeandstyle':'ライフ',
+    'environment':'科学','politics':'国際','football':'スポーツ','money':'経済'
+  };
+  return map[sectionId] || '国際';
+}
+
+function filterTopic(el){
+  document.querySelectorAll('.topic-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  activeTopic = el.dataset.topic;
+
+  // If searching, re-filter
+  const q = document.getElementById('cat-search').value.trim();
+  if(q){onSearch(q);return;}
+
+  if(activeTopic === 'all'){
+    exitSearchMode();
+    return;
+  }
+  const hits = ALL_ARTICLES.filter(a => a.topic === activeTopic);
+  showResults(hits, null);
+}
+
+// combined list for index lookup (local + api search)
+let _displayedHits = [];
+
+function showResults(hits, query, loading=false){
+  searchMode = true;
+  document.getElementById('cat-grid').style.display='none';
+  const box = document.getElementById('search-results');
+  box.classList.add('show');
+  _displayedHits = hits;
+
+  const spinner = loading && guardianApiKey
+    ? `<div class="search-loading"><span class="search-spin"></span>Guardian APIで検索中…</div>` : '';
+
+  if(hits.length === 0 && !loading){
+    box.innerHTML=`<div class="no-results">「${query||activeTopic}」に一致する記事が見つかりませんでした${guardianApiKey?'':' <span style="color:var(--accent);font-size:11px;">（APIキー未設定）</span>'}</div>${spinner}`;
+    return;
+  }
+  box.innerHTML = hits.map((a,i)=>`
+    <div class="result-item ${selectedResultArticle===a?'selected':''}" onclick="selectResultArticleByIdx(this,${i})">
+      <div class="result-icon">${a.emoji||'📄'}</div>
+      <div class="result-body">
+        <div class="result-title">${a.title}</div>
+        <div class="result-meta">
+          <span class="result-cat">${a.source||'The Guardian'}</span>
+          <span class="result-topic">${a.cat} · ${a.topic||''}</span>
+          ${a._fromApiSearch?'<span class="result-live-tag">LIVE</span>':''}
+        </div>
+      </div>
+      <div class="result-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+    </div>
+  `).join('') + spinner;
+}
+
+function selectResultArticleByIdx(el, idx){
+  document.querySelectorAll('.result-item').forEach(r=>r.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedResultArticle = _displayedHits[idx];
+  state.cat = selectedResultArticle.cat;
+  state.article = selectedResultArticle;
+  setTimeout(()=>goToMode(), 200);
+}
+// legacy alias kept for safety
+function selectResultArticle(el, idx){
+  selectResultArticleByIdx(el, idx);
+}
+
+function clearSearch(){
+  document.getElementById('cat-search').value='';
+  document.getElementById('search-clear').classList.remove('show');
+  // Reset topic chips to all
+  document.querySelectorAll('.topic-chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector('.topic-chip[data-topic="all"]').classList.add('active');
+  activeTopic='all';
+  exitSearchMode();
+}
+
+function exitSearchMode(){
+  searchMode = false;
+  selectedResultArticle = null;
+  document.getElementById('cat-grid').style.display='';
+  const box = document.getElementById('search-results');
+  box.classList.remove('show');
+  box.innerHTML='';
+}
+
+// ══ Screen 1: Category ══
+function selectCat(el){
+  document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.cat = el.dataset.cat;
+  state.article = null; // reset pre-selected article
+  selectedResultArticle = null;
+  setTimeout(()=>goToMode(),320);
+}
+
+function goToMode(){
+  setStep(2);
+  show('s-cat','s-mode');
+  document.getElementById('back-btn').classList.add('show');
+}
+
+// ══ Screen 2: Mode + Level ══
+function selectMode(el){
+  document.querySelectorAll('.mode-card').forEach(c=>c.className='mode-card');
+  const m = el.dataset.mode;
+  el.classList.add(`selected-${m==='discussion'?'disc':m==='facilitation'?'faci':'inte'}`);
+  state.mode = m;
+  checkStart();
+}
+function selectLevel(el){
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  state.level = el.dataset.level;
+  checkStart();
+}
+function checkStart(){
+  document.getElementById('start-btn').disabled = !(state.mode && state.level);
+}
+
+// ══ Session start ══
+async function startSession(){
+  loading('記事を選定中…');
+  // Use pre-selected article from search/filter, or pick randomly from category
+  if(!state.article){
+    const pool = ARTICLES[state.cat] || ARTICLES['主要'];
+    state.article = pool[Math.floor(Math.random()*pool.length)];
+  }
+  state.history = [];
+
+  // ① 記事を保存（昨日の記事バナー用）
+  saveLastArticle(state.article, state.cat, state.mode);
+
+  renderArticle();
+  renderModeBadge();
+  setStep(3);
+  show('s-mode','s-session');
+  document.getElementById('back-btn').classList.remove('show');
+  document.getElementById('vocab-fab').classList.add('show');
+  updateVocabBadge();
+  loading(null);
+
+  await aiOpen();
+}
+
+function renderArticle(){
+  const a = state.article;
+  document.getElementById('a-source').textContent = a.source;
+  document.getElementById('a-cat').textContent = state.cat;
+  document.getElementById('a-title').textContent = a.title;
+  document.getElementById('a-summary').textContent = a.summary;
+  const ul = document.createElement('ul');
+  ul.className='article-points-mini';
+  a.points.forEach(p=>{const li=document.createElement('li');li.textContent=p;ul.appendChild(li);});
+  const pm = document.getElementById('a-points-mini');
+  pm.innerHTML='<div style="font-size:11px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">論点</div>';
+  pm.appendChild(ul);
+}
+
+function renderModeBadge(){
+  const badge = document.getElementById('a-mode-badge');
+  const modeLabels = {discussion:['ディスカッション','badge-disc'],facilitation:['ファシリテーション','badge-faci'],interview:['面接スピーチ','badge-inte']};
+  const [label,cls] = modeLabels[state.mode];
+  badge.textContent = label;
+  badge.className = `strip-mode-badge ${cls}`;
+}
+
+function toggleExpand(){
+  expandOpen = !expandOpen;
+  document.getElementById('article-full').classList.toggle('show',expandOpen);
+  document.getElementById('expand-btn').classList.toggle('open',expandOpen);
+}
+
+// ══ AI opening ══
+async function aiOpen(){
+  if(!sample){addMsg('ai','⚠️ AIに接続できませんでした。ページを再読み込みしてください。');return;}
+  showTyping();
+  const sys = buildSystem();
+  const openPrompt = buildOpenPrompt();
+  try{
+    let text='';
+    await sample([{role:'user',content:openPrompt}],{
+      onText:({text:t})=>{text=t;updateTyping(text);},
+      cache:false
+    });
+    removeTyping();
+    addMsg('ai',text);
+    state.history=[{role:'user',content:openPrompt},{role:'assistant',content:text}];
+    showSuggestions();
+  }catch(e){
+    removeTyping();
+    addMsg('ai','セッションを開始できませんでした。もう一度お試しください。');
+  }
+}
+
+function buildSystem(){
+  const levelInst = {
+    beginner:'You support the user in English but may provide Japanese explanations when they struggle. Keep English simple (A2-B1).',
+    intermediate:'Conduct the session mainly in English. Occasionally offer a Japanese hint if needed. Target B2 level.',
+    advanced:'Conduct everything in English only. Target C1-C2 level. Use natural, sophisticated vocabulary.'
+  };
+  const modeInst = {
+    discussion:`You are an engaging discussion partner. Ask thought-provoking questions. After every 2-3 user responses, provide brief feedback on their English (grammar, vocabulary, fluency) in a "💡 Feedback" section.`,
+    facilitation:`You play the role of a meeting participant (sometimes agreeable, sometimes challenging). The user is the facilitator. After every 2-3 user responses, evaluate their facilitation skills and English in a "💡 Feedback" section.`,
+    interview:`You are a professional interviewer at a global company. Ask structured interview questions based on the article. After each user answer, give detailed feedback on content, delivery, and English in a "💡 Feedback" section.`
+  };
+  return `${levelInst[state.level]} ${modeInst[state.mode]}
+Article: "${state.article.title}" — ${state.article.summary}
+Key discussion points: ${state.article.points.join(', ')}
+Keep responses concise (under 120 words for the main content). Format feedback clearly with scores when giving "💡 Feedback".`;
+}
+
+function buildOpenPrompt(){
+  const intros = {
+    discussion:`Start the discussion session about this article. Briefly set the scene (1-2 sentences), then ask one sharp opening question to get the user's opinion. Be engaging and welcoming.`,
+    facilitation:`The user will facilitate a meeting about this article. Set up the scenario: you are a participant (introduce your role briefly). Then wait for the user to open the meeting.`,
+    interview:`Begin the interview session. Introduce yourself as the interviewer briefly, then ask the first interview question related to this article's topic. Be professional and welcoming.`
+  };
+  return `${buildSystem()}\n\n${intros[state.mode]}`;
+}
+
+// ══ Send message ══
+async function send(txt){
+  if(state.busy)return;
+  const inp=document.getElementById('inp');
+  const msg=txt||inp.value.trim();
+  if(!msg)return;
+  inp.value='';resize(inp);
+  document.getElementById('sugg-row').innerHTML='';
+  addMsg('user',msg);
+
+  state.busy=true;
+  state.history.push({role:'user',content:msg});
+  showTyping();
+
+  const fullHistory = [{role:'user',content:buildOpenPrompt()},...state.history.slice(1)];
+
+  try{
+    let text='';
+    await sample(fullHistory,{
+      onText:({text:t})=>{text=t;updateTyping(text);},
+      cache:false
+    });
+    removeTyping();
+
+    // Check for feedback
+    if(text.includes('💡 Feedback') || text.includes('💡 Score')){
+      const parts = text.split(/💡 Feedback|💡 Score/i);
+      if(parts[0].trim()) addMsg('ai',parts[0].trim());
+      if(parts[1]) renderFeedbackCard(parts[1].trim());
+    } else {
+      addMsg('ai',text);
+    }
+    state.history.push({role:'assistant',content:text});
+    showSuggestions();
+  }catch(e){
+    removeTyping();
+    addMsg('ai','Error connecting to AI. Please try again.');
+  }
+  state.busy=false;
+}
+
+function renderFeedbackCard(rawText){
+  const chat=document.getElementById('chat');
+  const wrap=document.createElement('div');
+  wrap.className='msg ai';
+
+  // Try to extract scores
+  const scoreRe=/(\w[\w\s]+?):\s*(\d+)\/(\d+)/g;
+  const scores=[];let m;
+  while((m=scoreRe.exec(rawText))!==null){
+    scores.push({label:m[1].trim(),val:parseInt(m[2]),max:parseInt(m[3])});
+  }
+
+  let html=`<div class="av">🤖</div><div style="flex:1">`;
+  html+=`<div class="feedback-card">`;
+  html+=`<div class="feedback-title">💡 Feedback</div>`;
+
+  if(scores.length){
+    html+=`<div class="score-row">`;
+    scores.forEach(s=>{
+      html+=`<div class="score-item">
+        <div class="score-num">${s.val}<span class="score-max">/${s.max}</span></div>
+        <div class="score-label">${s.label}</div>
+      </div>`;
+    });
+    html+=`</div>`;
+    scores.forEach(s=>{
+      const pct=Math.round((s.val/s.max)*100);
+      html+=`<div class="bar-wrap">
+        <div class="bar-label-row"><span class="bar-label">${s.label}</span><span class="bar-val">${pct}%</span></div>
+        <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    });
+  }
+
+  // Clean raw text
+  const cleanText=rawText.replace(/(\w[\w\s]+?):\s*\d+\/\d+/g,'').replace(/^\s*[\-\*]\s*/gm,'').trim();
+  if(cleanText){
+    html+=`<div class="feedback-section">
+      <div class="feedback-section-title">コメント</div>
+      <div class="feedback-text">${cleanText.replace(/\n/g,'<br>')}</div>
+    </div>`;
+  }
+
+  // ③ 語彙をフィードバックから抽出して追加ボタン表示
+  const vocabMatches = rawText.match(/\b[A-Z][a-z]+(?:\s+[a-z]+){0,2}\b|\b[a-z]+(?:tion|ment|ance|ence|ity|ness|ize|ise|ful|less|ous)\b/g);
+  if(vocabMatches && vocabMatches.length > 0){
+    const uniq = [...new Set(vocabMatches)].slice(0,6);
+    html+=`<div class="feedback-section">
+      <div class="feedback-section-title">📖 語彙を単語帳に追加</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+        ${uniq.map(w=>`<button class="add-vocab-btn" data-word="${w}" onclick="promptAddVocab(this)">＋ ${w}</button>`).join('')}
+      </div>
+    </div>`;
+  }
+  html+=`</div></div>`;
+  wrap.innerHTML=html;
+  chat.appendChild(wrap);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+// ══ Chat helpers ══
+let typingEl=null;
+let ttsActive=null;
+function toggleHide(btn){
+  const msgDiv=btn.closest('.msg');
+  const bubble=msgDiv.querySelector('.bubble');
+  const hidden=bubble.classList.toggle('hidden');
+  btn.title=hidden?'テキストを表示':'テキストを隠す';
+  btn.innerHTML=hidden?
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`:
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+}
+function speakText(btn,text,shadowMode=false){
+  if(!window.speechSynthesis)return;
+  const msgDiv=btn.closest('.msg');
+  const bubble=msgDiv?msgDiv.querySelector('.bubble'):null;
+
+  if(ttsActive===btn){
+    window.speechSynthesis.cancel();
+    ttsActive=null;
+    btn.classList.remove('speaking');
+    btn.title='読み上げる';
+    // シャドーイング: 再生終了時は文字を表示に戻す
+    if(bubble&&bubble.classList.contains('hidden')){
+      bubble.classList.remove('hidden');
+      showRepeatBtn(msgDiv, btn, text);
+    }
+    return;
+  }
+  if(ttsActive){
+    window.speechSynthesis.cancel();
+    ttsActive.classList.remove('speaking');
+    ttsActive.title='読み上げる';
+  }
+  // シャドーイングモード: 再生中は文字を隠す
+  if(shadowMode && bubble){
+    bubble.classList.add('hidden');
+  }
+  const plain=text.replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
+  const utt=new SpeechSynthesisUtterance(plain);
+  utt.lang='en-US';utt.rate=0.92;utt.pitch=1;
+  const voices=window.speechSynthesis.getVoices();
+  const enVoice=voices.find(v=>v.lang==='en-US'&&v.name.includes('Google'))||voices.find(v=>v.lang.startsWith('en'));
+  if(enVoice)utt.voice=enVoice;
+  utt.onend=()=>{
+    ttsActive=null;btn.classList.remove('speaking');btn.title='読み上げる';
+    if(shadowMode && bubble){
+      bubble.classList.remove('hidden');
+      showRepeatBtn(msgDiv, btn, text);
+    }
+  };
+  utt.onerror=()=>{
+    ttsActive=null;btn.classList.remove('speaking');btn.title='読み上げる';
+    if(bubble) bubble.classList.remove('hidden');
+  };
+  ttsActive=btn;
+  btn.classList.add('speaking');
+  btn.title='停止する';
+  window.speechSynthesis.speak(utt);
+}
+
+function showRepeatBtn(msgDiv, ttsBtn, text){
+  // リピートボタンを表示（既にあれば更新しない）
+  if(msgDiv.querySelector('.repeat-btn')) return;
+  const actions = msgDiv.querySelector('.msg-actions');
+  if(!actions) return;
+  const repeatBtn = document.createElement('button');
+  repeatBtn.className='action-btn repeat-btn';
+  repeatBtn.title='もう一度シャドーイング';
+  repeatBtn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.36"/></svg>`;
+  repeatBtn.onclick=()=>speakText(ttsBtn, text, true);
+  actions.appendChild(repeatBtn);
+}
+function addMsg(role,text){
+  const chat=document.getElementById('chat');
+  const d=document.createElement('div');
+  d.className=`msg ${role}`;
+  const av=role==='ai'?'🌐':'👤';
+  const bubbleHtml=text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  if(role==='ai'){
+    const escaped=text.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
+    d.innerHTML=`<div class="av">${av}</div><div class="msg-col"><div class="bubble">${bubbleHtml}</div><div class="msg-actions"><button class="action-btn hide-btn" title="テキストを隠す" onclick="toggleHide(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="action-btn tts-btn" title="読み上げる" onclick="speakText(this,'${escaped}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button><button class="action-btn shadow-btn" title="シャドーイング：再生中に文字を隠す" onclick="speakText(this.closest('.msg').querySelector('.tts-btn'),\'${escaped}\',true)" style="font-size:10px;width:auto;padding:0 7px;letter-spacing:.3px;font-weight:700;font-family:\'DM Sans\',sans-serif;">影</button></div></div>`;
+  } else {
+    d.innerHTML=`<div class="av">${av}</div><div class="bubble">${bubbleHtml}</div>`;
+  }
+  chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
+}
+function showTyping(){
+  const chat=document.getElementById('chat');
+  typingEl=document.createElement('div');
+  typingEl.className='msg ai';typingEl.id='typing';
+  typingEl.innerHTML=`<div class="av">🌐</div><div class="msg-col"><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
+  chat.appendChild(typingEl);chat.scrollTop=chat.scrollHeight;
+}
+function updateTyping(text){
+  if(!typingEl)return;
+  const b=typingEl.querySelector('.bubble');
+  if(b) b.innerHTML=text.replace(/\n/g,'<br>');
+  document.getElementById('chat').scrollTop=99999;
+}
+function removeTyping(){if(typingEl){typingEl.remove();typingEl=null;}}
+
+const SUGGESTIONS = {
+  discussion:["I think...", "On the other hand,", "Could you elaborate on that?","In Japan, we tend to...","I'm not sure I agree because..."],
+  facilitation:["Let's move on to...", "What's your view on this?","To summarize so far,","Does anyone have concerns about...","Let's take a vote on..."],
+  interview:["In my experience...", "That's a great question.", "I believe the key challenge is...","To give you a specific example,","My approach would be to..."]
+};
+let suggIdx=0;
+function showSuggestions(){
+  const row=document.getElementById('sugg-row');
+  const pool=SUGGESTIONS[state.mode]||SUGGESTIONS.discussion;
+  const picks=[];
+  const idxs=new Set();
+  while(picks.length<3&&picks.length<pool.length){
+    const i=(suggIdx+picks.length)%pool.length;
+    picks.push(pool[i]);
+  }
+  suggIdx=(suggIdx+3)%pool.length;
+  row.innerHTML=picks.map(s=>`<button class="sugg" onclick="send('${s.replace(/'/g,"\\'")}')"> ${s}</button>`).join('');
+}
+
+// ══ Navigation ══
+// ══ ③ 単語帳 ══
+function loadVocab(){
+  try{ return JSON.parse(localStorage.getItem('ns_vocab')||'[]'); }catch(e){ return []; }
+}
+function saveVocab(list){
+  try{ localStorage.setItem('ns_vocab', JSON.stringify(list)); }catch(e){}
+}
+function updateVocabBadge(){
+  const list = loadVocab();
+  const cnt = document.getElementById('vocab-count');
+  cnt.textContent = list.length;
+  cnt.style.display = list.length > 0 ? 'flex' : 'none';
+}
+function toggleVocabPanel(){
+  const panel = document.getElementById('vocab-panel');
+  const show = !panel.classList.contains('show');
+  panel.classList.toggle('show', show);
+  if(show) renderVocabList();
+}
+function renderVocabList(){
+  const list = loadVocab();
+  const el = document.getElementById('vocab-list');
+  if(list.length === 0){
+    el.innerHTML='<div class="vocab-empty">まだ単語が登録されていません。<br>フィードバック内の語彙を「＋単語帳」で追加してください。</div>';
+    return;
+  }
+  el.innerHTML = list.slice().reverse().map((v,i)=>`
+    <div class="vocab-item">
+      <div style="flex:1">
+        <div class="vocab-word">${v.word}</div>
+        ${v.note?`<div class="vocab-note">${v.note}</div>`:''}
+        <div class="vocab-date">${v.date} · ${v.article||''}</div>
+      </div>
+      <button class="vocab-del" onclick="deleteVocab(${list.length-1-i})" title="削除">×</button>
+    </div>
+  `).join('');
+}
+function deleteVocab(idx){
+  const list = loadVocab();
+  list.splice(idx,1);
+  saveVocab(list);
+  updateVocabBadge();
+  renderVocabList();
+}
+function addVocab(word, note){
+  const list = loadVocab();
+  if(list.some(v=>v.word.toLowerCase()===word.toLowerCase())) return; // 重複チェック
+  list.push({
+    word, note,
+    date: new Date().toLocaleDateString('ja-JP'),
+    article: state.article ? state.article.title.substring(0,40)+'…' : ''
+  });
+  saveVocab(list);
+  updateVocabBadge();
+}
+function promptAddVocab(btn){
+  const word = prompt('単語帳に追加する語彙を入力してください：', btn.dataset.word||'');
+  if(!word) return;
+  const note = prompt('メモ（例：使い方・例文）を入力してください（省略可）：','');
+  addVocab(word.trim(), note||'');
+  btn.textContent='✓ 追加済み';
+  btn.style.opacity='0.5';
+  btn.style.pointerEvents='none';
+}
+
+// ══ Streak & Score History ══
+function loadStreak(){
+  try{ return JSON.parse(localStorage.getItem('ns_streak')||'{"days":0,"last":""}'); }catch(e){ return {days:0,last:''}; }
+}
+function updateStreak(){
+  const today = new Date().toDateString();
+  let s = loadStreak();
+  if(s.last === today) return; // already updated today
+  const yesterday = new Date(Date.now()-86400000).toDateString();
+  s.days = (s.last === yesterday) ? s.days + 1 : 1;
+  s.last = today;
+  try{ localStorage.setItem('ns_streak', JSON.stringify(s)); }catch(e){}
+}
+function loadScoreHistory(){
+  try{ return JSON.parse(localStorage.getItem('ns_score_history')||'[]'); }catch(e){ return []; }
+}
+function saveScoreHistory(score){
+  const history = loadScoreHistory();
+  history.push({ date: new Date().toLocaleDateString('ja-JP'), score });
+  // keep last 20 entries
+  if(history.length > 20) history.splice(0, history.length - 20);
+  try{ localStorage.setItem('ns_score_history', JSON.stringify(history)); }catch(e){}
+}
+function renderStatsBar(){
+  const streak = loadStreak();
+  const history = loadScoreHistory();
+  if(streak.days === 0 && history.length === 0){
+    document.getElementById('stats-bar').style.display = 'none';
+    return;
+  }
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('streak-val').textContent = streak.days;
+  // Sparkline
+  const scores = history.map(h=>h.score);
+  const svg = document.getElementById('sparkline-line');
+  if(scores.length < 2){
+    svg.setAttribute('points','');
+    document.getElementById('sparkline-sub').textContent = scores.length === 1 ? `直近: ${scores[0]}点` : 'まだデータなし';
+  } else {
+    const W=160, H=32, pad=3;
+    const minS=Math.min(...scores), maxS=Math.max(...scores);
+    const range = maxS - minS || 1;
+    const pts = scores.map((s,i)=>{
+      const x = pad + (i/(scores.length-1))*(W-pad*2);
+      const y = H - pad - ((s-minS)/range)*(H-pad*2);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    svg.setAttribute('points', pts);
+    const avg = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+    document.getElementById('sparkline-sub').textContent = `平均 ${avg}点 (${scores.length}回)`;
+  }
+}
+
+// ══ End Session ══
+async function endSession(){
+  if(state.busy) return;
+  if(state.history.length < 2){
+    addMsg('ai','もう少し会話を続けてから終了しましょう！最低2〜3回のやり取りが必要です。');
+    return;
+  }
+  // Show loading
+  loading('スコアを計算中…');
+  document.getElementById('vocab-fab').classList.remove('show');
+  document.getElementById('vocab-panel').classList.remove('show');
+
+  // Build history text for AI evaluation
+  const conv = state.history.slice(-20).map(m=>`${m.role==='user'?'Student':'AI'}: ${m.content}`).join('\n');
+  const prompt = `You are an experienced English speaking coach. Evaluate this English conversation practice session.
+
+Article topic: "${state.article ? state.article.title : 'General discussion'}"
+Mode: ${state.mode}
+
+Conversation:
+${conv}
+
+Provide a JSON response in exactly this format (no markdown, just JSON):
+{
+  "score": <integer 0-100>,
+  "improvements": [
+    "<specific expression or grammar point to improve, with example fix>",
+    "<second improvement>",
+    "<third improvement>"
+  ]
+}
+
+Score based on: fluency (30pts), vocabulary range (30pts), grammar accuracy (20pts), content relevance (20pts).
+Keep improvements concise and actionable in Japanese.`;
+
+  try {
+    if(!sample) sample = await window.claude.use('sample');
+    let raw = '';
+    await sample.streamText(prompt, chunk => { raw += chunk; });
+    // parse JSON
+    const match = raw.match(/\{[\s\S]*\}/);
+    if(!match) throw new Error('no json');
+    const result = JSON.parse(match[0]);
+    const score = Math.min(100, Math.max(0, Math.round(result.score)));
+    const improvements = result.improvements || [];
+
+    // Save stats
+    updateStreak();
+    saveScoreHistory(score);
+
+    loading(null);
+    showSummaryScreen(score, improvements);
+  } catch(e) {
+    loading(null);
+    // fallback: show with estimated score
+    const msgCount = state.history.filter(m=>m.role==='user').length;
+    const estScore = Math.min(90, 40 + msgCount * 8);
+    updateStreak();
+    saveScoreHistory(estScore);
+    showSummaryScreen(estScore, [
+      '発言の最初に "Well," や "Actually," などのフィラーを使って自然につなごう',
+      '意見を述べる際は "I believe that..." より "From my perspective..." で洗練度アップ',
+      '抽象的な表現を避け、具体例（"For instance, in Japan..."）で説得力を高めよう'
+    ]);
+  }
+}
+
+function showSummaryScreen(score, improvements){
+  // Populate summary screen
+  document.getElementById('summary-date').textContent =
+    new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+
+  const num = document.getElementById('score-num');
+  num.textContent = score;
+  const ring = document.getElementById('score-ring');
+  ring.className = 'score-ring ' + (score >= 80 ? 'score-hi' : score >= 55 ? 'score-mid' : 'score-lo');
+
+  const emoji = score >= 80 ? '🏆' : score >= 60 ? '🎉' : score >= 40 ? '💪' : '📚';
+  document.getElementById('summary-emoji').textContent = emoji;
+
+  const list = document.getElementById('improve-list');
+  list.innerHTML = improvements.slice(0,3).map((tip,i)=>`
+    <div class="improve-item">
+      <div class="improve-num">${i+1}</div>
+      <div class="improve-text">${tip}</div>
+    </div>
+  `).join('');
+
+  // Transition to summary screen
+  show('s-session', 's-summary');
+  setStep(3);
+}
+
+function goHome(){
+  show('s-summary','s-cat');
+  document.getElementById('back-btn').classList.remove('show');
+  setStep(1);
+  renderStatsBar();
+  loadYesterdayBanner();
+}
+
+function restartSession(){
+  // Keep same article + mode, restart session
+  const saved = { article: state.article, cat: state.cat, mode: state.mode, level: state.level };
+  state = { cat: saved.cat, mode: saved.mode, level: saved.level, article: saved.article, history: [], busy: false };
+  document.getElementById('chat').innerHTML = '';
+  show('s-summary','s-session');
+  document.getElementById('vocab-fab').classList.add('show');
+  updateVocabBadge();
+  startSession();
+}
+
+function goBack(){
+  document.getElementById('vocab-fab').classList.remove('show');
+  document.getElementById('vocab-panel').classList.remove('show');
+  if(document.getElementById('s-summary').classList.contains('active')){
+    goHome(); return;
+  }
+  if(document.getElementById('s-session').classList.contains('active')){
+    // session → mode screen
+    show('s-session','s-mode');
+    document.getElementById('back-btn').classList.add('show');
+    setStep(2); return;
+  }
+  if(document.getElementById('s-mode').classList.contains('active')){
+    setStep(1);show('s-mode','s-cat');
+    document.getElementById('back-btn').classList.remove('show');
+  }
+}
+function show(from,to){
+  document.getElementById(from).classList.remove('active');
+  document.getElementById(to).classList.add('active');
+}
+function setStep(n){
+  ['d1','d2','d3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.className='dot'+(i+1<n?' done':i+1===n?' on':'');
+  });
+}
+function loading(msg){
+  const l=document.getElementById('loader');
+  if(msg){document.getElementById('load-txt').textContent=msg;l.classList.add('show');}
+  else l.classList.remove('show');
+}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function resize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px';}
+
+// ══ Voice Input (Web Speech API) ══
+let recognition = null;
+let isListening = false;
+let voiceTimerInterval = null;
+let voiceSeconds = 0;
+let interimText = '';
+
+(function initVoice(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const micBtn = document.getElementById('mic-btn');
+  if(!SpeechRecognition){
+    micBtn.classList.add('unsupported');
+    micBtn.title = 'お使いのブラウザは音声入力に非対応です（Chrome推奨）';
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';       // 英語認識
+  recognition.continuous = true;    // 話し続けても認識
+  recognition.interimResults = true; // リアルタイム表示
+
+  recognition.onstart = () => {
+    isListening = true;
+    micBtn.classList.add('listening');
+    document.getElementById('inp').classList.add('recording');
+    document.getElementById('voice-status').classList.add('show');
+    startVoiceTimer();
+  };
+
+  recognition.onresult = (e) => {
+    const inp = document.getElementById('inp');
+    let interim = '';
+    let final = inp.dataset.finalText || '';
+
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      const t = e.results[i][0].transcript;
+      if(e.results[i].isFinal){
+        final += (final ? ' ' : '') + t.trim();
+      } else {
+        interim += t;
+      }
+    }
+    inp.dataset.finalText = final;
+    // 確定テキスト + リアルタイム中間テキストを表示
+    inp.value = final + (interim ? ' ' + interim : '');
+    resize(inp);
+  };
+
+  recognition.onerror = (e) => {
+    if(e.error === 'no-speech') return; // 無音は無視
+    stopVoice();
+    if(e.error === 'not-allowed'){
+      addMsg('ai','⚠️ マイクへのアクセスが拒否されました。ブラウザの設定からマイクを許可してください。');
+    }
+  };
+
+  recognition.onend = () => {
+    // continuous=trueでも接続が切れることがあるので再接続
+    if(isListening) recognition.start();
+  };
+})();
+
+function toggleVoice(){
+  if(document.getElementById('mic-btn').classList.contains('unsupported')) return;
+  if(isListening){ stopVoice(true); } else { startVoice(); }
+}
+
+function startVoice(){
+  if(!recognition) return;
+  const inp = document.getElementById('inp');
+  inp.dataset.finalText = inp.value.trim(); // 既存テキストを保持
+  recognition.start();
+}
+
+function stopVoice(autoSend = false){
+  isListening = false;
+  if(recognition){
+    recognition.onend = null; // 再起動をブロック
+    recognition.stop();
+    // 新しいonendをセット
+    recognition.onend = () => { recognition.onend = null; };
+  }
+  document.getElementById('mic-btn').classList.remove('listening');
+  document.getElementById('inp').classList.remove('recording');
+  document.getElementById('voice-status').classList.remove('show');
+  stopVoiceTimer();
+
+  const inp = document.getElementById('inp');
+  const finalText = (inp.dataset.finalText || inp.value).trim();
+  inp.value = finalText;
+  inp.dataset.finalText = '';
+  resize(inp);
+
+  // 停止後に自動送信
+  if(autoSend && finalText){
+    setTimeout(()=>send(), 150);
+  }
+
+  // recognition.onendを再登録（次回録音のため）
+  if(recognition){
+    recognition.onend = () => {
+      if(isListening) recognition.start();
+    };
+  }
+}
+
+function cancelVoice(){
+  isListening = false;
+  if(recognition){
+    recognition.onend = null;
+    recognition.stop();
+    recognition.onend = () => { if(isListening) recognition.start(); };
+  }
+  document.getElementById('mic-btn').classList.remove('listening');
+  document.getElementById('inp').classList.remove('recording');
+  document.getElementById('voice-status').classList.remove('show');
+  stopVoiceTimer();
+  // テキストをクリアせずキャンセルのみ
+  document.getElementById('inp').dataset.finalText = '';
+}
+
+function startVoiceTimer(){
+  voiceSeconds = 0;
+  updateVoiceTimer();
+  voiceTimerInterval = setInterval(()=>{
+    voiceSeconds++;
+    updateVoiceTimer();
+    // 3分で自動停止
+    if(voiceSeconds >= 180) stopVoice(true);
+  }, 1000);
+}
+function stopVoiceTimer(){
+  clearInterval(voiceTimerInterval);
+  voiceTimerInterval = null;
+  document.getElementById('voice-timer').textContent = '0:00';
+}
+function updateVoiceTimer(){
+  const m = Math.floor(voiceSeconds/60);
+  const s = voiceSeconds % 60;
+  document.getElementById('voice-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+}
+</script>
+
+<!-- 単語帳 FAB -->
+<button class="vocab-fab" id="vocab-fab" onclick="toggleVocabPanel()" title="単語帳">
+  📖<span class="vocab-count" id="vocab-count" style="display:none">0</span>
+</button>
+<!-- 単語帳パネル -->
+<div class="vocab-panel" id="vocab-panel">
+  <div class="vocab-panel-header">
+    <div class="vocab-panel-title">📖 単語帳</div>
+    <button class="vocab-close" onclick="toggleVocabPanel()">×</button>
+  </div>
+  <div id="vocab-list"></div>
+</div>
+
+</body>
+</html>
