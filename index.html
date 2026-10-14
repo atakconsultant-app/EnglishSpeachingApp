@@ -1177,7 +1177,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="mode-icon disc"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ディスカッション</div>
-          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝え����力を養う。</div>
+          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝える力を養う。</div>
           <div class="mode-tag">Discussion</div>
         </div>
       </div>
@@ -1254,7 +1254,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 
   <div class="input-bar">
     <div class="input-col">
-      <textarea id="inp" placeholder="英語で入力、またはマ������話す…" rows="1"
+      <textarea id="inp" placeholder="英語で入力、またはマイクで話す…" rows="1"
         onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
       <div class="voice-status" id="voice-status">
         <div class="voice-pulse"></div>
@@ -1431,7 +1431,7 @@ async function fetchGuardianAll(){
   });
   await Promise.all(promises);
   if(fetched>0){
-    setApiStatus('ok', `Guardian API 接続済み ��� ${fetched}カテゴリ最新記事取得済み ✓`);
+    setApiStatus('ok', `Guardian API 接続済み — ${fetched}カテゴリ最新記事取得済み ✓`);
   } else {
     setApiStatus('err','取得失敗 — APIキーを確認してください');
     guardianApiKey = null;
@@ -1442,23 +1442,23 @@ async function fetchGuardianAll(){
 // ══ Articles DB (with topic + emoji + keywords) ══
 const ARTICLES = {
   主要:[
-    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギ����政策との整合性']},
-    {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。���国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
+    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギー政策との整合性']},
+    {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。各国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
   ],
   国内:[
-    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバ���シティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直��を求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
-    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘���の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
+    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
+    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
-    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸���������際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
   ],
   経済:[
     {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
     {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した。大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
   ],
   エンタメ:[
-    {source:'Variety',emoji:'🎵',topic:'ス��ーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
+    {source:'Variety',emoji:'🎵',topic:'スポーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
     {source:'The Hollywood Reporter',emoji:'🎬',topic:'ビジネス',keywords:['ストリーミング','映画','メディア','Netflix','streaming','content','動画配信','サブスク','subscription','データセンター','クラウド','コンテンツ','OTT'],title:'Streaming Wars Enter New Phase as Studios Merge Content Libraries',summary:'大手スタジオのコンテンツライブラリ統合が進み、ストリーミング戦争が新局面へ。消費者の選択肢が変わる中、クリエイターへの報酬体系の見直しを求める声も上がっている。',points:['コンテンツの多様性','クリエイターエコノミー','日本コンテンツのグローバル展開']}
   ],
   スポーツ:[
@@ -1471,11 +1471,11 @@ const ARTICLES = {
   ],
   科学:[
     {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
-    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科��的発見と商業利用']}
+    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
   ],
   ライフ:[
     {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
-    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らして��る。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
+    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
   ]
 };
 
@@ -1530,7 +1530,7 @@ async function doSearch(val){
       keywords: r.webTitle.toLowerCase().split(/\W+/).filter(w=>w.length>3),
       title: r.webTitle,
       summary: r.fields?.trailText || r.webTitle,
-      points:['記事の背景と���脈','主な論点と影響','あなたの意見は？'],
+      points:['記事の背景と文脈','主な論点と影響','あなたの意見は？'],
       url: r.webUrl,
       live: true,
       _fromApiSearch: true
@@ -1850,7 +1850,7 @@ function renderFeedbackCard(rawText){
   const cleanText=rawText.replace(/(\w[\w\s]+?):\s*\d+\/\d+/g,'').replace(/^\s*[\-\*]\s*/gm,'').trim();
   if(cleanText){
     html+=`<div class="feedback-section">
-      <div class="feedback-section-title">コ���ント</div>
+      <div class="feedback-section-title">コメント</div>
       <div class="feedback-text">${cleanText.replace(/\n/g,'<br>')}</div>
     </div>`;
   }
@@ -1879,7 +1879,7 @@ function toggleHide(btn){
   const msgDiv=btn.closest('.msg');
   const bubble=msgDiv.querySelector('.bubble');
   const hidden=bubble.classList.toggle('hidden');
-  btn.title=hidden?'テキストを表示':'テキス���を隠す';
+  btn.title=hidden?'テキストを表示':'テキストを隠す';
   btn.innerHTML=hidden?
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`:
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
@@ -1906,7 +1906,7 @@ function speakText(btn,text,shadowMode=false){
     ttsActive.classList.remove('speaking');
     ttsActive.title='読み上げる';
   }
-  // シ��ドーイングモード: 再生中は文字を隠す
+  // シャドーイングモード: 再生中は文字を隠す
   if(shadowMode && bubble){
     bubble.classList.add('hidden');
   }
