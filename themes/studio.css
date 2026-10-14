@@ -125,5 +125,56 @@ textarea { border-radius: 16px; }
 .summary-title { color: var(--text); font-weight: 800; letter-spacing: -.6px; }
 .score-ring.score-hi { border-color: var(--accent); }
 
+/* 立体ボタン（B案由来）: 下方向のソリッドシャドウ + 押下で沈み込む */
+.btn-gold, .api-key-btn, .send-btn, .vocab-fab,
+.btn-outline, .action-btn, .sugg, .mic-btn, .end-session-btn, .back-btn,
+.add-vocab-btn, .strip-expand, .voice-cancel, .topic-chip,
+.cat-card, .mode-card, .level-btn {
+  transition: transform .1s ease, box-shadow .1s ease, background .15s ease, border-color .15s ease;
+}
+
+.btn-gold, .api-key-btn, .send-btn, .vocab-fab { box-shadow: 0 4px 0 #000; }
+.btn-gold:hover, .api-key-btn:hover, .send-btn:hover, .vocab-fab:hover { transform: translateY(-1px); box-shadow: 0 5px 0 #000; }
+.btn-gold:disabled { background: var(--surface3); color: var(--text-dim); box-shadow: 0 4px 0 var(--border2); transform: none; opacity: 1; }
+
+.btn-outline, .action-btn, .sugg, .mic-btn, .end-session-btn, .back-btn,
+.add-vocab-btn, .strip-expand, .voice-cancel {
+  border: 1px solid var(--border2); box-shadow: 0 3px 0 var(--border2);
+}
+.btn-outline:hover, .action-btn:hover, .sugg:hover, .mic-btn:hover, .end-session-btn:hover,
+.back-btn:hover, .add-vocab-btn:hover, .strip-expand:hover, .voice-cancel:hover {
+  transform: translateY(-1px); box-shadow: 0 4px 0 var(--border2);
+}
+.action-btn.shadow-mode { box-shadow: 0 3px 0 #2f6bff; }
+.mic-btn.listening { border-color: #f1a7a1; box-shadow: 0 3px 0 #f1a7a1; }
+
+.topic-strip { padding-bottom: 6px; }
+.topic-chip { box-shadow: 0 3px 0 var(--border2); }
+.topic-chip:hover { transform: translateY(-1px); box-shadow: 0 4px 0 var(--border2); }
+.topic-chip.active { background: #111118; color: #fff; box-shadow: 0 3px 0 #000; }
+
+.cat-card, .mode-card, .level-btn { border: 1px solid var(--border2); box-shadow: 0 4px 0 var(--border2); }
+.cat-card:hover, .mode-card:hover, .level-btn:hover { transform: translateY(-2px); border-color: var(--border2); box-shadow: 0 6px 0 var(--border2); }
+.cat-card.selected { border-color: var(--accent); box-shadow: 0 4px 0 var(--accent); }
+.level-btn.selected { border-color: var(--accent); box-shadow: 0 4px 0 var(--accent); }
+.mode-card.selected-disc { box-shadow: 0 4px 0 var(--mode-disc); }
+.mode-card.selected-faci { box-shadow: 0 4px 0 var(--mode-faci); }
+.mode-card.selected-inte { box-shadow: 0 4px 0 var(--mode-inte); }
+
+.btn-gold:active, .api-key-btn:active, .send-btn:active, .vocab-fab:active,
+.btn-outline:active, .action-btn:active, .sugg:active, .mic-btn:active, .end-session-btn:active,
+.back-btn:active, .add-vocab-btn:active, .strip-expand:active, .voice-cancel:active,
+.topic-chip:active, .level-btn:active {
+  transform: translateY(3px); box-shadow: 0 0 0 transparent;
+}
+.cat-card:active, .mode-card:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
+.btn-gold:disabled:active { transform: none; box-shadow: 0 4px 0 var(--border2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-gold, .api-key-btn, .send-btn, .vocab-fab, .btn-outline, .action-btn, .sugg, .mic-btn,
+  .end-session-btn, .back-btn, .add-vocab-btn, .strip-expand, .voice-cancel, .topic-chip,
+  .cat-card, .mode-card, .level-btn { transition: none; }
+}
+
 .theme-switch { background: var(--surface3); border: none; }
 .theme-switch button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(17,17,24,.12); }
