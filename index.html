@@ -267,6 +267,25 @@ header .spacer{flex:1;}
 .cat-card[data-cat="科学"]::before{background:linear-gradient(160deg,rgba(100,180,200,.15) 0%,rgba(0,0,0,.75));}
 .cat-card[data-cat="ライフ"]::before{background:linear-gradient(160deg,rgba(200,120,80,.15) 0%,rgba(0,0,0,.75));}
 
+/* hover-to-play category videos */
+.cat-video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;z-index:0;pointer-events:none;
+  transform:scale(1.001);transition:transform .5s ease;
+}
+.cat-card.has-video:hover .cat-video{transform:scale(1.05);}
+.cat-card.has-video::after{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.68) 100%);
+}
+.cat-card.has-video .cat-bg{display:none;}
+.cat-card.has-video .cat-name{color:#fff;}
+.cat-card.has-video .cat-name-en{color:rgba(255,255,255,.85);}
+.cat-card.has-video .cat-glyph{background:rgba(255,255,255,.92);}
+@media (prefers-reduced-motion:reduce){
+  .cat-video,.cat-card.has-video:hover .cat-video{transition:none;transform:none;}
+}
+
 /* ════════════════════════════════════
    SCREEN 2 — Mode + Level
 ════════════════════════════════════ */
@@ -874,7 +893,8 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <div id="search-results"></div>
 
   <div class="cat-grid" id="cat-grid">
-    <div class="cat-card" data-cat="主要" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="主要" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/top-news.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
@@ -1215,7 +1235,7 @@ const ARTICLES = {
     {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。各国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
   ],
   国内:[
-    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
+    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直��を求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
     {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘���の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
   ],
   国際:[
@@ -2182,6 +2202,22 @@ function updateVoiceTimer(){
   const s = voiceSeconds % 60;
   document.getElementById('voice-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
 }
+
+(function initCategoryVideos(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.cat-card.has-video').forEach(card=>{
+    const video = card.querySelector('.cat-video');
+    if(!video) return;
+    card.addEventListener('mouseenter',()=>{
+      if(reduceMotion) return;
+      video.play().catch(()=>{});
+    });
+    card.addEventListener('mouseleave',()=>{
+      video.pause();
+      video.currentTime = 0.1;
+    });
+  });
+})();
 </script>
 
 <!-- 単語帳 FAB -->
