@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>認証中… — NewSpeak</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;800&display=swap">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#f7f7f9;color:#111118;font-family:'Inter','Noto Sans JP',sans-serif;}
+  .card{width:100%;max-width:420px;background:#fff;border:1px solid #dad8e4;border-radius:20px;box-shadow:0 4px 0 #dad8e4;padding:36px 28px;text-align:center;}
+  .mark{font-weight:800;font-size:20px;letter-spacing:-.6px;margin-bottom:20px;}
+  .mark span{color:#5b4ce6;font-weight:600;}
+  h1{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:8px;}
+  p{color:#5d5c6b;font-size:14px;line-height:1.7;}
+  a.btn{display:inline-flex;margin-top:22px;padding:12px 22px;border-radius:999px;background:#111118;color:#fff;font-weight:600;font-size:14px;text-decoration:none;box-shadow:0 4px 0 #000;}
+  a.btn:active{transform:translateY(3px);box-shadow:none;}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="mark">New<span>Speak</span></div>
+  <h1 id="title">認証を確認しています…</h1>
+  <p id="msg">少々お待ちください。</p>
+  <a class="btn" id="link" href="/" hidden>アプリを開く</a>
+</main>
+<script src="/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/auth-client.js"></script>
+<script>
+(async function () {
+  const title = document.getElementById('title');
+  const msg = document.getElementById('msg');
+  const link = document.getElementById('link');
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  const done = (t, m, label) => { title.textContent = t; msg.textContent = m; link.textContent = label; link.hidden = false; };
+
+  if (params.get('error')) {
+    done('リンクが無効です', 'リンクの有効期限が切れているか、既に使用されています。もう一度お試しください。', 'ログイン画面へ');
+    link.href = '/?auth=login';
+    return;
+  }
+  if (!window.nsSupabase || !code) {
+    done('メールアドレスを確認しました', 'ログイン画面からメールアドレスとパスワードでログインしてください。', 'ログイン画面へ');
+    link.href = '/?auth=login';
+    return;
+  }
+  const { error } = await window.nsSupabase.auth.exchangeCodeForSession(code);
+  if (error) {
+    // Email is confirmed even when the PKCE verifier lives in another browser; ask the user to log in.
+    done('メールアドレスを確認しました', 'この端末ではまだログインしていません。ログイン画面からログインしてください。', 'ログイン画面へ');
+    link.href = '/?auth=login';
+    return;
+  }
+  location.replace('/');
+})();
+</script>
+</body>
+</html>

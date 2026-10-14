@@ -751,6 +751,7 @@ button,input,textarea{font-family:inherit;}
 }
 </style>
 <link id="theme-css" rel="stylesheet" href="themes/studio.css">
+<link rel="stylesheet" href="intro.css">
 <script>
 const THEMES=['studio','playful','gallery'];
 function applyTheme(t){
@@ -763,7 +764,7 @@ function applyTheme(t){
 applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return localStorage.getItem('ns-theme');}catch(e){return null;}})());
 </script>
 </head>
-<body>
+<body class="auth-loading is-guest">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></symbol>
   <symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></symbol>
@@ -818,10 +819,207 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="dot" id="d2"></div>
     <div class="dot" id="d3"></div>
   </div>
+  <div class="hdr-actions guest-only">
+    <button type="button" class="hdr-btn" onclick="openAuth('login')">ログイン</button>
+    <button type="button" class="hdr-btn solid" onclick="openAuth('signup')">無料で始める</button>
+  </div>
+  <div class="hdr-actions authed-only">
+    <button type="button" class="hdr-btn" onclick="signOut()">ログアウト</button>
+  </div>
 </header>
 
+<!-- ════ SCREEN 0 — アプリ紹介 ════ -->
+<main class="screen" id="s-intro" aria-label="NewSpeak の紹介">
+  <section class="intro-section hero">
+    <div class="hero-copy">
+      <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>AI × 最新ニュースで英会話</span>
+      <h1 class="hero-title">ニュースで話す、<br><em>本物の英語力。</em></h1>
+      <p class="hero-sub">毎日の英字ニュースを題材に、AIとディスカッション。読むだけで終わらない、「話せる」英語学習をはじめましょう。</p>
+      <div class="hero-ctas">
+        <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></button>
+        <button type="button" class="ns-btn ghost" onclick="openAuth('login')">ログイン</button>
+      </div>
+      <p class="hero-note">メールアドレスだけで登録できます。クレジットカード不要。</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hv-tile">
+        <video class="intro-auto" src="videos/world.mp4#t=0.1" muted loop playsinline preload="metadata"></video>
+        <div class="hv-bubble"><b>AI COACH</b>What do you think is the biggest impact of this news on daily life?</div>
+        <div class="hv-chip"><span>World</span>国際</div>
+      </div>
+      <div class="hv-tile">
+        <video class="intro-auto" src="videos/technology.mp4#t=0.1" muted loop playsinline preload="metadata"></video>
+        <div class="hv-chip"><span>Tech</span>IT</div>
+      </div>
+      <div class="hv-tile">
+        <video class="intro-auto" src="videos/science.mp4#t=0.1" muted loop playsinline preload="metadata"></video>
+        <div class="hv-chip"><span>Science</span>科学</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="stats-h" style="padding-top:0;border-top:none;">
+    <h2 id="stats-h" class="sr-only">NewSpeak の特長を数字で</h2>
+    <div class="stats-row">
+      <div class="stat-pill"><strong>9</strong><span>ニュースカテゴリー</span></div>
+      <div class="stat-pill"><strong>3</strong><span>練習モード</span></div>
+      <div class="stat-pill"><strong>24h</strong><span>いつでも練習</span></div>
+    </div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="features-h">
+    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg>FEATURES</span>
+    <h2 class="intro-h2" id="features-h">話す力が伸びる、4つの仕組み</h2>
+    <p class="intro-lead">インプットからアウトプットまで、ひとつのアプリで完結します。</p>
+    <div class="feature-grid">
+      <article class="feature-card">
+        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
+        <h3 class="feature-title">毎日届く最新ニュース</h3>
+        <p class="feature-text">The Guardian の最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
+        <h3 class="feature-title">AIとディスカッション</h3>
+        <p class="feature-text">ディスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
+        <h3 class="feature-title">音声入力とシャドーイング</h3>
+        <p class="feature-text">マイクで話して、そのまま回答。シャドーイングで発音とリズムも鍛えられます。</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg></div>
+        <h3 class="feature-title">スコアと単語帳で成長を記録</h3>
+        <p class="feature-text">セッションごとのスコア、連続学習日数、保存した単語をいつでも振り返れます。</p>
+      </article>
+    </div>
+    <div class="steps" aria-label="学習の流れ">
+      <div class="step"><div class="step-num">1</div><div class="step-text">カテゴリーを選ぶ<small>興味のあるニュースから</small></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">モードとレベルを選ぶ<small>初級〜上級まで対応</small></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">AIと英語で話す<small>終了後にフィードバック</small></div></div>
+    </div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="gallery-h">
+    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg>CATEGORIES</span>
+    <h2 class="intro-h2" id="gallery-h">興味のあるテーマから、話そう</h2>
+    <p class="intro-lead">9つのカテゴリーから選べます。カードにカーソルを合わせるとプレビューが再生されます。</p>
+    <div class="cat-grid intro-gallery" id="intro-gallery"></div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="faq-h">
+    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg>FAQ</span>
+    <h2 class="intro-h2" id="faq-h">よくある質問</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>無料で使えますか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>はい。メールアドレスで登録するだけで、すべての練習モードを無料でお使いいただけます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>英語初心者でも大丈夫ですか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>レベルを初級・中級・上級から選べます。初級ではAIがやさしい表現でゆっくり問いかけるので、安心して始められます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>どんなニュースで練習できますか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>主要・国内・国際・経済・エンタメ・スポーツ・IT・科学・ライフの9カテゴリーに加え、キーワード検索で好きなトピックの記事を選べます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>音声で話すには何が必要ですか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>マイク付きの端末と、音声認識に対応したブラウザ（Chrome など）があれば利用できます。キーボード入力でも練習できます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>パスワードを忘れた場合は？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>下のお問い合わせフォームから、登録したメールアドレスを添えてご連絡ください。</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="contact-h">
+    <div class="contact-wrap">
+      <div>
+        <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>CONTACT</span>
+        <h2 class="intro-h2" id="contact-h">お問い合わせ</h2>
+        <p class="intro-lead">ご質問・ご要望・不具合のご報告など、お気軽にお送りください。</p>
+      </div>
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="field">
+          <label for="ct-name">お名前</label>
+          <input id="ct-name" name="name" type="text" maxlength="100" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="ct-email">メールアドレス</label>
+          <input id="ct-email" name="email" type="email" maxlength="254" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="ct-message">お問い合わせ内容</label>
+          <textarea id="ct-message" name="message" maxlength="2000" required></textarea>
+        </div>
+        <div class="form-msg" id="ct-msg" role="status" aria-live="polite"></div>
+        <button type="submit" class="ns-btn primary" id="ct-submit">送信する</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="final-cta" aria-labelledby="final-h">
+    <h2 id="final-h">今日のニュースで、英語を話してみよう。</h2>
+    <p>登録は30秒。すぐに最初のセッションを始められます。</p>
+    <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める</button>
+  </section>
+  <footer class="intro-footer">
+    <span>&copy; 2026 NewSpeak</span>
+    <span>News articles powered by The Guardian Open Platform</span>
+  </footer>
+</main>
+
+<!-- ════ SCREEN 0b — ログイン / 新規登録 ════ -->
+<main class="screen" id="s-auth" aria-label="ログイン">
+  <div class="auth-card">
+    <div id="auth-main">
+      <h1 class="auth-title" id="auth-title">おかえりなさい</h1>
+      <p class="auth-sub" id="auth-sub">ログインして、今日のニュースで練習を続けましょう。</p>
+      <div class="auth-tabs" role="tablist" aria-label="ログイン方法">
+        <button type="button" class="auth-tab" role="tab" id="tab-login" aria-selected="true" onclick="setAuthMode('login')">ログイン</button>
+        <button type="button" class="auth-tab" role="tab" id="tab-signup" aria-selected="false" onclick="setAuthMode('signup')">新規登録</button>
+      </div>
+      <form class="auth-form" id="auth-form" novalidate>
+        <div class="field">
+          <label for="auth-email">メールアドレス</label>
+          <input id="auth-email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="auth-password">パスワード</label>
+          <div class="pw-wrap">
+            <input id="auth-password" type="password" autocomplete="current-password" minlength="8" required>
+            <button type="button" class="pw-toggle" onclick="togglePw(this)" aria-controls="auth-password">表示</button>
+          </div>
+          <span class="field-hint signup-only" hidden>8文字以上で入力してください</span>
+        </div>
+        <div class="field signup-only" hidden>
+          <label for="auth-password2">パスワード（確認）</label>
+          <input id="auth-password2" type="password" autocomplete="new-password" minlength="8">
+        </div>
+        <div class="form-msg" id="auth-msg" role="alert" aria-live="polite"></div>
+        <button type="submit" class="ns-btn primary" id="auth-submit">ログイン</button>
+      </form>
+      <p class="auth-switch" id="auth-switch">アカウントをお持ちでない方は <button type="button" class="link-btn" onclick="setAuthMode('signup')">新規登録</button></p>
+      <ul class="auth-perks signup-only" hidden>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-usercheck"/></svg>メールアドレスだけで無料登録</li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg>9カテゴリーの最新ニュースで練習</li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg>スコアと単語帳で成長を記録</li>
+      </ul>
+    </div>
+    <div class="auth-done" id="auth-done" hidden>
+      <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-usercheck"/></svg></div>
+      <h1 class="auth-title">確認メールを送信しました</h1>
+      <p class="auth-sub">メール内のリンクをクリックして登録を完了してください。完了後、こちらからログインできます。</p>
+      <button type="button" class="ns-btn ghost" style="margin-top:20px;width:100%;" onclick="setAuthMode('login')">ログイン画面へ</button>
+    </div>
+  </div>
+  <button type="button" class="ns-btn ghost auth-back" onclick="openIntro()">紹介ページに戻る</button>
+</main>
+
 <!-- ════ SCREEN 1 — カテゴリー ════ -->
-<div class="screen active" id="s-cat">
+<div class="screen" id="s-cat">
   <div class="cat-hero">
     <div class="cat-hero-title">今日は何を<br><em>学びますか？</em></div>
     <div class="cat-hero-sub">カテゴリーを選ぶか、キーワードで記事を直接検索</div>
@@ -979,7 +1177,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="mode-icon disc"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ディスカッション</div>
-          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝え���力を養う。</div>
+          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝え����力を養う。</div>
           <div class="mode-tag">Discussion</div>
         </div>
       </div>
@@ -1056,7 +1254,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 
   <div class="input-bar">
     <div class="input-col">
-      <textarea id="inp" placeholder="英語で入力、またはマイ����話す…" rows="1"
+      <textarea id="inp" placeholder="英語で入力、またはマ������話す…" rows="1"
         onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
       <div class="voice-status" id="voice-status">
         <div class="voice-pulse"></div>
@@ -1115,6 +1313,9 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 </div><!-- /app -->
 
 <script>applyTheme(document.documentElement.dataset.theme);</script>
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="auth-client.js"></script>
 <div id="loader"><div class="spin"></div><div class="load-text" id="load-txt">記事を選定中…</div></div>
 
 <script>
@@ -1230,7 +1431,7 @@ async function fetchGuardianAll(){
   });
   await Promise.all(promises);
   if(fetched>0){
-    setApiStatus('ok', `Guardian API 接続済み — ${fetched}カテゴリ最新記事取得済み ✓`);
+    setApiStatus('ok', `Guardian API 接続済み ��� ${fetched}カテゴリ最新記事取得済み ✓`);
   } else {
     setApiStatus('err','取得失敗 — APIキーを確認してください');
     guardianApiKey = null;
@@ -2042,6 +2243,7 @@ function goBack(){
   }
 }
 function goTop(){
+  if(document.body.classList.contains('is-guest')){ openIntro(); return; }
   if(isListening && recognition) recognition.stop();
   document.getElementById('vocab-fab').classList.remove('show');
   document.getElementById('vocab-panel').classList.remove('show');
@@ -2212,6 +2414,184 @@ function updateVoiceTimer(){
   const s = voiceSeconds % 60;
   document.getElementById('voice-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
 }
+
+(function buildIntroGallery(){
+  const gallery = document.getElementById('intro-gallery');
+  if(!gallery) return;
+  document.querySelectorAll('#cat-grid .cat-card').forEach(card=>{
+    const clone = card.cloneNode(true);
+    clone.removeAttribute('onclick');
+    clone.classList.remove('selected');
+    clone.setAttribute('role','button');
+    clone.setAttribute('tabindex','0');
+    clone.setAttribute('aria-label', clone.querySelector('.cat-name').textContent + ' のニュースで練習する（無料登録）');
+    clone.addEventListener('click',()=>openAuth('signup'));
+    clone.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openAuth('signup'); } });
+    gallery.appendChild(clone);
+  });
+})();
+
+/* ─── Auth / 紹介画面 ─── */
+const sb = window.nsSupabase;
+let authMode = 'login';
+
+function activateScreen(id){
+  if(isListening && recognition) recognition.stop();
+  document.getElementById('vocab-fab').classList.remove('show');
+  document.getElementById('vocab-panel').classList.remove('show');
+  document.querySelectorAll('.screen.active').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.scrollTop = 0;
+  document.getElementById('back-btn').classList.remove('show');
+}
+function setIntroVideos(play){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('video.intro-auto').forEach(v=>{
+    if(play && !reduceMotion) v.play().catch(()=>{}); else v.pause();
+  });
+}
+function openIntro(){
+  activateScreen('s-intro');
+  setIntroVideos(true);
+}
+function openAuth(mode){
+  setIntroVideos(false);
+  activateScreen('s-auth');
+  setAuthMode(mode || 'login');
+  setTimeout(()=>document.getElementById('auth-email').focus(), 50);
+}
+function setAuthMode(mode){
+  authMode = mode;
+  const isSignup = mode === 'signup';
+  document.getElementById('auth-main').hidden = false;
+  document.getElementById('auth-done').hidden = true;
+  document.getElementById('tab-login').setAttribute('aria-selected', String(!isSignup));
+  document.getElementById('tab-signup').setAttribute('aria-selected', String(isSignup));
+  document.getElementById('auth-title').textContent = isSignup ? 'アカウントを作成' : 'おかえりなさい';
+  document.getElementById('auth-sub').textContent = isSignup
+    ? '無料登録で、最新ニュースを使った英会話練習をすぐに始められます。'
+    : 'ログインして、今日のニュースで練習を続けましょう。';
+  document.getElementById('auth-submit').textContent = isSignup ? '無料で登録する' : 'ログイン';
+  document.getElementById('auth-password').setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
+  document.getElementById('auth-password2').required = isSignup;
+  document.querySelectorAll('#s-auth .signup-only').forEach(el=>el.hidden = !isSignup);
+  document.getElementById('auth-switch').innerHTML = isSignup
+    ? 'すでにアカウントをお持ちの方は <button type="button" class="link-btn" onclick="setAuthMode(\'login\')">ログイン</button>'
+    : 'アカウントをお持ちでない方は <button type="button" class="link-btn" onclick="setAuthMode(\'signup\')">新規登録</button>';
+  showFormMsg('auth-msg', '', '');
+}
+function togglePw(btn){
+  const input = document.getElementById('auth-password');
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  document.getElementById('auth-password2').type = input.type;
+  btn.textContent = show ? '隠す' : '表示';
+}
+function showFormMsg(id, type, text){
+  const el = document.getElementById(id);
+  el.className = 'form-msg' + (text ? ' show ' + type : '');
+  el.textContent = text;
+}
+function authErrorMessage(error){
+  const code = error && error.code;
+  if(error && error.status === 429 || code === 'over_request_rate_limit' || code === 'over_email_send_rate_limit')
+    return '試行回数が多すぎます。しばらく時間をおいてから再度お試しください。';
+  if(code === 'email_not_confirmed') return 'メールアドレスが未確認です。届いた確認メールのリンクをクリックしてから、ログインしてください。';
+  if(code === 'weak_password') return 'パスワードが弱すぎます。8文字以上で、推測されにくいものにしてください。';
+  if(code === 'email_address_invalid') return 'このメールアドレスは使用できません。別のアドレスをお試しください。';
+  if(code === 'invalid_credentials') return 'メールアドレスまたはパスワードが正しくありません。';
+  return '予期しないエラーが発生しました。時間をおいて再度お試しください。';
+}
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+document.getElementById('auth-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const password2 = document.getElementById('auth-password2').value;
+  if(!sb) return showFormMsg('auth-msg','error','認証サービスに接続できません。時間をおいて再度お試しください。');
+  if(!EMAIL_RE.test(email)) return showFormMsg('auth-msg','error','正しいメールアドレスを入力してください。');
+  if(password.length < 8) return showFormMsg('auth-msg','error','パスワードは8文字以上で入力してください。');
+  if(authMode === 'signup' && password !== password2) return showFormMsg('auth-msg','error','確認用パスワードが一致しません。');
+
+  const btn = document.getElementById('auth-submit');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = '処理中…';
+  showFormMsg('auth-msg','','');
+  try{
+    if(authMode === 'signup'){
+      const { data, error } = await sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.nsAuthRedirectUrl } });
+      if(error && error.code !== 'user_already_exists') return showFormMsg('auth-msg','error',authErrorMessage(error));
+      if(data && data.session) return;
+      document.getElementById('auth-main').hidden = true;
+      document.getElementById('auth-done').hidden = false;
+    }else{
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if(error) return showFormMsg('auth-msg','error',authErrorMessage(error));
+    }
+  }catch(err){
+    showFormMsg('auth-msg','error','通信エラーが発生しました。接続を確認してください。');
+  }finally{
+    btn.disabled = false; btn.textContent = label;
+  }
+});
+
+document.getElementById('contact-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const name = document.getElementById('ct-name').value.trim();
+  const email = document.getElementById('ct-email').value.trim();
+  const message = document.getElementById('ct-message').value.trim();
+  if(!name || !message) return showFormMsg('ct-msg','error','お名前とお問い合わせ内容を入力してください。');
+  if(!EMAIL_RE.test(email)) return showFormMsg('ct-msg','error','正しいメールアドレスを入力してください。');
+  if(!sb) return showFormMsg('ct-msg','error','送信できませんでした。時間をおいて再度お試しください。');
+  const btn = document.getElementById('ct-submit');
+  btn.disabled = true; btn.textContent = '送信中…';
+  try{
+    const { error } = await sb.from('contact_messages').insert({ name: name.slice(0,100), email: email.slice(0,254), message: message.slice(0,2000) });
+    if(error) throw error;
+    e.target.reset();
+    showFormMsg('ct-msg','success','送信しました。お問い合わせありがとうございます。');
+  }catch(err){
+    showFormMsg('ct-msg','error','送信できませんでした。時間をおいて再度お試しください。');
+  }finally{
+    btn.disabled = false; btn.textContent = '送信する';
+  }
+});
+
+let currentUserId = null;
+function applySession(session){
+  const userId = session ? session.user.id : null;
+  const changed = userId !== currentUserId || document.body.classList.contains('auth-loading');
+  currentUserId = userId;
+  document.body.classList.toggle('is-authed', !!userId);
+  document.body.classList.toggle('is-guest', !userId);
+  if(!changed) return;
+  if(userId){
+    setIntroVideos(false);
+    goTop();
+  }else{
+    const wantsLogin = new URLSearchParams(location.search).get('auth');
+    if(wantsLogin) openAuth(wantsLogin === 'signup' ? 'signup' : 'login'); else openIntro();
+  }
+  document.body.classList.remove('auth-loading');
+}
+async function signOut(){
+  if(sb) await sb.auth.signOut();
+  applySession(null);
+}
+
+// Runs after the whole script so state declared further down (e.g. recognition) is initialized.
+window.addEventListener('DOMContentLoaded', async function initAuth(){
+  if(!sb){ applySession(null); return; }
+  try{
+    const { data } = await sb.auth.getSession();
+    applySession(data.session);
+  }catch(err){
+    applySession(null);
+  }
+  sb.auth.onAuthStateChange((_event, session)=>{ setTimeout(()=>applySession(session), 0); });
+});
 
 (function initCategoryVideos(){
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
