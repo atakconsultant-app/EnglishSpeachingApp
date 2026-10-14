@@ -903,56 +903,64 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <div class="cat-name-en">Top News</div>
       <div class="cat-name">主要</div>
     </div>
-    <div class="cat-card" data-cat="国内" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="国内" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/domestic.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Domestic</div>
       <div class="cat-name">国内</div>
     </div>
-    <div class="cat-card" data-cat="国際" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="国際" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/world.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">World</div>
       <div class="cat-name">国際</div>
     </div>
-    <div class="cat-card" data-cat="経済" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="経済" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/economy.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Economy</div>
       <div class="cat-name">経済</div>
     </div>
-    <div class="cat-card" data-cat="エンタメ" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="エンタメ" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/entertainment.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Entertainment</div>
       <div class="cat-name">エンタメ</div>
     </div>
-    <div class="cat-card" data-cat="スポーツ" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="スポーツ" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/sports.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Sports</div>
       <div class="cat-name">スポーツ</div>
     </div>
-    <div class="cat-card" data-cat="IT" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="IT" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/technology.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-laptop"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-laptop"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Technology</div>
       <div class="cat-name">IT</div>
     </div>
-    <div class="cat-card" data-cat="科学" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="科学" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/science.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Science</div>
       <div class="cat-name">科学</div>
     </div>
-    <div class="cat-card" data-cat="ライフ" onclick="selectCat(this)">
+    <div class="cat-card has-video" data-cat="ライフ" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/lifestyle.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
