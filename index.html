@@ -49,7 +49,11 @@ header{
 .wordmark{
   font-family:var(--font-serif);font-size:24px;font-weight:600;
   letter-spacing:-.5px;color:var(--accent2);
+  background:none;border:none;padding:0;margin:0;cursor:pointer;line-height:1.2;
+  border-radius:6px;transition:opacity .15s;
 }
+.wordmark:hover{opacity:.75;}
+.wordmark:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}
 .wordmark span{color:var(--text-sub);font-weight:400;font-style:italic;}
 header .spacer{flex:1;}
 .back-btn{
@@ -777,7 +781,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 
 <!-- ─── Header ─── -->
 <header>
-  <div class="wordmark">New<span>Speak</span></div>
+  <button type="button" class="wordmark" onclick="goTop()" aria-label="NewSpeak ホームに戻る">New<span>Speak</span></button>
   <div class="spacer"></div>
   <div class="theme-switch" role="group" aria-label="デザイン案の切り替え">
     <button type="button" data-theme="studio" onclick="applyTheme('studio')">A<span class="ts-label">スタジオ</span></button>
@@ -1212,7 +1216,7 @@ const ARTICLES = {
   ],
   国内:[
     {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
-    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
+    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘���の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
@@ -1295,7 +1299,7 @@ async function doSearch(val){
       keywords: r.webTitle.toLowerCase().split(/\W+/).filter(w=>w.length>3),
       title: r.webTitle,
       summary: r.fields?.trailText || r.webTitle,
-      points:['記事の背景と文脈','主な論点と影響','あなたの意見は？'],
+      points:['記事の背景と���脈','主な論点と影響','あなたの意見は？'],
       url: r.webUrl,
       live: true,
       _fromApiSearch: true
@@ -1671,7 +1675,7 @@ function speakText(btn,text,shadowMode=false){
     ttsActive.classList.remove('speaking');
     ttsActive.title='読み上げる';
   }
-  // シャドーイングモード: 再生中は文字を隠す
+  // シ��ドーイングモード: 再生中は文字を隠す
   if(shadowMode && bubble){
     bubble.classList.add('hidden');
   }
@@ -2006,6 +2010,18 @@ function goBack(){
     setStep(1);show('s-mode','s-cat');
     document.getElementById('back-btn').classList.remove('show');
   }
+}
+function goTop(){
+  if(isListening && recognition) recognition.stop();
+  document.getElementById('vocab-fab').classList.remove('show');
+  document.getElementById('vocab-panel').classList.remove('show');
+  document.querySelectorAll('.screen.active').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-cat').classList.add('active');
+  document.getElementById('back-btn').classList.remove('show');
+  setStep(1);
+  renderStatsBar();
+  loadYesterdayBanner();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 function show(from,to){
   document.getElementById(from).classList.remove('active');
