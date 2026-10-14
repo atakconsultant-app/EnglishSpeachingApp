@@ -281,8 +281,8 @@ header .spacer{flex:1;}
   background:#fff;border-top:1px solid rgba(17,17,24,.08);
   }
   .cat-card.has-video .cat-bg{display:none;}
-  .cat-card.has-video .cat-name{color:#111118;}
-  .cat-card.has-video .cat-name-en{color:var(--accent);}
+  .cat-card.has-video .cat-name{color:#111118;line-height:1.15;}
+  .cat-card.has-video .cat-name-en{color:var(--accent);line-height:1;margin-bottom:1px;}
 .cat-card.has-video .cat-glyph{background:rgba(255,255,255,.92);}
 @media (prefers-reduced-motion:reduce){
   .cat-video,.cat-card.has-video:hover .cat-video{transition:none;transform:none;}
@@ -1233,7 +1233,7 @@ async function fetchGuardianAll(){
 // ══ Articles DB (with topic + emoji + keywords) ══
 const ARTICLES = {
   主要:[
-    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギ���政策との整合性']},
+    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギ����政策との整合性']},
     {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。���国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
   ],
   国内:[
@@ -1242,7 +1242,7 @@ const ARTICLES = {
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
-    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念������際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸���������際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
   ],
   経済:[
     {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
