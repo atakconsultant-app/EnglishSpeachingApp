@@ -920,7 +920,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <div class="cat-name">国際</div>
     </div>
     <div class="cat-card has-video" data-cat="経済" onclick="selectCat(this)">
-      <video class="cat-video" src="videos/economy.mp4#t=0.5" data-start="0.5" muted playsinline preload="metadata" aria-hidden="true"></video>
+      <video class="cat-video" src="videos/economy.mp4#t=0.3" data-start="0.3" muted playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
       <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
@@ -979,7 +979,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="mode-icon disc"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ディスカッション</div>
-          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝え��力を養う。</div>
+          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝え���力を養う。</div>
           <div class="mode-tag">Discussion</div>
         </div>
       </div>
@@ -1056,7 +1056,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 
   <div class="input-bar">
     <div class="input-col">
-      <textarea id="inp" placeholder="英語で入力、またはマイク��話す…" rows="1"
+      <textarea id="inp" placeholder="英語で入力、またはマイ����話す…" rows="1"
         onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
       <div class="voice-status" id="voice-status">
         <div class="voice-pulse"></div>
@@ -1270,7 +1270,7 @@ const ARTICLES = {
   ],
   科学:[
     {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
-    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
+    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科��的発見と商業利用']}
   ],
   ライフ:[
     {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
@@ -1649,7 +1649,7 @@ function renderFeedbackCard(rawText){
   const cleanText=rawText.replace(/(\w[\w\s]+?):\s*\d+\/\d+/g,'').replace(/^\s*[\-\*]\s*/gm,'').trim();
   if(cleanText){
     html+=`<div class="feedback-section">
-      <div class="feedback-section-title">コメント</div>
+      <div class="feedback-section-title">コ���ント</div>
       <div class="feedback-text">${cleanText.replace(/\n/g,'<br>')}</div>
     </div>`;
   }
