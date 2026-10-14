@@ -24,12 +24,17 @@
   --mode-faci: #7b6cf0;
   --mode-inte: #4fb8a0;
   --score-hi: #c8a96e;
+  --grad: linear-gradient(135deg,#c8a96e,#e0ba78);
+  --on-accent: #0a0808;
+  --overlay: rgba(9,9,15,.88);
+  --font-sans: 'DM Sans',sans-serif;
+  --font-serif: 'EB Garamond',serif;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top,0px);
   padding-bottom: env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
 
 /* ─── App shell ─── */
 #app{display:flex;flex-direction:column;height:100vh;max-width:860px;margin:0 auto;}
@@ -42,9 +47,13 @@ header{
   background:var(--bg);flex-shrink:0;
 }
 .wordmark{
-  font-family:'EB Garamond',serif;font-size:24px;font-weight:600;
+  font-family:var(--font-serif);font-size:24px;font-weight:600;
   letter-spacing:-.5px;color:var(--accent2);
+  background:none;border:none;padding:0;margin:0;cursor:pointer;line-height:1.2;
+  border-radius:6px;transition:opacity .15s;
 }
+.wordmark:hover{opacity:.75;}
+.wordmark:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}
 .wordmark span{color:var(--text-sub);font-weight:400;font-style:italic;}
 header .spacer{flex:1;}
 .back-btn{
@@ -74,7 +83,7 @@ header .spacer{flex:1;}
   border-bottom:1px solid var(--border);
 }
 .cat-hero-title{
-  font-family:'EB Garamond',serif;
+  font-family:var(--font-serif);
   font-size:32px;font-weight:600;line-height:1.2;
   color:var(--text);letter-spacing:-.5px;
 }
@@ -93,7 +102,7 @@ header .spacer{flex:1;}
   width:100%;padding:11px 14px 11px 40px;
   border-radius:10px;border:1.5px solid var(--border2);
   background:var(--surface2);color:var(--text);
-  font-size:14px;font-family:'DM Sans',sans-serif;
+  font-size:14px;font-family:var(--font-sans);
   outline:none;transition:border-color .18s;
 }
 #cat-search:focus{border-color:var(--accent);}
@@ -187,8 +196,8 @@ header .spacer{flex:1;}
 .api-key-input::placeholder{color:var(--text-dim);}
 .api-key-btn{
   padding:8px 14px;border-radius:8px;border:none;
-  background:linear-gradient(135deg,#c8a96e,#e0ba78);
-  color:#0a0808;font-size:12px;font-weight:700;
+  background:var(--grad);
+  color:var(--on-accent);font-size:12px;font-weight:700;
   cursor:pointer;white-space:nowrap;transition:opacity .15s;flex-shrink:0;
 }
 .api-key-btn:hover{opacity:.85;}
@@ -258,6 +267,27 @@ header .spacer{flex:1;}
 .cat-card[data-cat="科学"]::before{background:linear-gradient(160deg,rgba(100,180,200,.15) 0%,rgba(0,0,0,.75));}
 .cat-card[data-cat="ライフ"]::before{background:linear-gradient(160deg,rgba(200,120,80,.15) 0%,rgba(0,0,0,.75));}
 
+/* hover-to-play category videos */
+.cat-video{
+  position:absolute;top:0;left:0;width:100%;height:calc(100% - var(--cat-label-h));
+  object-fit:cover;z-index:0;pointer-events:none;
+  transform:scale(1.001);transform-origin:center top;transition:transform .5s ease;
+  }
+  .cat-card.has-video{--cat-label-h:57px;}
+  .cat-card.has-video:hover .cat-video{transform:scale(1.05);}
+  .cat-card.has-video::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:var(--cat-label-h);
+  z-index:0;pointer-events:none;
+  background:#fff;border-top:1px solid rgba(17,17,24,.08);
+  }
+  .cat-card.has-video .cat-bg{display:none;}
+  .cat-card.has-video .cat-name{color:#111118;line-height:1.15;}
+  .cat-card.has-video .cat-name-en{color:var(--accent);line-height:1;margin-bottom:1px;}
+.cat-card.has-video .cat-glyph{background:rgba(255,255,255,.92);}
+@media (prefers-reduced-motion:reduce){
+  .cat-video,.cat-card.has-video:hover .cat-video{transition:none;transform:none;}
+}
+
 /* ════════════════════════════════════
    SCREEN 2 — Mode + Level
 ════════════════════════════════════ */
@@ -313,8 +343,8 @@ header .spacer{flex:1;}
 .cta-wrap{padding:20px 28px 28px;}
 .btn-gold{
   width:100%;padding:15px;border-radius:12px;border:none;
-  background:linear-gradient(135deg,#c8a96e,#e0ba78);
-  color:#0a0808;font-size:15px;font-weight:700;
+  background:var(--grad);
+  color:var(--on-accent);font-size:15px;font-weight:700;
   cursor:pointer;transition:opacity .18s;letter-spacing:.2px;
 }
 .btn-gold:hover{opacity:.88;}
@@ -342,7 +372,7 @@ header .spacer{flex:1;}
 .badge-disc{background:rgba(91,138,240,.18);color:#7aaaf5;}
 .badge-faci{background:rgba(123,108,240,.18);color:#a99cf5;}
 .badge-inte{background:rgba(79,184,160,.18);color:#6ed4be;}
-.strip-title{font-family:'EB Garamond',serif;font-size:17px;font-weight:600;line-height:1.35;color:var(--text);}
+.strip-title{font-family:var(--font-serif);font-size:17px;font-weight:600;line-height:1.35;color:var(--text);}
 .strip-expand{
   display:flex;align-items:center;gap:4px;margin-top:6px;
   font-size:12px;color:var(--text-dim);cursor:pointer;width:fit-content;
@@ -405,8 +435,8 @@ header .spacer{flex:1;}
 .vocab-fab{
   position:fixed;bottom:90px;right:20px;
   width:46px;height:46px;border-radius:50%;
-  border:none;background:linear-gradient(135deg,#c8a96e,#e0ba78);
-  color:#0a0808;font-size:20px;cursor:pointer;
+  border:none;background:var(--grad);
+  color:var(--on-accent);font-size:20px;cursor:pointer;
   box-shadow:0 4px 16px rgba(200,169,110,0.4);
   display:none;align-items:center;justify-content:center;
   z-index:100;transition:transform .15s;
@@ -431,7 +461,7 @@ header .spacer{flex:1;}
 }
 .vocab-panel.show{display:flex;}
 .vocab-panel-header{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
-.vocab-panel-title{font-family:"EB Garamond",serif;font-size:20px;font-weight:600;color:var(--accent2);flex:1;}
+.vocab-panel-title{font-family:var(--font-serif);font-size:20px;font-weight:600;color:var(--accent2);flex:1;}
 .vocab-close{background:none;border:none;color:var(--text-dim);font-size:22px;cursor:pointer;padding:0 4px;}
 .vocab-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);}
 .vocab-word{font-size:15px;font-weight:600;color:var(--accent2);flex:1;}
@@ -457,7 +487,7 @@ header .spacer{flex:1;}
 .feedback-title{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
 .score-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
 .score-item{flex:1;min-width:90px;text-align:center;padding:10px 8px;background:var(--surface2);border-radius:10px;}
-.score-num{font-family:'EB Garamond',serif;font-size:28px;font-weight:600;color:var(--accent2);}
+.score-num{font-family:var(--font-serif);font-size:28px;font-weight:600;color:var(--accent2);}
 .score-max{font-size:11px;color:var(--text-dim);}
 .score-label{font-size:11px;color:var(--text-sub);margin-top:3px;}
 .bar-wrap{margin-bottom:8px;}
@@ -498,7 +528,7 @@ header .spacer{flex:1;}
 textarea{
   width:100%;padding:11px 14px;border-radius:10px;
   border:1.5px solid var(--border2);background:var(--surface2);
-  color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;
+  color:var(--text);font-size:14px;font-family:var(--font-sans);
   resize:none;outline:none;max-height:110px;min-height:44px;
   line-height:1.5;transition:border-color .18s;
 }
@@ -535,7 +565,7 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
   0%,100%{height:4px;}
   50%{height:14px;}
 }
-.voice-timer{font-family:'EB Garamond',serif;font-size:13px;color:#e05555;min-width:32px;}
+.voice-timer{font-family:var(--font-serif);font-size:13px;color:#e05555;min-width:32px;}
 .voice-cancel{
   margin-left:auto;font-size:11px;color:var(--text-dim);
   background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:6px;
@@ -567,13 +597,13 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 .mic-btn.unsupported{opacity:.3;cursor:not-allowed;}
 .send-btn{
   width:44px;height:44px;border-radius:10px;flex-shrink:0;
-  background:linear-gradient(135deg,#c8a96e,#e0ba78);
+  background:var(--grad);
   border:none;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
   transition:opacity .15s;
 }
 .send-btn:hover{opacity:.85;}
-.send-btn svg{width:18px;height:18px;fill:#0a0808;}
+.send-btn svg{width:18px;height:18px;fill:var(--on-accent);}
 
 /* ─── End session button ─── */
 .end-session-btn{
@@ -592,7 +622,7 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 .summary-wrap{padding:28px;max-width:600px;margin:0 auto;width:100%;}
 .summary-header{margin-bottom:28px;text-align:center;}
 .summary-emoji{font-size:48px;margin-bottom:12px;}
-.summary-title{font-family:'EB Garamond',serif;font-size:26px;font-weight:600;color:var(--accent2);margin-bottom:4px;}
+.summary-title{font-family:var(--font-serif);font-size:26px;font-weight:600;color:var(--accent2);margin-bottom:4px;}
 .summary-sub{font-size:13px;color:var(--text-sub);}
 .score-ring-wrap{display:flex;justify-content:center;margin:20px 0;}
 .score-ring{
@@ -604,7 +634,7 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 .score-ring.score-hi{border-color:var(--accent);}
 .score-ring.score-mid{border-color:#5b8af0;}
 .score-ring.score-lo{border-color:#6b7280;}
-.score-num{font-family:'EB Garamond',serif;font-size:36px;font-weight:600;color:var(--text);line-height:1;}
+.score-num{font-family:var(--font-serif);font-size:36px;font-weight:600;color:var(--text);line-height:1;}
 .score-label{font-size:11px;color:var(--text-sub);margin-top:2px;}
 .summary-section{margin-bottom:20px;}
 .summary-section-title{
@@ -645,7 +675,7 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
   display:flex;flex-direction:column;gap:4px;
 }
 .stat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);}
-.stat-value{font-family:'EB Garamond',serif;font-size:26px;font-weight:600;color:var(--accent2);line-height:1;}
+.stat-value{font-family:var(--font-serif);font-size:26px;font-weight:600;color:var(--accent2);line-height:1;}
 .stat-sub{font-size:11px;color:var(--text-sub);}
 .sparkline-wrap{margin-top:6px;}
 .sparkline-svg{width:100%;height:32px;display:block;}
@@ -653,7 +683,7 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 /* Overlay loader */
 #loader{
   display:none;position:fixed;inset:0;
-  background:rgba(9,9,15,.88);backdrop-filter:blur(8px);
+  background:var(--overlay);backdrop-filter:blur(8px);
   z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:16px;
 }
 #loader.show{display:flex;}
@@ -661,8 +691,46 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 @keyframes rot{to{transform:rotate(360deg);}}
 .load-text{font-size:13px;color:var(--text-sub);}
 
+button,input,textarea{font-family:inherit;}
+.api-key-input{font-family:ui-monospace,SFMono-Regular,Menlo,monospace,var(--font-sans);}
+.api-key-input::placeholder{font-family:var(--font-sans);}
+
+/* ─── Line icons ─── */
+.ic{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;display:inline-block;vertical-align:-0.15em;}
+.topic-chip{display:inline-flex;align-items:center;gap:6px;}
+.topic-chip .ic{width:14px;height:14px;}
+.stat-label{display:flex;align-items:center;gap:6px;}
+.stat-label .ic{width:13px;height:13px;color:var(--accent);}
+.cat-glyph{color:var(--accent);line-height:0;}
+.cat-bg{color:var(--accent);}
+.mode-icon .ic{width:22px;height:22px;}
+.mode-icon.disc{color:var(--mode-disc);}
+.mode-icon.faci{color:var(--mode-faci);}
+.mode-icon.inte{color:var(--mode-inte);}
+.level-flag{color:var(--accent);line-height:0;}
+.level-flag .ic{width:20px;height:20px;}
+.yesterday-icon,.api-banner-icon{color:var(--accent);line-height:0;}
+.yesterday-arrow{line-height:0;}
+.av{color:var(--text-sub);}
+.msg.ai .av{color:var(--accent);}
+.av .ic{width:15px;height:15px;}
+.result-icon{color:var(--accent);line-height:0;}
+.result-icon .ic{width:22px;height:22px;}
+.summary-emoji{color:var(--accent);line-height:0;}
+.feedback-title,.feedback-section-title,.vocab-panel-title{display:flex;align-items:center;gap:8px;}
+.vocab-panel-title .ic{width:20px;height:20px;}
+.vocab-fab .ic{width:20px;height:20px;}
+
+/* ─── Design switcher ─── */
+.theme-switch{display:flex;gap:2px;padding:3px;border-radius:999px;border:1px solid var(--border2);background:var(--surface);}
+.theme-switch button{border:none;background:none;color:var(--text-sub);font:500 11px/1 var(--font-sans);padding:7px 11px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.theme-switch button:hover{color:var(--text);}
+.theme-switch button[aria-pressed="true"]{background:var(--accent-dim);color:var(--accent);font-weight:700;}
+.theme-switch .ts-label{margin-left:4px;}
+
 /* Responsive */
 @media(max-width:600px){
+  .theme-switch .ts-label{display:none;}
   header{padding:12px 16px;}
   .cat-hero{padding:20px 16px 14px;}
   .cat-hero-title{font-size:24px;}
@@ -682,14 +750,66 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
   .score-row{gap:6px;}
 }
 </style>
+<link id="theme-css" rel="stylesheet" href="themes/studio.css">
+<link rel="stylesheet" href="intro.css">
+<script>
+const THEMES=['studio','playful','gallery'];
+function applyTheme(t){
+  if(!THEMES.includes(t)) t='studio';
+  document.documentElement.dataset.theme=t;
+  document.getElementById('theme-css').href='themes/'+t+'.css';
+  try{localStorage.setItem('ns-theme',t);}catch(e){}
+  document.querySelectorAll('.theme-switch button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===t)));
+}
+applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return localStorage.getItem('ns-theme');}catch(e){return null;}})());
+</script>
 </head>
-<body>
+<body class="auth-loading is-guest">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M22 7l-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.5"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.7V17c0 .6-.5 1-1 1.2C7.9 18.8 7 20.2 7 22M14 14.7V17c0 .6.5 1 1 1.2 1.1.6 2 2 2 3.8M18 2H6v7a6 6 0 0 0 12 0V2z"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6.5L4.6 18.4A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.4-2.6L14 9.5V3M7 15h10"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M18 17V9M13 17V5M8 17v-3"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/></symbol>
+  <symbol id="i-usercheck" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 11l2 2 4-4"/></symbol>
+  <symbol id="i-sig1" viewBox="0 0 24 24"><path d="M5 20v-4"/><path d="M12 20v-9M19 20V6" stroke-opacity=".25"/></symbol>
+  <symbol id="i-sig2" viewBox="0 0 24 24"><path d="M5 20v-4M12 20v-9"/><path d="M19 20V6" stroke-opacity=".25"/></symbol>
+  <symbol id="i-sig3" viewBox="0 0 24 24"><path d="M5 20v-4M12 20v-9M19 20V6"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13L17 22l-5-3-5 3 1.5-9"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.8 1.2 6.9-6.2-3.2L5.8 21 7 14.1 2 9.3l6.9-1z"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M15.1 14c.2-1 .7-1.7 1.4-2.5A6 6 0 1 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
+</svg>
 <div id="app">
 
 <!-- ─── Header ─── -->
 <header>
-  <div class="wordmark">New<span>Speak</span></div>
+  <button type="button" class="wordmark" onclick="goTop()" aria-label="NewSpeak ホームに戻る">New<span>Speak</span></button>
   <div class="spacer"></div>
+  <div class="theme-switch" role="group" aria-label="デザイン案の切り替え">
+    <button type="button" data-theme="studio" onclick="applyTheme('studio')">A<span class="ts-label">スタジオ</span></button>
+    <button type="button" data-theme="playful" onclick="applyTheme('playful')">B<span class="ts-label">プレイフル</span></button>
+    <button type="button" data-theme="gallery" onclick="applyTheme('gallery')">C<span class="ts-label">ギャラリー</span></button>
+  </div>
   <button class="back-btn" id="back-btn" onclick="goBack()">
     <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
     戻る
@@ -699,10 +819,207 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
     <div class="dot" id="d2"></div>
     <div class="dot" id="d3"></div>
   </div>
+  <div class="hdr-actions guest-only">
+    <button type="button" class="hdr-btn" onclick="openAuth('login')">ログイン</button>
+    <button type="button" class="hdr-btn solid" onclick="openAuth('signup')">無料で始める</button>
+  </div>
+  <div class="hdr-actions authed-only">
+    <button type="button" class="hdr-btn" onclick="signOut()">ログアウト</button>
+  </div>
 </header>
 
+<!-- ════ SCREEN 0 — アプリ紹介 ════ -->
+<main class="screen" id="s-intro" aria-label="NewSpeak の紹介">
+  <section class="intro-section hero">
+    <div class="hero-copy">
+      <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>AI × 最新ニュースで英会話</span>
+      <h1 class="hero-title">ニュースで話す、<br><em>本物の英語力。</em></h1>
+      <p class="hero-sub">毎日の英字ニュースを題材に、AIとディスカッション。読むだけで終わらない、「話せる」英語学習をはじめましょう。</p>
+      <div class="hero-ctas">
+        <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></button>
+        <button type="button" class="ns-btn ghost" onclick="openAuth('login')">ログイン</button>
+      </div>
+      <p class="hero-note">メールアドレスだけで登録できます。クレジットカード不要。</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hv-tile">
+        <video class="intro-auto" src="videos/world.mp4#t=0.1" muted loop playsinline preload="metadata"></video>
+        <div class="hv-bubble"><b>AI COACH</b>What do you think is the biggest impact of this news on daily life?</div>
+        <div class="hv-chip"><span>World</span>国際</div>
+      </div>
+      <div class="hv-tile">
+        <video class="intro-auto" src="videos/technology.mp4#t=0.1" muted loop playsinline preload="metadata"></video>
+        <div class="hv-chip"><span>Tech</span>IT</div>
+      </div>
+      <div class="hv-tile">
+        <video class="intro-auto" src="videos/science.mp4#t=0.1" muted loop playsinline preload="metadata"></video>
+        <div class="hv-chip"><span>Science</span>科学</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="stats-h" style="padding-top:0;border-top:none;">
+    <h2 id="stats-h" class="sr-only">NewSpeak の特長を数字で</h2>
+    <div class="stats-row">
+      <div class="stat-pill"><strong>9</strong><span>ニュースカテゴリー</span></div>
+      <div class="stat-pill"><strong>3</strong><span>練習モード</span></div>
+      <div class="stat-pill"><strong>24h</strong><span>いつでも練習</span></div>
+    </div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="features-h">
+    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg>FEATURES</span>
+    <h2 class="intro-h2" id="features-h">話す力が伸びる、4つの仕組み</h2>
+    <p class="intro-lead">インプットからアウトプットまで、ひとつのアプリで完結します。</p>
+    <div class="feature-grid">
+      <article class="feature-card">
+        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
+        <h3 class="feature-title">毎日届く最新ニュース</h3>
+        <p class="feature-text">The Guardian の最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
+        <h3 class="feature-title">AIとディスカッション</h3>
+        <p class="feature-text">ディスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
+        <h3 class="feature-title">音声入力とシャドーイング</h3>
+        <p class="feature-text">マイクで話して、そのまま回答。シャドーイングで発音とリズムも鍛えられます。</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg></div>
+        <h3 class="feature-title">スコアと単語帳で成長を記録</h3>
+        <p class="feature-text">セッションごとのスコア、連続学習日数、保存した単語をいつでも振り返れます。</p>
+      </article>
+    </div>
+    <div class="steps" aria-label="学習の流れ">
+      <div class="step"><div class="step-num">1</div><div class="step-text">カテゴリーを選ぶ<small>興味のあるニュースから</small></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">モードとレベルを選ぶ<small>初級〜上級まで対応</small></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">AIと英語で話す<small>終了後にフィードバック</small></div></div>
+    </div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="gallery-h">
+    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg>CATEGORIES</span>
+    <h2 class="intro-h2" id="gallery-h">興味のあるテーマから、話そう</h2>
+    <p class="intro-lead">9つのカテゴリーから選べます。カードにカーソルを合わせるとプレビューが再生されます。</p>
+    <div class="cat-grid intro-gallery" id="intro-gallery"></div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="faq-h">
+    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg>FAQ</span>
+    <h2 class="intro-h2" id="faq-h">よくある質問</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>無料で使えますか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>はい。メールアドレスで登録するだけで、すべての練習モードを無料でお使いいただけます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>英語初心者でも大丈夫ですか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>レベルを初級・中級・上級から選べます。初級ではAIがやさしい表現でゆっくり問いかけるので、安心して始められます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>どんなニュースで練習できますか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>主要・国内・国際・経済・エンタメ・スポーツ・IT・科学・ライフの9カテゴリーに加え、キーワード検索で好きなトピックの記事を選べます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>音声で話すには何が必要ですか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>マイク付きの端末と、音声認識に対応したブラウザ（Chrome など）があれば利用できます。キーボード入力でも練習できます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>パスワードを忘れた場合は？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <p>下のお問い合わせフォームから、登録したメールアドレスを添えてご連絡ください。</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="intro-section" aria-labelledby="contact-h">
+    <div class="contact-wrap">
+      <div>
+        <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>CONTACT</span>
+        <h2 class="intro-h2" id="contact-h">お問い合わせ</h2>
+        <p class="intro-lead">ご質問・ご要望・不具合のご報告など、お気軽にお送りください。</p>
+      </div>
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="field">
+          <label for="ct-name">お名前</label>
+          <input id="ct-name" name="name" type="text" maxlength="100" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="ct-email">メールアドレス</label>
+          <input id="ct-email" name="email" type="email" maxlength="254" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="ct-message">お問い合わせ内容</label>
+          <textarea id="ct-message" name="message" maxlength="2000" required></textarea>
+        </div>
+        <div class="form-msg" id="ct-msg" role="status" aria-live="polite"></div>
+        <button type="submit" class="ns-btn primary" id="ct-submit">送信する</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="final-cta" aria-labelledby="final-h">
+    <h2 id="final-h">今日のニュースで、英語を話してみよう。</h2>
+    <p>登録は30秒。すぐに最初のセッションを始められます。</p>
+    <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める</button>
+  </section>
+  <footer class="intro-footer">
+    <span>&copy; 2026 NewSpeak</span>
+    <span>News articles powered by The Guardian Open Platform</span>
+  </footer>
+</main>
+
+<!-- ════ SCREEN 0b — ログイン / 新規登録 ════ -->
+<main class="screen" id="s-auth" aria-label="ログイン">
+  <div class="auth-card">
+    <div id="auth-main">
+      <h1 class="auth-title" id="auth-title">おかえりなさい</h1>
+      <p class="auth-sub" id="auth-sub">ログインして、今日のニュースで練習を続けましょう。</p>
+      <div class="auth-tabs" role="tablist" aria-label="ログイン方法">
+        <button type="button" class="auth-tab" role="tab" id="tab-login" aria-selected="true" onclick="setAuthMode('login')">ログイン</button>
+        <button type="button" class="auth-tab" role="tab" id="tab-signup" aria-selected="false" onclick="setAuthMode('signup')">新規登録</button>
+      </div>
+      <form class="auth-form" id="auth-form" novalidate>
+        <div class="field">
+          <label for="auth-email">メールアドレス</label>
+          <input id="auth-email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="auth-password">パスワード</label>
+          <div class="pw-wrap">
+            <input id="auth-password" type="password" autocomplete="current-password" minlength="8" required>
+            <button type="button" class="pw-toggle" onclick="togglePw(this)" aria-controls="auth-password">表示</button>
+          </div>
+          <span class="field-hint signup-only" hidden>8文字以上で入力してください</span>
+        </div>
+        <div class="field signup-only" hidden>
+          <label for="auth-password2">パスワード（確認）</label>
+          <input id="auth-password2" type="password" autocomplete="new-password" minlength="8">
+        </div>
+        <div class="form-msg" id="auth-msg" role="alert" aria-live="polite"></div>
+        <button type="submit" class="ns-btn primary" id="auth-submit">ログイン</button>
+      </form>
+      <p class="auth-switch" id="auth-switch">アカウントをお持ちでない方は <button type="button" class="link-btn" onclick="setAuthMode('signup')">新規登録</button></p>
+      <ul class="auth-perks signup-only" hidden>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-usercheck"/></svg>メールアドレスだけで無料登録</li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg>9カテゴリーの最新ニュースで練習</li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg>スコアと単語帳で成長を記録</li>
+      </ul>
+    </div>
+    <div class="auth-done" id="auth-done" hidden>
+      <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-usercheck"/></svg></div>
+      <h1 class="auth-title">確認メールを送信しました</h1>
+      <p class="auth-sub">メール内のリンクをクリックして登録を完了してください。完了後、こちらからログインできます。</p>
+      <button type="button" class="ns-btn ghost" style="margin-top:20px;width:100%;" onclick="setAuthMode('login')">ログイン画面へ</button>
+    </div>
+  </div>
+  <button type="button" class="ns-btn ghost auth-back" onclick="openIntro()">紹介ページに戻る</button>
+</main>
+
 <!-- ════ SCREEN 1 — カテゴリー ════ -->
-<div class="screen active" id="s-cat">
+<div class="screen" id="s-cat">
   <div class="cat-hero">
     <div class="cat-hero-title">今日は何を<br><em>学びますか？</em></div>
     <div class="cat-hero-sub">カテゴリーを選ぶか、キーワードで記事を直接検索</div>
@@ -716,25 +1033,25 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
   <!-- Topic chips -->
   <div class="topic-strip" id="topic-strip">
     <div class="topic-chip active" data-topic="all" onclick="filterTopic(this)">すべて</div>
-    <div class="topic-chip" data-topic="AI・テック" onclick="filterTopic(this)">🤖 AI・テック</div>
-    <div class="topic-chip" data-topic="地政学" onclick="filterTopic(this)">🌍 地政学</div>
-    <div class="topic-chip" data-topic="経済・投資" onclick="filterTopic(this)">📈 経済・投資</div>
-    <div class="topic-chip" data-topic="社会・労働" onclick="filterTopic(this)">👥 社会・労働</div>
-    <div class="topic-chip" data-topic="環境・科学" onclick="filterTopic(this)">🌱 環境・科学</div>
-    <div class="topic-chip" data-topic="スポーツ・文化" onclick="filterTopic(this)">🏆 スポーツ・文化</div>
-    <div class="topic-chip" data-topic="ビジネス" onclick="filterTopic(this)">💼 ビジネス</div>
-    <div class="topic-chip" data-topic="医療・健康" onclick="filterTopic(this)">🏥 医療・健康</div>
+    <div class="topic-chip" data-topic="AI・テック" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-cpu"/></svg>AI・テック</div>
+    <div class="topic-chip" data-topic="地政学" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>地政学</div>
+    <div class="topic-chip" data-topic="経済・投資" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg>経済・投資</div>
+    <div class="topic-chip" data-topic="社会・労働" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>社会・労働</div>
+    <div class="topic-chip" data-topic="環境・科学" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg>環境・科学</div>
+    <div class="topic-chip" data-topic="スポーツ・文化" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg>スポーツ・文化</div>
+    <div class="topic-chip" data-topic="ビジネス" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-briefcase"/></svg>ビジネス</div>
+    <div class="topic-chip" data-topic="医療・健康" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-pulse"/></svg>医療・健康</div>
   </div>
 
   <!-- Stats bar (streak + score history) -->
   <div class="stats-bar" id="stats-bar" style="display:none;padding:0 28px 14px;">
     <div class="stat-card">
-      <div class="stat-label">🔥 連続学習</div>
+      <div class="stat-label"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg>連続学習</div>
       <div class="stat-value" id="streak-val">0</div>
       <div class="stat-sub">日連続</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">📊 スコア推移</div>
+      <div class="stat-label"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg>スコア推移</div>
       <div class="sparkline-wrap">
         <svg class="sparkline-svg" id="sparkline-svg" viewBox="0 0 160 32" preserveAspectRatio="none">
           <polyline id="sparkline-line" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points=""/>
@@ -746,18 +1063,18 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 
   <!-- Yesterday article banner -->
   <div class="yesterday-banner" id="yesterday-banner" onclick="useYesterdayArticle()">
-    <div class="yesterday-icon">🔁</div>
+    <div class="yesterday-icon"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg></div>
     <div class="yesterday-body">
       <div class="yesterday-title">昨日の記事でもう一度練習しますか？</div>
       <div class="yesterday-article" id="yesterday-title"></div>
       <div class="yesterday-meta" id="yesterday-meta"></div>
     </div>
-    <div class="yesterday-arrow">›</div>
+    <div class="yesterday-arrow"><svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></div>
   </div>
 
   <!-- Guardian API banner -->
   <div class="api-banner" id="api-banner">
-    <div class="api-banner-icon">🔑</div>
+    <div class="api-banner-icon"><svg class="ic" aria-hidden="true"><use href="#i-key"/></svg></div>
     <div class="api-banner-body">
       <div class="api-banner-title">Guardian API で最新ニュースを取得</div>
       <div class="api-banner-sub">APIキーを入力すると毎日最新の英語記事で練習できます。<br>取得先: <strong>open-platform.theguardian.com</strong></div>
@@ -776,65 +1093,74 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
   <div id="search-results"></div>
 
   <div class="cat-grid" id="cat-grid">
-    <div class="cat-card" data-cat="主要" onclick="selectCat(this)">
-      <div class="cat-bg">📰</div>
-      <div class="cat-glyph">📰</div>
+    <div class="cat-card has-video" data-cat="主要" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/top-news.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Top News</div>
       <div class="cat-name">主要</div>
     </div>
-    <div class="cat-card" data-cat="国内" onclick="selectCat(this)">
-      <div class="cat-bg">🗾</div>
-      <div class="cat-glyph">🗾</div>
+    <div class="cat-card has-video" data-cat="国内" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/domestic.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Domestic</div>
       <div class="cat-name">国内</div>
     </div>
-    <div class="cat-card" data-cat="国際" onclick="selectCat(this)">
-      <div class="cat-bg">🌏</div>
-      <div class="cat-glyph">🌏</div>
+    <div class="cat-card has-video" data-cat="国際" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/world.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">World</div>
       <div class="cat-name">国際</div>
     </div>
-    <div class="cat-card" data-cat="経済" onclick="selectCat(this)">
-      <div class="cat-bg">📈</div>
-      <div class="cat-glyph">📈</div>
+    <div class="cat-card has-video" data-cat="経済" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/economy.mp4#t=0.3" data-start="0.3" muted playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Economy</div>
       <div class="cat-name">経済</div>
     </div>
-    <div class="cat-card" data-cat="エンタメ" onclick="selectCat(this)">
-      <div class="cat-bg">🎬</div>
-      <div class="cat-glyph">🎬</div>
+    <div class="cat-card has-video" data-cat="エンタメ" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/entertainment.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Entertainment</div>
       <div class="cat-name">エンタメ</div>
     </div>
-    <div class="cat-card" data-cat="スポーツ" onclick="selectCat(this)">
-      <div class="cat-bg">⚽</div>
-      <div class="cat-glyph">⚽</div>
+    <div class="cat-card has-video" data-cat="スポーツ" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/sports.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Sports</div>
       <div class="cat-name">スポーツ</div>
     </div>
-    <div class="cat-card" data-cat="IT" onclick="selectCat(this)">
-      <div class="cat-bg">💻</div>
-      <div class="cat-glyph">💻</div>
+    <div class="cat-card has-video" data-cat="IT" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/technology.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-laptop"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-laptop"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Technology</div>
       <div class="cat-name">IT</div>
     </div>
-    <div class="cat-card" data-cat="科学" onclick="selectCat(this)">
-      <div class="cat-bg">🔬</div>
-      <div class="cat-glyph">🔬</div>
+    <div class="cat-card has-video" data-cat="科学" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/science.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Science</div>
       <div class="cat-name">科学</div>
     </div>
-    <div class="cat-card" data-cat="ライフ" onclick="selectCat(this)">
-      <div class="cat-bg">🌿</div>
-      <div class="cat-glyph">🌿</div>
+    <div class="cat-card has-video" data-cat="ライフ" onclick="selectCat(this)">
+      <video class="cat-video" src="videos/lifestyle.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg></div>
+      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Lifestyle</div>
       <div class="cat-name">ライフ</div>
@@ -848,15 +1174,15 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
     <div class="section-title">練習モードを選ぶ</div>
     <div class="mode-cards">
       <div class="mode-card" data-mode="discussion" onclick="selectMode(this)">
-        <div class="mode-icon disc">💬</div>
+        <div class="mode-icon disc"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ディスカッション</div>
-          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝える力を養う。</div>
+          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝え����力を養う。</div>
           <div class="mode-tag">Discussion</div>
         </div>
       </div>
       <div class="mode-card" data-mode="facilitation" onclick="selectMode(this)">
-        <div class="mode-icon faci">🎙️</div>
+        <div class="mode-icon faci"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ファシリテーション</div>
           <div class="mode-desc">AIが参加者役になり、あなたが議題を進行する。会議・プレゼンのスピーキング力を鍛える。</div>
@@ -864,7 +1190,7 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
         </div>
       </div>
       <div class="mode-card" data-mode="interview" onclick="selectMode(this)">
-        <div class="mode-icon inte">🤝</div>
+        <div class="mode-icon inte"><svg class="ic" aria-hidden="true"><use href="#i-usercheck"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">面接スピーチ</div>
           <div class="mode-desc">記事をテーマに英語面接を模擬体験。外資・海外就職を目指す人に最適な実践練習。</div>
@@ -880,17 +1206,17 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
     <div class="section-title">英語レベルを選ぶ</div>
     <div class="level-row">
       <div class="level-btn" data-level="beginner" onclick="selectLevel(this)">
-        <div class="level-flag">🇯🇵</div>
+        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig1"/></svg></div>
         <div class="level-name">初級</div>
         <div class="level-hint">日本語サポートあり</div>
       </div>
       <div class="level-btn" data-level="intermediate" onclick="selectLevel(this)">
-        <div class="level-flag">🌐</div>
+        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig2"/></svg></div>
         <div class="level-name">中級</div>
         <div class="level-hint">英語メイン+補足</div>
       </div>
       <div class="level-btn" data-level="advanced" onclick="selectLevel(this)">
-        <div class="level-flag">🇬🇧</div>
+        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig3"/></svg></div>
         <div class="level-name">上級</div>
         <div class="level-hint">フル英語</div>
       </div>
@@ -928,7 +1254,7 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 
   <div class="input-bar">
     <div class="input-col">
-      <textarea id="inp" placeholder="英語で入力 または 🎤 で話す…" rows="1"
+      <textarea id="inp" placeholder="英語で入力、またはマ������話す…" rows="1"
         onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
       <div class="voice-status" id="voice-status">
         <div class="voice-pulse"></div>
@@ -963,7 +1289,7 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 <div class="screen" id="s-summary">
   <div class="summary-wrap">
     <div class="summary-header">
-      <div class="summary-emoji" id="summary-emoji">🎉</div>
+      <div class="summary-emoji" id="summary-emoji"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></div>
       <div class="summary-title">セッション完了！</div>
       <div class="summary-sub" id="summary-date"></div>
     </div>
@@ -986,6 +1312,10 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 
 </div><!-- /app -->
 
+<script>applyTheme(document.documentElement.dataset.theme);</script>
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="auth-client.js"></script>
 <div id="loader"><div class="spin"></div><div class="load-text" id="load-txt">記事を選定中…</div></div>
 
 <script>
@@ -1000,6 +1330,9 @@ const GUARDIAN_CAT_MAP = {
   '主要':'news','国内':'world','国際':'world','経済':'business',
   'エンタメ':'culture','スポーツ':'sport','IT':'technology','科学':'science','ライフ':'lifeandstyle'
 };
+const ICON = n => `<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const TOPIC_ICONS = {"AI・テック": "cpu", "地政学": "globe", "経済・投資": "trend", "社会・労働": "users", "環境・科学": "leaf", "スポーツ・文化": "trophy", "ビジネス": "briefcase", "医療・健康": "pulse"};
+const CAT_ICONS = {"主要": "news", "国内": "map", "国際": "globe", "経済": "trend", "エンタメ": "film", "スポーツ": "trophy", "IT": "laptop", "科学": "flask", "ライフ": "leaf"};
 const CAT_EMOJIS = {'主要':'📰','国内':'🗾','国際':'🌏','経済':'📈','エンタメ':'🎬','スポーツ':'⚽','IT':'💻','科学':'🔬','ライフ':'🌿'};
 
 // ══ Init capability ══
@@ -1098,7 +1431,7 @@ async function fetchGuardianAll(){
   });
   await Promise.all(promises);
   if(fetched>0){
-    setApiStatus('ok', `Guardian API 接続済み — ${fetched}カテゴリ最新記事取得済み ✓`);
+    setApiStatus('ok', `Guardian API 接続済み ��� ${fetched}カテゴリ最新記事取得済み ✓`);
   } else {
     setApiStatus('err','取得失敗 — APIキーを確認してください');
     guardianApiKey = null;
@@ -1109,23 +1442,23 @@ async function fetchGuardianAll(){
 // ══ Articles DB (with topic + emoji + keywords) ══
 const ARTICLES = {
   主要:[
-    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギー政策との整合性']},
-    {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。各国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
+    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギ����政策との整合性']},
+    {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。���国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
   ],
   国内:[
-    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
-    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
+    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバ���シティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直��を求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
+    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘���の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
-    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸���������際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
   ],
   経済:[
     {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
     {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した。大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
   ],
   エンタメ:[
-    {source:'Variety',emoji:'🎵',topic:'スポーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
+    {source:'Variety',emoji:'🎵',topic:'ス��ーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
     {source:'The Hollywood Reporter',emoji:'🎬',topic:'ビジネス',keywords:['ストリーミング','映画','メディア','Netflix','streaming','content','動画配信','サブスク','subscription','データセンター','クラウド','コンテンツ','OTT'],title:'Streaming Wars Enter New Phase as Studios Merge Content Libraries',summary:'大手スタジオのコンテンツライブラリ統合が進み、ストリーミング戦争が新局面へ。消費者の選択肢が変わる中、クリエイターへの報酬体系の見直しを求める声も上がっている。',points:['コンテンツの多様性','クリエイターエコノミー','日本コンテンツのグローバル展開']}
   ],
   スポーツ:[
@@ -1138,11 +1471,11 @@ const ARTICLES = {
   ],
   科学:[
     {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
-    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
+    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科��的発見と商業利用']}
   ],
   ライフ:[
     {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
-    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
+    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らして��る。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
   ]
 };
 
@@ -1197,7 +1530,7 @@ async function doSearch(val){
       keywords: r.webTitle.toLowerCase().split(/\W+/).filter(w=>w.length>3),
       title: r.webTitle,
       summary: r.fields?.trailText || r.webTitle,
-      points:['記事の背景と文脈','主な論点と影響','あなたの意見は？'],
+      points:['記事の背景と���脈','主な論点と影響','あなたの意見は？'],
       url: r.webUrl,
       live: true,
       _fromApiSearch: true
@@ -1257,7 +1590,7 @@ function showResults(hits, query, loading=false){
   }
   box.innerHTML = hits.map((a,i)=>`
     <div class="result-item ${selectedResultArticle===a?'selected':''}" onclick="selectResultArticleByIdx(this,${i})">
-      <div class="result-icon">${a.emoji||'📄'}</div>
+      <div class="result-icon">${ICON(TOPIC_ICONS[a.topic]||CAT_ICONS[a.cat]||'file')}</div>
       <div class="result-body">
         <div class="result-title">${a.title}</div>
         <div class="result-meta">
@@ -1392,7 +1725,7 @@ function toggleExpand(){
 
 // ══ AI opening ══
 async function aiOpen(){
-  if(!sample){addMsg('ai','⚠️ AIに接続できませんでした。ページを再読み込みしてください。');return;}
+  if(!sample){addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。');return;}
   showTyping();
   const sys = buildSystem();
   const openPrompt = buildOpenPrompt();
@@ -1491,9 +1824,9 @@ function renderFeedbackCard(rawText){
     scores.push({label:m[1].trim(),val:parseInt(m[2]),max:parseInt(m[3])});
   }
 
-  let html=`<div class="av">🤖</div><div style="flex:1">`;
+  let html=`<div class="av">${ICON('sparkle')}</div><div style="flex:1">`;
   html+=`<div class="feedback-card">`;
-  html+=`<div class="feedback-title">💡 Feedback</div>`;
+  html+=`<div class="feedback-title">${ICON('bulb')}Feedback</div>`;
 
   if(scores.length){
     html+=`<div class="score-row">`;
@@ -1517,7 +1850,7 @@ function renderFeedbackCard(rawText){
   const cleanText=rawText.replace(/(\w[\w\s]+?):\s*\d+\/\d+/g,'').replace(/^\s*[\-\*]\s*/gm,'').trim();
   if(cleanText){
     html+=`<div class="feedback-section">
-      <div class="feedback-section-title">コメント</div>
+      <div class="feedback-section-title">コ���ント</div>
       <div class="feedback-text">${cleanText.replace(/\n/g,'<br>')}</div>
     </div>`;
   }
@@ -1527,7 +1860,7 @@ function renderFeedbackCard(rawText){
   if(vocabMatches && vocabMatches.length > 0){
     const uniq = [...new Set(vocabMatches)].slice(0,6);
     html+=`<div class="feedback-section">
-      <div class="feedback-section-title">📖 語彙を単語帳に追加</div>
+      <div class="feedback-section-title">${ICON('book')}語彙を単語帳に追加</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
         ${uniq.map(w=>`<button class="add-vocab-btn" data-word="${w}" onclick="promptAddVocab(this)">＋ ${w}</button>`).join('')}
       </div>
@@ -1546,7 +1879,7 @@ function toggleHide(btn){
   const msgDiv=btn.closest('.msg');
   const bubble=msgDiv.querySelector('.bubble');
   const hidden=bubble.classList.toggle('hidden');
-  btn.title=hidden?'テキストを表示':'テキストを隠す';
+  btn.title=hidden?'テキストを表示':'テキス���を隠す';
   btn.innerHTML=hidden?
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`:
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
@@ -1573,7 +1906,7 @@ function speakText(btn,text,shadowMode=false){
     ttsActive.classList.remove('speaking');
     ttsActive.title='読み上げる';
   }
-  // シャドーイングモード: 再生中は文字を隠す
+  // シ��ドーイングモード: 再生中は文字を隠す
   if(shadowMode && bubble){
     bubble.classList.add('hidden');
   }
@@ -1616,7 +1949,7 @@ function addMsg(role,text){
   const chat=document.getElementById('chat');
   const d=document.createElement('div');
   d.className=`msg ${role}`;
-  const av=role==='ai'?'🌐':'👤';
+  const av=role==='ai'?ICON('sparkle'):ICON('user');
   const bubbleHtml=text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
   if(role==='ai'){
     const escaped=text.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
@@ -1631,7 +1964,7 @@ function showTyping(){
   const chat=document.getElementById('chat');
   typingEl=document.createElement('div');
   typingEl.className='msg ai';typingEl.id='typing';
-  typingEl.innerHTML=`<div class="av">🌐</div><div class="msg-col"><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
+  typingEl.innerHTML=`<div class="av">${ICON('sparkle')}</div><div class="msg-col"><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
   chat.appendChild(typingEl);chat.scrollTop=chat.scrollHeight;
 }
 function updateTyping(text){
@@ -1857,8 +2190,8 @@ function showSummaryScreen(score, improvements){
   const ring = document.getElementById('score-ring');
   ring.className = 'score-ring ' + (score >= 80 ? 'score-hi' : score >= 55 ? 'score-mid' : 'score-lo');
 
-  const emoji = score >= 80 ? '🏆' : score >= 60 ? '🎉' : score >= 40 ? '💪' : '📚';
-  document.getElementById('summary-emoji').textContent = emoji;
+  const emoji = score >= 80 ? 'award' : score >= 60 ? 'star' : score >= 40 ? 'zap' : 'book';
+  document.getElementById('summary-emoji').innerHTML = ICON(emoji);
 
   const list = document.getElementById('improve-list');
   list.innerHTML = improvements.slice(0,3).map((tip,i)=>`
@@ -1908,6 +2241,19 @@ function goBack(){
     setStep(1);show('s-mode','s-cat');
     document.getElementById('back-btn').classList.remove('show');
   }
+}
+function goTop(){
+  if(document.body.classList.contains('is-guest')){ openIntro(); return; }
+  if(isListening && recognition) recognition.stop();
+  document.getElementById('vocab-fab').classList.remove('show');
+  document.getElementById('vocab-panel').classList.remove('show');
+  document.querySelectorAll('.screen.active').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-cat').classList.add('active');
+  document.getElementById('back-btn').classList.remove('show');
+  setStep(1);
+  renderStatsBar();
+  loadYesterdayBanner();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 function show(from,to){
   document.getElementById(from).classList.remove('active');
@@ -1979,7 +2325,7 @@ let interimText = '';
     if(e.error === 'no-speech') return; // 無音は無視
     stopVoice();
     if(e.error === 'not-allowed'){
-      addMsg('ai','⚠️ マイクへのアクセスが拒否されました。ブラウザの設定からマイクを許可してください。');
+      addMsg('ai','マイクへのアクセスが拒否されました。ブラウザの設定からマイクを許可してください。');
     }
   };
 
@@ -2068,16 +2414,220 @@ function updateVoiceTimer(){
   const s = voiceSeconds % 60;
   document.getElementById('voice-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
 }
+
+(function buildIntroGallery(){
+  const gallery = document.getElementById('intro-gallery');
+  if(!gallery) return;
+  document.querySelectorAll('#cat-grid .cat-card').forEach(card=>{
+    const clone = card.cloneNode(true);
+    clone.removeAttribute('onclick');
+    clone.classList.remove('selected');
+    clone.setAttribute('role','button');
+    clone.setAttribute('tabindex','0');
+    clone.setAttribute('aria-label', clone.querySelector('.cat-name').textContent + ' のニュースで練習する（無料登録）');
+    clone.addEventListener('click',()=>openAuth('signup'));
+    clone.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openAuth('signup'); } });
+    gallery.appendChild(clone);
+  });
+})();
+
+/* ─── Auth / 紹介画面 ─── */
+const sb = window.nsSupabase;
+let authMode = 'login';
+
+function activateScreen(id){
+  if(isListening && recognition) recognition.stop();
+  document.getElementById('vocab-fab').classList.remove('show');
+  document.getElementById('vocab-panel').classList.remove('show');
+  document.querySelectorAll('.screen.active').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.scrollTop = 0;
+  document.getElementById('back-btn').classList.remove('show');
+}
+function setIntroVideos(play){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('video.intro-auto').forEach(v=>{
+    if(play && !reduceMotion) v.play().catch(()=>{}); else v.pause();
+  });
+}
+function openIntro(){
+  activateScreen('s-intro');
+  setIntroVideos(true);
+}
+function openAuth(mode){
+  setIntroVideos(false);
+  activateScreen('s-auth');
+  setAuthMode(mode || 'login');
+  setTimeout(()=>document.getElementById('auth-email').focus(), 50);
+}
+function setAuthMode(mode){
+  authMode = mode;
+  const isSignup = mode === 'signup';
+  document.getElementById('auth-main').hidden = false;
+  document.getElementById('auth-done').hidden = true;
+  document.getElementById('tab-login').setAttribute('aria-selected', String(!isSignup));
+  document.getElementById('tab-signup').setAttribute('aria-selected', String(isSignup));
+  document.getElementById('auth-title').textContent = isSignup ? 'アカウントを作成' : 'おかえりなさい';
+  document.getElementById('auth-sub').textContent = isSignup
+    ? '無料登録で、最新ニュースを使った英会話練習をすぐに始められます。'
+    : 'ログインして、今日のニュースで練習を続けましょう。';
+  document.getElementById('auth-submit').textContent = isSignup ? '無料で登録する' : 'ログイン';
+  document.getElementById('auth-password').setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
+  document.getElementById('auth-password2').required = isSignup;
+  document.querySelectorAll('#s-auth .signup-only').forEach(el=>el.hidden = !isSignup);
+  document.getElementById('auth-switch').innerHTML = isSignup
+    ? 'すでにアカウントをお持ちの方は <button type="button" class="link-btn" onclick="setAuthMode(\'login\')">ログイン</button>'
+    : 'アカウントをお持ちでない方は <button type="button" class="link-btn" onclick="setAuthMode(\'signup\')">新規登録</button>';
+  showFormMsg('auth-msg', '', '');
+}
+function togglePw(btn){
+  const input = document.getElementById('auth-password');
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  document.getElementById('auth-password2').type = input.type;
+  btn.textContent = show ? '隠す' : '表示';
+}
+function showFormMsg(id, type, text){
+  const el = document.getElementById(id);
+  el.className = 'form-msg' + (text ? ' show ' + type : '');
+  el.textContent = text;
+}
+function authErrorMessage(error){
+  const code = error && error.code;
+  if(error && error.status === 429 || code === 'over_request_rate_limit' || code === 'over_email_send_rate_limit')
+    return '試行回数が多すぎます。しばらく時間をおいてから再度お試しください。';
+  if(code === 'email_not_confirmed') return 'メールアドレスが未確認です。届いた確認メールのリンクをクリックしてから、ログインしてください。';
+  if(code === 'weak_password') return 'パスワードが弱すぎます。8文字以上で、推測されにくいものにしてください。';
+  if(code === 'email_address_invalid') return 'このメールアドレスは使用できません。別のアドレスをお試しください。';
+  if(code === 'invalid_credentials') return 'メールアドレスまたはパスワードが正しくありません。';
+  return '予期しないエラーが発生しました。時間をおいて再度お試しください。';
+}
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+document.getElementById('auth-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const password2 = document.getElementById('auth-password2').value;
+  if(!sb) return showFormMsg('auth-msg','error','認証サービスに接続できません。時間をおいて再度お試しください。');
+  if(!EMAIL_RE.test(email)) return showFormMsg('auth-msg','error','正しいメールアドレスを入力してください。');
+  if(password.length < 8) return showFormMsg('auth-msg','error','パスワードは8文字以上で入力してください。');
+  if(authMode === 'signup' && password !== password2) return showFormMsg('auth-msg','error','確認用パスワードが一致しません。');
+
+  const btn = document.getElementById('auth-submit');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = '処理中…';
+  showFormMsg('auth-msg','','');
+  try{
+    if(authMode === 'signup'){
+      const { data, error } = await sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.nsAuthRedirectUrl } });
+      if(error && error.code !== 'user_already_exists') return showFormMsg('auth-msg','error',authErrorMessage(error));
+      if(data && data.session) return;
+      document.getElementById('auth-main').hidden = true;
+      document.getElementById('auth-done').hidden = false;
+    }else{
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if(error) return showFormMsg('auth-msg','error',authErrorMessage(error));
+    }
+  }catch(err){
+    showFormMsg('auth-msg','error','通信エラーが発生しました。接続を確認してください。');
+  }finally{
+    btn.disabled = false; btn.textContent = label;
+  }
+});
+
+document.getElementById('contact-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const name = document.getElementById('ct-name').value.trim();
+  const email = document.getElementById('ct-email').value.trim();
+  const message = document.getElementById('ct-message').value.trim();
+  if(!name || !message) return showFormMsg('ct-msg','error','お名前とお問い合わせ内容を入力してください。');
+  if(!EMAIL_RE.test(email)) return showFormMsg('ct-msg','error','正しいメールアドレスを入力してください。');
+  if(!sb) return showFormMsg('ct-msg','error','送信できませんでした。時間をおいて再度お試しください。');
+  const btn = document.getElementById('ct-submit');
+  btn.disabled = true; btn.textContent = '送信中…';
+  try{
+    const { error } = await sb.from('contact_messages').insert({ name: name.slice(0,100), email: email.slice(0,254), message: message.slice(0,2000) });
+    if(error) throw error;
+    e.target.reset();
+    showFormMsg('ct-msg','success','送信しました。お問い合わせありがとうございます。');
+  }catch(err){
+    showFormMsg('ct-msg','error','送信できませんでした。時間をおいて再度お試しください。');
+  }finally{
+    btn.disabled = false; btn.textContent = '送信する';
+  }
+});
+
+let currentUserId = null;
+function applySession(session){
+  const userId = session ? session.user.id : null;
+  const changed = userId !== currentUserId || document.body.classList.contains('auth-loading');
+  currentUserId = userId;
+  document.body.classList.toggle('is-authed', !!userId);
+  document.body.classList.toggle('is-guest', !userId);
+  if(!changed) return;
+  if(userId){
+    setIntroVideos(false);
+    goTop();
+  }else{
+    const wantsLogin = new URLSearchParams(location.search).get('auth');
+    if(wantsLogin) openAuth(wantsLogin === 'signup' ? 'signup' : 'login'); else openIntro();
+  }
+  document.body.classList.remove('auth-loading');
+}
+async function signOut(){
+  if(sb) await sb.auth.signOut();
+  applySession(null);
+}
+
+// Runs after the whole script so state declared further down (e.g. recognition) is initialized.
+window.addEventListener('DOMContentLoaded', async function initAuth(){
+  if(!sb){ applySession(null); return; }
+  try{
+    const { data } = await sb.auth.getSession();
+    applySession(data.session);
+  }catch(err){
+    applySession(null);
+  }
+  sb.auth.onAuthStateChange((_event, session)=>{ setTimeout(()=>applySession(session), 0); });
+});
+
+(function initCategoryVideos(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.cat-card.has-video').forEach(card=>{
+    const video = card.querySelector('.cat-video');
+    if(!video) return;
+    const hasCustomStart = video.dataset.start !== undefined;
+    const startTime = hasCustomStart ? parseFloat(video.dataset.start) || 0 : 0.1;
+    // Native `loop` restarts at 0, so videos with a custom start loop manually to skip the opening frames.
+    if(hasCustomStart){
+      video.addEventListener('ended',()=>{
+        video.currentTime = startTime;
+        if(card.matches(':hover')) video.play().catch(()=>{});
+      });
+    }
+    card.addEventListener('mouseenter',()=>{
+      if(reduceMotion) return;
+      if(video.currentTime < startTime) video.currentTime = startTime;
+      video.play().catch(()=>{});
+    });
+    card.addEventListener('mouseleave',()=>{
+      video.pause();
+      video.currentTime = startTime;
+    });
+  });
+})();
 </script>
 
 <!-- 単語帳 FAB -->
 <button class="vocab-fab" id="vocab-fab" onclick="toggleVocabPanel()" title="単語帳">
-  📖<span class="vocab-count" id="vocab-count" style="display:none">0</span>
+  <svg class="ic" aria-hidden="true"><use href="#i-book"/></svg><span class="vocab-count" id="vocab-count" style="display:none">0</span>
 </button>
 <!-- 単語帳パネル -->
 <div class="vocab-panel" id="vocab-panel">
   <div class="vocab-panel-header">
-    <div class="vocab-panel-title">📖 単語帳</div>
+    <div class="vocab-panel-title"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg>単語帳</div>
     <button class="vocab-close" onclick="toggleVocabPanel()">×</button>
   </div>
   <div id="vocab-list"></div>

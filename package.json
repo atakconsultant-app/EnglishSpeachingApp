@@ -1,0 +1,14 @@
+{
+  "name": "english-speaking-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "config": "node --env-file-if-exists=.env.development.local scripts/gen-config.mjs",
+    "dev": "npm run config && serve -l 3000 .",
+    "build": "node scripts/gen-config.mjs",
+    "start": "serve -l 3000 ."
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
