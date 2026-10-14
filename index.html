@@ -927,7 +927,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <article class="feature-card">
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
         <h3 class="feature-title">毎日届く最新ニュース</h3>
-        <p class="feature-text">The Guardian の最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
+        <p class="feature-text">世界の英字ニュースの最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
       </article>
       <article class="feature-card">
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
@@ -1019,7 +1019,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   </section>
   <footer class="intro-footer">
     <span>&copy; 2026 NewSpeak</span>
-    <span>News articles powered by The Guardian Open Platform</span>
+    <span>News data provided by GNews</span>
   </footer>
 </main>
 
@@ -1134,22 +1134,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="yesterday-arrow"><svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></div>
   </div>
 
-  <!-- Guardian API banner -->
-  <div class="api-banner" id="api-banner">
-    <div class="api-banner-icon"><svg class="ic" aria-hidden="true"><use href="#i-key"/></svg></div>
-    <div class="api-banner-body">
-      <div class="api-banner-title">Guardian API で最新ニュースを取得</div>
-      <div class="api-banner-sub">APIキーを入力すると毎日最新の英語記事で練習できます。<br>取得先: <strong>open-platform.theguardian.com</strong></div>
-      <div class="api-key-row">
-        <input class="api-key-input" id="api-key-input" type="password" placeholder="APIキーを入力… (例: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)" autocomplete="off">
-        <button class="api-key-btn" onclick="saveApiKey()">保存して取得</button>
-      </div>
-      <div class="api-status" id="api-status">
-        <div class="api-dot" id="api-dot"></div>
-        <span id="api-status-text">APIキー未設定 — ハードコード記事を使用中</span>
-      </div>
-    </div>
-  </div>
 
   <!-- Search / filter results -->
   <div id="search-results"></div>
@@ -1402,13 +1386,9 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 let state = { cat: null, mode: null, level: null, article: null, history: [], busy: false };
 let sample = null;
 let expandOpen = false;
-let guardianApiKey = null;
-
-// ══ Guardian API category map ══
-const GUARDIAN_CAT_MAP = {
-  '主要':'news','国内':'world','国際':'world','経済':'business',
-  'エンタメ':'culture','スポーツ':'sport','IT':'technology','科学':'science','ライフ':'lifeandstyle'
-};
+let liveNews = false; // サーバー（/api/news）から最新ニュースを取得できたか
+const LIVE_CATS = ['主要','国内','国際','経済','エンタメ','スポーツ','IT','科学','ライフ'];
+const DEFAULT_POINTS = ['記事の背景と文脈','主な論点と影響','あなたの意見は？'];
 const ICON = n => `<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const TOPIC_ICONS = {"AI・テック": "cpu", "地政学": "globe", "経済・投資": "trend", "社会・労働": "users", "環境・科学": "leaf", "スポーツ・文化": "trophy", "ビジネス": "briefcase", "医療・健康": "pulse"};
 const CAT_ICONS = {"主要": "news", "国内": "map", "国際": "globe", "経済": "trend", "エンタメ": "film", "スポーツ": "trophy", "IT": "laptop", "科学": "flask", "ライフ": "leaf"};
@@ -1416,14 +1396,11 @@ const CAT_EMOJIS = {'主要':'📰','国内':'🗾','国際':'🌏','経済':'�
 
 // ══ Init capability ══
 (async()=>{
-  sample = await claude.use('sample');
-  // Restore saved API key
-  try{
-    const saved = localStorage.getItem('guardian_api_key');
-    if(saved){ guardianApiKey=saved; document.getElementById('api-key-input').value=saved; setApiStatus('ok','Guardian API 接続済み ✓'); fetchGuardianAll(); }
-    loadYesterdayBanner();
-  }catch(e){}
+  try{ sample = await claude.use('sample'); }catch(e){ sample = null; }
 })();
+try{ localStorage.removeItem('guardian_api_key'); }catch(e){} // 旧方式で保存されたキーを削除
+try{ loadYesterdayBanner(); }catch(e){}
+fetchLiveNews();
 // AI接続を待たずにホームの統計・クイックスタートを描画
 setTimeout(()=>{ try{ renderStatsBar(); }catch(e){ console.error(e); } }, 0);
 
@@ -1462,61 +1439,38 @@ function useYesterdayArticle(){
   goToMode();
 }
 
-function saveApiKey(){
-  const key = document.getElementById('api-key-input').value.trim();
-  if(!key){ alert('APIキーを入力してください'); return; }
-  guardianApiKey = key;
-  try{ localStorage.setItem('guardian_api_key', key); }catch(e){}
-  setApiStatus('loading','記事を取得中…');
-  fetchGuardianAll();
+// ══ 最新ニュース（GNews をサーバー経由で取得。APIキーはサーバー側のみ） ══
+function toAppArticle(a, cat){
+  return {
+    source: a.source || 'GNews',
+    emoji: CAT_EMOJIS[cat] || '📰',
+    topic: cat,
+    keywords: a.title.toLowerCase().split(/\W+/).filter(w=>w.length>3),
+    title: a.title,
+    summary: a.summary || a.title,
+    points: DEFAULT_POINTS,
+    url: a.url,
+    image: a.image || '',
+    live: true
+  };
 }
 
-function setApiStatus(state, text){
-  const dot = document.getElementById('api-dot');
-  const txt = document.getElementById('api-status-text');
-  dot.className = 'api-dot' + (state==='ok'?' ok':state==='err'?' err':state==='loading'?' loading':'');
-  txt.textContent = text;
-}
-
-async function fetchGuardianAll(){
-  if(!guardianApiKey) return;
-  const cats = Object.keys(GUARDIAN_CAT_MAP);
-  let fetched = 0;
-  const promises = cats.map(async cat => {
+async function fetchLiveNews(){
+  if(!/^https?:$/.test(location.protocol)) return; // ローカルファイルで開いた場合は内蔵記事のみ
+  const results = await Promise.all(LIVE_CATS.map(async cat => {
     try{
-      const section = GUARDIAN_CAT_MAP[cat];
-      const url = `https://content.guardianapis.com/search?section=${section}&page-size=5&order-by=newest&api-key=${guardianApiKey}`;
-      const res = await fetch(url);
-      if(!res.ok) throw new Error(res.status);
+      const res = await fetch('/api/news?cat=' + encodeURIComponent(cat));
+      if(!res.ok) return false;
       const data = await res.json();
-      const items = (data.response?.results||[]).filter(r=>r.type==='article');
-      if(items.length){
-        const newArticles = items.map(r=>({
-          source:'The Guardian',
-          emoji: CAT_EMOJIS[cat]||'📰',
-          topic: cat,
-          keywords: r.webTitle.toLowerCase().split(/\W+/).filter(w=>w.length>3),
-          title: r.webTitle,
-          summary: r.webTitle, // Guardian free tier doesn't return body; AI will elaborate
-          points:['記事の背景と文脈','主な論点と影響','あなたの意見は？'],
-          url: r.webUrl,
-          live: true
-        }));
-        // Prepend live articles, keep static as fallback
-        ARTICLES[cat] = [...newArticles, ...ARTICLES[cat]];
-        newArticles.forEach(a => ALL_ARTICLES.unshift({...a, cat}));
-        fetched++;
-      }
-    }catch(e){ console.error('Guardian fetch failed for', cat, e.message, e); }
-  });
-  await Promise.all(promises);
-  if(fetched>0){
-    setApiStatus('ok', `Guardian API 接続済み — ${fetched}カテゴリ最新記事取得済み ✓`);
-  } else {
-    setApiStatus('err','取得失敗 — APIキーを確認してください');
-    guardianApiKey = null;
-    try{ localStorage.removeItem('guardian_api_key'); }catch(e){}
-  }
+      const items = (data.articles || []).slice(0, 5).map(a => toAppArticle(a, cat));
+      if(!items.length) return false;
+      // 最新記事を先頭に追加し、内蔵記事は予備として残す
+      ARTICLES[cat] = [...items, ...ARTICLES[cat]];
+      items.forEach(a => ALL_ARTICLES.unshift({...a, cat}));
+      return true;
+    }catch(e){ return false; }
+  }));
+  liveNews = results.some(Boolean);
 }
 
 // ══ Articles DB (with topic + emoji + keywords) ══
@@ -1569,7 +1523,6 @@ let activeTopic = 'all';
 let selectedResultArticle = null;
 
 let _searchTimer = null;
-let guardianSearchResults = []; // temp store for API search results
 
 function onSearch(val){
   const clear = document.getElementById('search-clear');
@@ -1594,44 +1547,24 @@ async function doSearch(val){
   );
   showResults(localHits, val, true); // show local + loading spinner
 
-  if(!guardianApiKey){ return; } // no API key — local only
+  if(!liveNews){ showResults(localHits, val, false); return; } // サーバー未接続時は内蔵記事のみ
 
   try {
-    const url = `https://content.guardianapis.com/search?q=${encodeURIComponent(val)}&page-size=10&order-by=relevance&show-fields=trailText&format=json&api-key=${guardianApiKey}`;
-    const res = await fetch(url, {mode:'cors'});
+    const res = await fetch('/api/news?q=' + encodeURIComponent(val));
     if(!res.ok) throw new Error(res.status);
     const data = await res.json();
-    const items = (data.response?.results||[]).filter(r => r.type==='article');
-    guardianSearchResults = items.map(r => ({
-      source:'The Guardian',
-      emoji:'🌐',
-      topic: r.sectionName || '国際',
-      cat: sectionToCat(r.sectionId) || '国際',
-      keywords: r.webTitle.toLowerCase().split(/\W+/).filter(w=>w.length>3),
-      title: r.webTitle,
-      summary: r.fields?.trailText || r.webTitle,
-      points:['記事の背景と文脈','主な論点と影響','あなたの意見は？'],
-      url: r.webUrl,
-      live: true,
-      _fromApiSearch: true
-    }));
-    // Merge: remove duplicates already in localHits by title
+    if(document.getElementById('cat-search').value !== val) return; // 入力が変わっていたら古い結果は捨てる
+    const apiHits = (data.articles || []).map(a => {
+      const cat = a.cat || '国際';
+      return {...toAppArticle(a, cat), cat, _fromApiSearch: true};
+    });
     const localTitles = new Set(localHits.map(a=>a.title));
-    const newApiHits = guardianSearchResults.filter(a => !localTitles.has(a.title));
+    const newApiHits = apiHits.filter(a => !localTitles.has(a.title));
     showResults([...localHits, ...newApiHits], val, false);
   } catch(e) {
-    console.warn('Guardian keyword search failed', e);
+    console.warn('News search failed', e);
     showResults(localHits, val, false);
   }
-}
-
-function sectionToCat(sectionId){
-  const map = {
-    'news':'主要','world':'国際','business':'経済','technology':'IT',
-    'science':'科学','sport':'スポーツ','culture':'エンタメ','lifeandstyle':'ライフ',
-    'environment':'科学','politics':'国際','football':'スポーツ','money':'経済'
-  };
-  return map[sectionId] || '国際';
 }
 
 function filterTopic(el){
@@ -1661,20 +1594,20 @@ function showResults(hits, query, loading=false){
   box.classList.add('show');
   _displayedHits = hits;
 
-  const spinner = loading && guardianApiKey
-    ? `<div class="search-loading"><span class="search-spin"></span>Guardian APIで検索中…</div>` : '';
+  const spinner = loading && liveNews
+    ? `<div class="search-loading"><span class="search-spin"></span>最新ニュースを検索中…</div>` : '';
 
   if(hits.length === 0 && !loading){
-    box.innerHTML=`<div class="no-results">「${query||activeTopic}」に一致する記事が見つかりませんでした${guardianApiKey?'':' <span style="color:var(--accent);font-size:11px;">（APIキー未設定）</span>'}</div>${spinner}`;
+    box.innerHTML=`<div class="no-results">「${query||activeTopic}」に一致する記事が見つかりませんでした</div>${spinner}`;
     return;
   }
   box.innerHTML = hits.map((a,i)=>`
     <div class="result-item ${selectedResultArticle===a?'selected':''}" onclick="selectResultArticleByIdx(this,${i})">
       <div class="result-icon">${ICON(TOPIC_ICONS[a.topic]||CAT_ICONS[a.cat]||'file')}</div>
       <div class="result-body">
-        <div class="result-title">${a.title}</div>
+        <div class="result-title">${escHtml(a.title)}</div>
         <div class="result-meta">
-          <span class="result-cat">${a.source||'The Guardian'}</span>
+          <span class="result-cat">${escHtml(a.source||'GNews')}</span>
           <span class="result-topic">${a.cat} · ${a.topic||''}</span>
           ${a._fromApiSearch?'<span class="result-live-tag">LIVE</span>':''}
         </div>
@@ -1755,8 +1688,7 @@ async function startSession(){
   loading('記事を選定中…');
   // Use pre-selected article from search/filter, or pick randomly from category
   if(!state.article){
-    const pool = ARTICLES[state.cat] || ARTICLES['主要'];
-    state.article = pool[Math.floor(Math.random()*pool.length)];
+    state.article = pickArticle(ARTICLES[state.cat] || ARTICLES['主要']);
   }
   state.history = [];
   document.getElementById('chat').innerHTML = '';
@@ -2253,10 +2185,16 @@ function quickStart(){
   let lastTitle = null;
   try{ const l = JSON.parse(localStorage.getItem('ns_last_article')||'null'); lastTitle = l && l.article ? l.article.title : null; }catch(e){}
   const catPool = (ARTICLES[state.cat] && ARTICLES[state.cat].length) ? ARTICLES[state.cat] : ALL_ARTICLES;
-  let pool = catPool.filter(a => a.title !== lastTitle);
-  if(pool.length === 0) pool = catPool;
-  state.article = pool[Math.floor(Math.random()*pool.length)] || null;
+  state.article = pickArticle(catPool, lastTitle);
   startSession();
+}
+// 最新ニュースがあればそちらを優先し、直前に練習した記事は避けて選ぶ
+function pickArticle(pool, excludeTitle){
+  const live = pool.filter(a => a.live);
+  let base = live.length ? live : pool;
+  const fresh = base.filter(a => a.title !== excludeTitle);
+  if(fresh.length) base = fresh;
+  return base[Math.floor(Math.random()*base.length)] || null;
 }
 
 // ══ 分散復習（間隔反復）ターゲット語彙 ══
