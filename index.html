@@ -679,6 +679,56 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 .stat-sub{font-size:11px;color:var(--text-sub);}
 .sparkline-wrap{margin-top:6px;}
 .sparkline-svg{width:100%;height:32px;display:block;}
+.stat-warn{font-size:11px;margin-top:4px;line-height:1.4;color:#d9730d;font-weight:600;}
+.stat-warn.ok{color:#0f9f7a;}
+
+/* ─── Quick start（デフォルト効果） ─── */
+.quick-start{
+  margin:16px 28px 14px;padding:16px 18px;border-radius:16px;cursor:pointer;
+  background:var(--accent-dim);border:1.5px solid var(--accent);
+  display:flex;align-items:center;gap:14px;transition:transform .15s,box-shadow .15s;
+}
+.quick-start:hover{transform:translateY(-1px);}
+.quick-start:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+.qs-play{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:var(--grad);color:var(--on-accent);
+  display:flex;align-items:center;justify-content:center;
+}
+.qs-play .ic{width:18px;height:18px;fill:currentColor;stroke:none;margin-left:2px;}
+.qs-title{font-size:15px;font-weight:700;color:var(--text);}
+.qs-sub{font-size:12px;color:var(--text-sub);margin-top:3px;}
+
+/* ─── Session goal strip（ゴール勾配） ─── */
+.goal-strip{padding:10px 24px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;}
+.goal-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--text-sub);margin-bottom:6px;}
+.goal-count{color:var(--text-dim);white-space:nowrap;}
+.goal-bar{height:6px;background:var(--surface3);border-radius:999px;overflow:hidden;}
+.goal-fill{height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .45s ease;}
+.goal-strip.done .goal-label{color:var(--accent);font-weight:700;}
+.target-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px;}
+.target-row:empty{display:none;}
+.target-hint{font-size:11px;color:var(--text-dim);}
+.target-chip{font-size:11px;padding:3px 10px;border-radius:999px;border:1px dashed var(--border2);color:var(--text-sub);}
+.target-chip.used{border-style:solid;border-color:var(--accent);color:var(--accent);background:var(--accent-dim);font-weight:600;}
+.end-session-btn.ready{background:var(--accent);border-color:var(--accent);color:var(--on-accent);animation:readyglow 1.2s ease-in-out infinite alternate;}
+@keyframes readyglow{from{filter:brightness(1);}to{filter:brightness(1.12);}}
+@media (prefers-reduced-motion:reduce){.end-session-btn.ready{animation:none;}}
+
+/* ─── Summary extras（ピーク・エンド） ─── */
+.score-delta{text-align:center;font-size:13px;color:var(--text-sub);margin:-6px 0 18px;}
+.score-delta .up{color:#0f9f7a;font-weight:700;}
+.score-delta .down{color:#d9730d;font-weight:700;}
+.pb-badge{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:11px;font-weight:700;}
+.summary-stats{display:flex;gap:8px;margin-bottom:20px;}
+.summary-stat{flex:1;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 6px;}
+.summary-stat b{display:block;font-size:22px;font-weight:800;color:var(--text);}
+.summary-stat span{font-size:11px;color:var(--text-sub);}
+.best-phrase{
+  font-size:17px;font-style:italic;line-height:1.55;color:var(--text);
+  padding:14px 16px;border-left:3px solid var(--accent);background:var(--accent-dim);border-radius:0 12px 12px 0;
+}
+.best-why{font-size:13px;color:var(--text-sub);margin-top:8px;line-height:1.6;}
 
 /* Overlay loader */
 #loader{
@@ -798,6 +848,8 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M15.1 14c.2-1 .7-1.7 1.4-2.5A6 6 0 1 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
 </svg>
 <div id="app">
 
@@ -1043,12 +1095,22 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="topic-chip" data-topic="医療・健康" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-pulse"/></svg>医療・健康</div>
   </div>
 
+  <!-- Quick start: ワンタップで開始（デフォルト効果 / 選択過多の解消） -->
+  <div class="quick-start" id="quick-start" role="button" tabindex="0" onclick="quickStart()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickStart();}">
+    <div class="qs-play"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg></div>
+    <div style="flex:1;min-width:0;">
+      <div class="qs-title">今日の10分を始める</div>
+      <div class="qs-sub" id="qs-sub">おすすめ記事を自動で選んですぐ開始</div>
+    </div>
+  </div>
+
   <!-- Stats bar (streak + score history) -->
   <div class="stats-bar" id="stats-bar" style="display:none;padding:0 28px 14px;">
     <div class="stat-card">
       <div class="stat-label"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg>連続学習</div>
       <div class="stat-value" id="streak-val">0</div>
       <div class="stat-sub">日連続</div>
+      <div class="stat-warn" id="streak-warn"></div>
     </div>
     <div class="stat-card">
       <div class="stat-label"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg>スコア推移</div>
@@ -1177,7 +1239,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="mode-icon disc"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ディスカッション</div>
-          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝え����力を養う。</div>
+          <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝える力を養う。</div>
           <div class="mode-tag">Discussion</div>
         </div>
       </div>
@@ -1249,12 +1311,22 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     </div>
   </div>
 
+  <!-- Goal strip: 保有進捗効果 + ゴール勾配 + 復習語彙 -->
+  <div class="goal-strip" id="goal-strip">
+    <div class="goal-row">
+      <span class="goal-label" id="goal-label">今日のゴール</span>
+      <span class="goal-count" id="goal-count"></span>
+    </div>
+    <div class="goal-bar"><div class="goal-fill" id="goal-fill"></div></div>
+    <div class="target-row" id="target-row"></div>
+  </div>
+
   <div id="chat"></div>
   <div id="sugg-row"></div>
 
   <div class="input-bar">
     <div class="input-col">
-      <textarea id="inp" placeholder="英語で入力、またはマ������話す…" rows="1"
+      <textarea id="inp" placeholder="英語で入力、またはマイクで話す…" rows="1"
         onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
       <div class="voice-status" id="voice-status">
         <div class="voice-pulse"></div>
@@ -1266,7 +1338,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       </div>
     </div>
     <div class="btn-row">
-      <button class="end-session-btn" onclick="endSession()" title="セッションを終了してスコアを確認">
+      <button class="end-session-btn" id="end-btn" onclick="endSession()" title="セッションを終了してスコアを確認">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 9 12 12 15 9"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
         終了
       </button>
@@ -1298,6 +1370,13 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="score-num" id="score-num">—</div>
         <div class="score-label">/ 100</div>
       </div>
+    </div>
+    <div class="score-delta" id="score-delta"></div>
+    <div class="summary-stats" id="summary-stats"></div>
+    <div class="summary-section" id="best-section">
+      <div class="summary-section-title">今日のベストフレーズ</div>
+      <div class="best-phrase" id="best-phrase"></div>
+      <div class="best-why" id="best-why"></div>
     </div>
     <div class="summary-section">
       <div class="summary-section-title">改善すべき表現 TOP 3</div>
@@ -1343,9 +1422,10 @@ const CAT_EMOJIS = {'主要':'📰','国内':'🗾','国際':'🌏','経済':'�
     const saved = localStorage.getItem('guardian_api_key');
     if(saved){ guardianApiKey=saved; document.getElementById('api-key-input').value=saved; setApiStatus('ok','Guardian API 接続済み ✓'); fetchGuardianAll(); }
     loadYesterdayBanner();
-    renderStatsBar();
   }catch(e){}
 })();
+// AI接続を待たずにホームの統計・クイックスタートを描画
+setTimeout(()=>{ try{ renderStatsBar(); }catch(e){ console.error(e); } }, 0);
 
 // ══ ① 昨日の記事バナー ══
 function saveLastArticle(article, cat, mode){
@@ -1431,7 +1511,7 @@ async function fetchGuardianAll(){
   });
   await Promise.all(promises);
   if(fetched>0){
-    setApiStatus('ok', `Guardian API 接続済み ��� ${fetched}カテゴリ最新記事取得済み ✓`);
+    setApiStatus('ok', `Guardian API 接続済み — ${fetched}カテゴリ最新記事取得済み ✓`);
   } else {
     setApiStatus('err','取得失敗 — APIキーを確認してください');
     guardianApiKey = null;
@@ -1442,23 +1522,23 @@ async function fetchGuardianAll(){
 // ══ Articles DB (with topic + emoji + keywords) ══
 const ARTICLES = {
   主要:[
-    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギ����政策との整合性']},
-    {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。���国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
+    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギー政策との整合性']},
+    {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。各国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
   ],
   国内:[
-    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバ���シティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直��を求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
-    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘���の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
+    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
+    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
-    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸���������際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
   ],
   経済:[
     {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
     {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した。大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
   ],
   エンタメ:[
-    {source:'Variety',emoji:'🎵',topic:'ス��ーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
+    {source:'Variety',emoji:'🎵',topic:'スポーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
     {source:'The Hollywood Reporter',emoji:'🎬',topic:'ビジネス',keywords:['ストリーミング','映画','メディア','Netflix','streaming','content','動画配信','サブスク','subscription','データセンター','クラウド','コンテンツ','OTT'],title:'Streaming Wars Enter New Phase as Studios Merge Content Libraries',summary:'大手スタジオのコンテンツライブラリ統合が進み、ストリーミング戦争が新局面へ。消費者の選択肢が変わる中、クリエイターへの報酬体系の見直しを求める声も上がっている。',points:['コンテンツの多様性','クリエイターエコノミー','日本コンテンツのグローバル展開']}
   ],
   スポーツ:[
@@ -1471,11 +1551,11 @@ const ARTICLES = {
   ],
   科学:[
     {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
-    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科��的発見と商業利用']}
+    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
   ],
   ライフ:[
     {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
-    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らして��る。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
+    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
   ]
 };
 
@@ -1530,7 +1610,7 @@ async function doSearch(val){
       keywords: r.webTitle.toLowerCase().split(/\W+/).filter(w=>w.length>3),
       title: r.webTitle,
       summary: r.fields?.trailText || r.webTitle,
-      points:['記事の背景と���脈','主な論点と影響','あなたの意見は？'],
+      points:['記事の背景と文脈','主な論点と影響','あなたの意見は？'],
       url: r.webUrl,
       live: true,
       _fromApiSearch: true
@@ -1679,14 +1759,23 @@ async function startSession(){
     state.article = pool[Math.floor(Math.random()*pool.length)];
   }
   state.history = [];
+  document.getElementById('chat').innerHTML = '';
+  document.getElementById('sugg-row').innerHTML = '';
+  state.userTurns = 0;
+  state.words = 0;
+  // 分散復習：期日が来た単語帳の語彙をターゲットに
+  state.targets = pickTargetVocab().map(w=>({word:w, used:false}));
 
   // ① 記事を保存（昨日の記事バナー用）
   saveLastArticle(state.article, state.cat, state.mode);
+  savePrefs();
 
   renderArticle();
   renderModeBadge();
+  renderGoal();
   setStep(3);
-  show('s-mode','s-session');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-session').classList.add('active');
   document.getElementById('back-btn').classList.remove('show');
   document.getElementById('vocab-fab').classList.add('show');
   updateVocabBadge();
@@ -1756,10 +1845,14 @@ function buildSystem(){
     facilitation:`You play the role of a meeting participant (sometimes agreeable, sometimes challenging). The user is the facilitator. After every 2-3 user responses, evaluate their facilitation skills and English in a "💡 Feedback" section.`,
     interview:`You are a professional interviewer at a global company. Ask structured interview questions based on the article. After each user answer, give detailed feedback on content, delivery, and English in a "💡 Feedback" section.`
   };
+  const targets = (state.targets||[]).map(t=>t.word);
+  const targetInst = targets.length
+    ? `\nThe learner is reviewing these target expressions from their vocabulary notebook: ${targets.join(', ')}. Naturally create chances for them to use these (e.g. ask questions that invite them), and briefly praise them when they do.`
+    : '';
   return `${levelInst[state.level]} ${modeInst[state.mode]}
 Article: "${state.article.title}" — ${state.article.summary}
 Key discussion points: ${state.article.points.join(', ')}
-Keep responses concise (under 120 words for the main content). Format feedback clearly with scores when giving "💡 Feedback".`;
+Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".${targetInst}`;
 }
 
 function buildOpenPrompt(){
@@ -1780,6 +1873,7 @@ async function send(txt){
   inp.value='';resize(inp);
   document.getElementById('sugg-row').innerHTML='';
   addMsg('user',msg);
+  trackUtterance(msg);
 
   state.busy=true;
   state.history.push({role:'user',content:msg});
@@ -1850,7 +1944,7 @@ function renderFeedbackCard(rawText){
   const cleanText=rawText.replace(/(\w[\w\s]+?):\s*\d+\/\d+/g,'').replace(/^\s*[\-\*]\s*/gm,'').trim();
   if(cleanText){
     html+=`<div class="feedback-section">
-      <div class="feedback-section-title">コ���ント</div>
+      <div class="feedback-section-title">コメント</div>
       <div class="feedback-text">${cleanText.replace(/\n/g,'<br>')}</div>
     </div>`;
   }
@@ -1879,7 +1973,7 @@ function toggleHide(btn){
   const msgDiv=btn.closest('.msg');
   const bubble=msgDiv.querySelector('.bubble');
   const hidden=bubble.classList.toggle('hidden');
-  btn.title=hidden?'テキストを表示':'テキス���を隠す';
+  btn.title=hidden?'テキストを表示':'テキストを隠す';
   btn.innerHTML=hidden?
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`:
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
@@ -1906,7 +2000,7 @@ function speakText(btn,text,shadowMode=false){
     ttsActive.classList.remove('speaking');
     ttsActive.title='読み上げる';
   }
-  // シ��ドーイングモード: 再生中は文字を隠す
+  // シャドーイングモード: 再生中は文字を隠す
   if(shadowMode && bubble){
     bubble.classList.add('hidden');
   }
@@ -2027,6 +2121,7 @@ function renderVocabList(){
         <div class="vocab-word">${v.word}</div>
         ${v.note?`<div class="vocab-note">${v.note}</div>`:''}
         <div class="vocab-date">${v.date} · ${v.article||''}</div>
+        <div class="vocab-date">${v.due && v.due > Date.now() ? '次の復習 '+new Date(v.due).toLocaleDateString('ja-JP') : '復習タイミング（次のセッションで出題）'}</div>
       </div>
       <button class="vocab-del" onclick="deleteVocab(${list.length-1-i})" title="削除">×</button>
     </div>
@@ -2079,20 +2174,43 @@ function loadScoreHistory(){
 function saveScoreHistory(score){
   const history = loadScoreHistory();
   history.push({ date: new Date().toLocaleDateString('ja-JP'), score });
-  // keep last 20 entries
   if(history.length > 20) history.splice(0, history.length - 20);
   try{ localStorage.setItem('ns_score_history', JSON.stringify(history)); }catch(e){}
 }
+function escHtml(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══ ストリーク表示（損失回避 / フレッシュスタート効果） ══
 function renderStatsBar(){
   const streak = loadStreak();
   const history = loadScoreHistory();
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now()-86400000).toDateString();
+  const doneToday = streak.last === today;
+  const alive = doneToday || streak.last === yesterday;
+  const days = alive ? streak.days : 0;
+
   if(streak.days === 0 && history.length === 0){
     document.getElementById('stats-bar').style.display = 'none';
-    return;
+  } else {
+    document.getElementById('stats-bar').style.display = 'flex';
   }
-  document.getElementById('stats-bar').style.display = 'flex';
-  document.getElementById('streak-val').textContent = streak.days;
-  // Sparkline
+  document.getElementById('streak-val').textContent = days;
+  const warn = document.getElementById('streak-warn');
+  if(doneToday){
+    warn.className = 'stat-warn ok';
+    warn.textContent = '今日の練習は達成済み ✓';
+  } else if(alive && days > 0){
+    warn.className = 'stat-warn';
+    warn.textContent = `今日練習しないと ${days}日の記録が途切れます`;
+  } else if(streak.days > 0){
+    warn.className = 'stat-warn';
+    warn.textContent = '今日から新しい記録をスタートしよう';
+  } else {
+    warn.textContent = '';
+  }
+
   const scores = history.map(h=>h.score);
   const svg = document.getElementById('sparkline-line');
   if(scores.length < 2){
@@ -2111,103 +2229,202 @@ function renderStatsBar(){
     const avg = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
     document.getElementById('sparkline-sub').textContent = `平均 ${avg}点 (${scores.length}回)`;
   }
+  renderQuickStart();
+}
+
+// ══ クイックスタート（デフォルト効果 / 選択過多の解消） ══
+const MODE_JA = {discussion:'ディスカッション', facilitation:'ファシリテーション', interview:'面接スピーチ'};
+const LEVEL_JA = {beginner:'初級', intermediate:'中級', advanced:'上級'};
+const DEFAULT_PREFS = {mode:'discussion', level:'intermediate', cat:'主要'};
+function loadPrefs(){
+  try{ return JSON.parse(localStorage.getItem('ns_prefs')||'null') || DEFAULT_PREFS; }catch(e){ return DEFAULT_PREFS; }
+}
+function savePrefs(){
+  try{ localStorage.setItem('ns_prefs', JSON.stringify({mode:state.mode, level:state.level, cat:state.cat})); }catch(e){}
+}
+function renderQuickStart(){
+  const p = loadPrefs();
+  const sub = document.getElementById('qs-sub');
+  if(sub) sub.textContent = `${MODE_JA[p.mode]||''}・${LEVEL_JA[p.level]||''} ／ ${p.cat}カテゴリのおすすめ記事を自動選択`;
+}
+function quickStart(){
+  const p = loadPrefs();
+  state.mode = p.mode; state.level = p.level; state.cat = p.cat || '主要';
+  let lastTitle = null;
+  try{ const l = JSON.parse(localStorage.getItem('ns_last_article')||'null'); lastTitle = l && l.article ? l.article.title : null; }catch(e){}
+  const catPool = (ARTICLES[state.cat] && ARTICLES[state.cat].length) ? ARTICLES[state.cat] : ALL_ARTICLES;
+  let pool = catPool.filter(a => a.title !== lastTitle);
+  if(pool.length === 0) pool = catPool;
+  state.article = pool[Math.floor(Math.random()*pool.length)] || null;
+  startSession();
+}
+
+// ══ 分散復習（間隔反復）ターゲット語彙 ══
+const SRS_INTERVALS = [1, 3, 7, 14, 30]; // days
+function pickTargetVocab(){
+  const now = Date.now();
+  return loadVocab()
+    .filter(v => !v.due || v.due <= now)
+    .sort((a,b) => (a.due||0) - (b.due||0))
+    .slice(0,3)
+    .map(v => v.word);
+}
+function markVocabReviewed(word){
+  const list = loadVocab();
+  const v = list.find(x => x.word.toLowerCase() === word.toLowerCase());
+  if(!v) return;
+  v.box = Math.min((v.box||0) + 1, SRS_INTERVALS.length - 1);
+  v.due = Date.now() + SRS_INTERVALS[v.box] * 86400000;
+  saveVocab(list);
+}
+
+// ══ ゴール勾配 + 保有進捗効果（記事を開いた時点で1/7） ══
+const GOAL_STEPS = 7;
+function trackUtterance(msg){
+  state.userTurns = (state.userTurns||0) + 1;
+  state.words = (state.words||0) + msg.split(/\s+/).filter(w => /[a-zA-Z]/.test(w)).length;
+  const low = msg.toLowerCase();
+  (state.targets||[]).forEach(t => {
+    if(!t.used && low.includes(t.word.toLowerCase())){ t.used = true; markVocabReviewed(t.word); }
+  });
+  renderGoal();
+}
+function renderGoal(){
+  const done = Math.min(GOAL_STEPS, 1 + (state.userTurns||0));
+  const reached = done >= GOAL_STEPS;
+  document.getElementById('goal-fill').style.width = (done/GOAL_STEPS*100) + '%';
+  document.getElementById('goal-count').textContent = `${done} / ${GOAL_STEPS} · ${state.words||0} words`;
+  document.getElementById('goal-label').textContent = reached
+    ? 'ゴール達成！「終了」でスコアを確認しよう'
+    : (done === 1 ? '記事を開いた ✓ ― ゴールまであと' : 'ゴールまであと') + ` ${GOAL_STEPS-done}回 発話`;
+  document.getElementById('goal-strip').classList.toggle('done', reached);
+  document.getElementById('end-btn').classList.toggle('ready', reached);
+  const row = document.getElementById('target-row');
+  const ts = state.targets || [];
+  row.innerHTML = ts.length
+    ? `<span class="target-hint">復習語彙を使おう：</span>` + ts.map(t =>
+        `<span class="target-chip${t.used?' used':''}" title="単語帳の復習語彙">${t.used?'✓ ':''}${escHtml(t.word)}</span>`).join('')
+    : '';
 }
 
 // ══ End Session ══
 async function endSession(){
   if(state.busy) return;
-  if(state.history.length < 2){
-    addMsg('ai','もう少し会話を続けてから終了しましょう！最低2〜3回のやり取りが必要です。');
+  if((state.userTurns||0) < 2){
+    addMsg('ai','もう少し会話を続けてから終了しましょう！スコア評価には2回以上の発話が必要です。');
     return;
   }
-  // Show loading
+  if(!sample){ addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。'); return; }
+  state.busy = true;
   loading('スコアを計算中…');
   document.getElementById('vocab-fab').classList.remove('show');
   document.getElementById('vocab-panel').classList.remove('show');
 
-  // Build history text for AI evaluation
-  const conv = state.history.slice(-20).map(m=>`${m.role==='user'?'Student':'AI'}: ${m.content}`).join('\n');
-  const prompt = `You are an experienced English speaking coach. Evaluate this English conversation practice session.
+  // history[0] は内部の開始プロンプトなので除外
+  const conv = state.history.slice(1).slice(-20)
+    .map(m => `${m.role==='user'?'Student':'AI'}: ${m.content}`).join('\n');
+  const prompt = `You are an experienced English speaking coach. Evaluate the STUDENT's English in this practice session.
 
 Article topic: "${state.article ? state.article.title : 'General discussion'}"
-Mode: ${state.mode}
+Mode: ${state.mode} / Level: ${state.level}
 
 Conversation:
 ${conv}
 
-Provide a JSON response in exactly this format (no markdown, just JSON):
+Return ONLY JSON (no markdown) in exactly this format:
 {
   "score": <integer 0-100>,
+  "best_phrase": "<the student's single best sentence, quoted exactly as they said it>",
+  "best_reason": "<why it was good, 1 sentence in Japanese>",
   "improvements": [
-    "<specific expression or grammar point to improve, with example fix>",
-    "<second improvement>",
-    "<third improvement>"
+    "<improvement 1 in Japanese: quote what the student said → better English version>",
+    "<improvement 2>",
+    "<improvement 3>"
   ]
 }
 
-Score based on: fluency (30pts), vocabulary range (30pts), grammar accuracy (20pts), content relevance (20pts).
-Keep improvements concise and actionable in Japanese.`;
+Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 20. Be fair and encouraging but honest.`;
 
+  const prevHistory = loadScoreHistory();
   try {
-    if(!sample) sample = await window.claude.use('sample');
     let raw = '';
-    await sample.streamText(prompt, chunk => { raw += chunk; });
-    // parse JSON
+    await sample([{role:'user', content:prompt}], { onText:({text:t}) => { raw = t; }, cache:false });
     const match = raw.match(/\{[\s\S]*\}/);
     if(!match) throw new Error('no json');
     const result = JSON.parse(match[0]);
-    const score = Math.min(100, Math.max(0, Math.round(result.score)));
-    const improvements = result.improvements || [];
-
-    // Save stats
+    const score = Math.min(100, Math.max(0, Math.round(Number(result.score)||0)));
     updateStreak();
     saveScoreHistory(score);
-
     loading(null);
-    showSummaryScreen(score, improvements);
+    showSummaryScreen(score, result.improvements || [], result.best_phrase, result.best_reason, prevHistory, true);
   } catch(e) {
+    console.error('Session scoring failed', e);
     loading(null);
-    // fallback: show with estimated score
-    const msgCount = state.history.filter(m=>m.role==='user').length;
-    const estScore = Math.min(90, 40 + msgCount * 8);
     updateStreak();
-    saveScoreHistory(estScore);
-    showSummaryScreen(estScore, [
-      '発言の最初に "Well," や "Actually," などのフィラーを使って自然につなごう',
-      '意見を述べる際は "I believe that..." より "From my perspective..." で洗練度アップ',
-      '抽象的な表現を避け、具体例（"For instance, in Japan..."）で説得力を高めよう'
-    ]);
+    showSummaryScreen(null, [
+      'AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しください。'
+    ], null, null, prevHistory, false);
   }
+  state.busy = false;
 }
 
-function showSummaryScreen(score, improvements){
-  // Populate summary screen
+function showSummaryScreen(score, improvements, bestPhrase, bestReason, prevHistory, scored){
   document.getElementById('summary-date').textContent =
     new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
 
-  const num = document.getElementById('score-num');
-  num.textContent = score;
-  const ring = document.getElementById('score-ring');
-  ring.className = 'score-ring ' + (score >= 80 ? 'score-hi' : score >= 55 ? 'score-mid' : 'score-lo');
+  document.getElementById('score-num').textContent = scored ? score : '—';
+  document.getElementById('score-ring').className = 'score-ring ' +
+    (!scored ? '' : score >= 80 ? 'score-hi' : score >= 55 ? 'score-mid' : 'score-lo');
+  document.getElementById('summary-emoji').innerHTML =
+    ICON(!scored ? 'book' : score >= 80 ? 'award' : score >= 60 ? 'star' : score >= 40 ? 'zap' : 'book');
 
-  const emoji = score >= 80 ? 'award' : score >= 60 ? 'star' : score >= 40 ? 'zap' : 'book';
-  document.getElementById('summary-emoji').innerHTML = ICON(emoji);
+  // 前回比・自己ベスト（自分との比較）
+  const delta = document.getElementById('score-delta');
+  if(scored && prevHistory.length){
+    const prev = prevHistory[prevHistory.length-1].score;
+    const best = Math.max(...prevHistory.map(h=>h.score));
+    const d = score - prev;
+    const dTxt = d > 0 ? `<span class="up">▲ ${d}</span>` : d < 0 ? `<span class="down">▼ ${-d}</span>` : '±0';
+    delta.innerHTML = `前回比 ${dTxt}` + (score > best ? '<span class="pb-badge">自己ベスト更新！</span>' : '');
+  } else if(scored){
+    delta.innerHTML = '初回スコア ― ここが基準点です';
+  } else {
+    delta.textContent = '';
+  }
 
-  const list = document.getElementById('improve-list');
-  list.innerHTML = improvements.slice(0,3).map((tip,i)=>`
+  // セッションの実績（アウトプット量）
+  const ts = state.targets || [];
+  const used = ts.filter(t=>t.used).length;
+  document.getElementById('summary-stats').innerHTML =
+    `<div class="summary-stat"><b>${state.userTurns||0}</b><span>発話回数</span></div>` +
+    `<div class="summary-stat"><b>${state.words||0}</b><span>話した単語数</span></div>` +
+    (ts.length ? `<div class="summary-stat"><b>${used}/${ts.length}</b><span>復習語彙を使用</span></div>` : '');
+
+  // ピーク・エンドの法則：良かった点を先に
+  const bestSec = document.getElementById('best-section');
+  if(bestPhrase){
+    bestSec.style.display = '';
+    document.getElementById('best-phrase').textContent = `“${bestPhrase}”`;
+    document.getElementById('best-why').textContent = bestReason || '';
+  } else {
+    bestSec.style.display = 'none';
+  }
+
+  document.getElementById('improve-list').innerHTML = improvements.slice(0,3).map((tip,i)=>`
     <div class="improve-item">
       <div class="improve-num">${i+1}</div>
-      <div class="improve-text">${tip}</div>
+      <div class="improve-text">${escHtml(tip)}</div>
     </div>
   `).join('');
 
-  // Transition to summary screen
-  show('s-session', 's-summary');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-summary').classList.add('active');
   setStep(3);
 }
 
 function goHome(){
-  show('s-summary','s-cat');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-cat').classList.add('active');
   document.getElementById('back-btn').classList.remove('show');
   setStep(1);
   renderStatsBar();
@@ -2218,10 +2435,6 @@ function restartSession(){
   // Keep same article + mode, restart session
   const saved = { article: state.article, cat: state.cat, mode: state.mode, level: state.level };
   state = { cat: saved.cat, mode: saved.mode, level: saved.level, article: saved.article, history: [], busy: false };
-  document.getElementById('chat').innerHTML = '';
-  show('s-summary','s-session');
-  document.getElementById('vocab-fab').classList.add('show');
-  updateVocabBadge();
   startSession();
 }
 
