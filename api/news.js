@@ -107,8 +107,18 @@ module.exports = async function handler(req, res) {
   try {
     const upstream = await fetch(`${GNEWS_BASE}/${endpoint}?${params.toString()}`);
     if (!upstream.ok) {
+      // GNewsのエラーメッセージを原因調査用に返す（APIキーが含まれていれば伏せる）
+      let detail = '';
+      try {
+        const body = await upstream.json();
+        const errs = body && body.errors;
+        detail = Array.isArray(errs) ? errs.join(' / ')
+          : (errs && typeof errs === 'object') ? Object.values(errs).flat().join(' / ')
+          : String(errs || body.message || '');
+      } catch (e) { /* 本文がJSONでない場合は詳細なし */ }
+      detail = detail.split(apiKey).join('***').slice(0, 300);
       res.setHeader('Cache-Control', 'no-store');
-      return res.status(502).json({ error: 'upstream_error', status: upstream.status });
+      return res.status(502).json({ error: 'upstream_error', status: upstream.status, detail });
     }
     const data = await upstream.json();
     const articles = (data.articles || [])
