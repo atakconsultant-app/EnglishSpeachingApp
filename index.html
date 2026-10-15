@@ -1398,6 +1398,37 @@ const CAT_EMOJIS = {'主要':'📰','国内':'🗾','国際':'🌏','経済':'�
 (async()=>{
   try{ sample = await claude.use('sample'); }catch(e){ sample = null; }
 })();
+
+// ══ AI呼び出し：claude.ai上では claude.use、公開サイトではサーバー（/api/chat）経由 ══
+function aiAvailable(){ return !!sample || /^https?:$/.test(location.protocol); }
+async function callAI(messages, purpose, onText){
+  if(sample){
+    let text = '';
+    await sample(messages, { onText:({text:t})=>{ text = t; if(onText) onText(t); }, cache:false });
+    return text;
+  }
+  let token = '';
+  try{
+    const { data } = await sb.auth.getSession();
+    token = data && data.session ? data.session.access_token : '';
+  }catch(e){}
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+    body: JSON.stringify({ purpose, messages })
+  });
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok){
+    const err = new Error(data.error || ('http ' + res.status));
+    err.userMessage = res.status === 401 ? 'ログインの有効期限が切れました。もう一度ログインしてください。'
+      : res.status === 429 ? '本日のAI利用回数の上限に達しました。明日また練習しましょう。'
+      : null;
+    throw err;
+  }
+  const text = data.text || '';
+  if(onText) onText(text);
+  return text;
+}
 try{ localStorage.removeItem('guardian_api_key'); }catch(e){} // 旧方式で保存されたキーを削除
 try{ loadYesterdayBanner(); }catch(e){}
 fetchLiveNews();
@@ -1746,23 +1777,18 @@ function toggleExpand(){
 
 // ══ AI opening ══
 async function aiOpen(){
-  if(!sample){addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。');return;}
+  if(!aiAvailable()){addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。');return;}
   showTyping();
-  const sys = buildSystem();
   const openPrompt = buildOpenPrompt();
   try{
-    let text='';
-    await sample([{role:'user',content:openPrompt}],{
-      onText:({text:t})=>{text=t;updateTyping(text);},
-      cache:false
-    });
+    const text = await callAI([{role:'user',content:openPrompt}], 'chat', t => updateTyping(t));
     removeTyping();
     addMsg('ai',text);
     state.history=[{role:'user',content:openPrompt},{role:'assistant',content:text}];
     showSuggestions();
   }catch(e){
     removeTyping();
-    addMsg('ai','セッションを開始できませんでした。もう一度お試しください。');
+    addMsg('ai', e.userMessage || 'セッションを開始できませんでした。もう一度お試しください。');
   }
 }
 
@@ -1814,11 +1840,7 @@ async function send(txt){
   const fullHistory = [{role:'user',content:buildOpenPrompt()},...state.history.slice(1)];
 
   try{
-    let text='';
-    await sample(fullHistory,{
-      onText:({text:t})=>{text=t;updateTyping(text);},
-      cache:false
-    });
+    const text = await callAI(fullHistory, 'chat', t => updateTyping(t));
     removeTyping();
 
     // Check for feedback
@@ -1833,7 +1855,8 @@ async function send(txt){
     showSuggestions();
   }catch(e){
     removeTyping();
-    addMsg('ai','Error connecting to AI. Please try again.');
+    state.history.pop(); // 失敗した発言は履歴から外し、同じ内容をもう一度送れるようにする
+    addMsg('ai', e.userMessage || 'AIに接続できませんでした。もう一度送信してください。');
   }
   state.busy=false;
 }
@@ -2252,7 +2275,7 @@ async function endSession(){
     addMsg('ai','もう少し会話を続けてから終了しましょう！スコア評価には2回以上の発話が必要です。');
     return;
   }
-  if(!sample){ addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。'); return; }
+  if(!aiAvailable()){ addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。'); return; }
   state.busy = true;
   loading('スコアを計算中…');
   document.getElementById('vocab-fab').classList.remove('show');
@@ -2285,8 +2308,7 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
 
   const prevHistory = loadScoreHistory();
   try {
-    let raw = '';
-    await sample([{role:'user', content:prompt}], { onText:({text:t}) => { raw = t; }, cache:false });
+    const raw = await callAI([{role:'user', content:prompt}], 'score');
     const match = raw.match(/\{[\s\S]*\}/);
     if(!match) throw new Error('no json');
     const result = JSON.parse(match[0]);
@@ -2300,7 +2322,7 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
     loading(null);
     updateStreak();
     showSummaryScreen(null, [
-      'AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しください。'
+      e.userMessage || 'AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しください。'
     ], null, null, prevHistory, false);
   }
   state.busy = false;
