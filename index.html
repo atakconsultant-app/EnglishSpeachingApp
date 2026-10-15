@@ -1462,6 +1462,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
           <label class="seg-opt"><input type="radio" name="sp-accent" value="us" onchange="updateSpeechPref('accent', this.value)"><span>アメリカ</span></label>
           <label class="seg-opt"><input type="radio" name="sp-accent" value="gb" onchange="updateSpeechPref('accent', this.value)"><span>イギリス</span></label>
           <label class="seg-opt"><input type="radio" name="sp-accent" value="in" onchange="updateSpeechPref('accent', this.value)"><span>インド</span></label>
+<label class="seg-opt"><input type="radio" name="sp-accent" value="au" onchange="updateSpeechPref('accent', this.value)"><span>オーストラリア</span></label>
         </div>
       </div>
       <div class="field">
@@ -1652,7 +1653,7 @@ const ARTICLES = {
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
-    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能してい���ものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
   ],
   経済:[
     {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
@@ -1663,7 +1664,7 @@ const ARTICLES = {
     {source:'The Hollywood Reporter',emoji:'🎬',topic:'ビジネス',keywords:['ストリーミング','映画','メディア','Netflix','streaming','content','動画配信','サブスク','subscription','データセンター','クラウド','コンテンツ','OTT'],title:'Streaming Wars Enter New Phase as Studios Merge Content Libraries',summary:'大手スタジオのコンテンツライブラリ統合が進み、ストリーミング戦争が新局面へ。消費者の選択肢が変わる中、クリエイターへの報酬体系の見直しを求める声も上がっている。',points:['コンテンツの多様性','クリエイターエコノミー','日本コンテンツのグローバル展開']}
   ],
   スポーツ:[
-    {source:'ESPN',emoji:'🏅',topic:'スポーツ・文化',keywords:['オリンピック','スポーツ','テクノロジー','Olympic','LA','2028','eスポーツ','esports','AI審判','データ分析','athletics'],title:'Olympic Games 2028 LA: Technology and Inclusion Take Center Stage',summary:'2028年ロサンゼルス五輪に向けて、テクノロジー活用とインクルージョンが重点テーマに。AI審判システムの導入やeスポーツの正式種目化をめぐる議論が活発化している。',points:['スポーツとテクノロジーの融合','公平性と新技術','五輪の商業化と純粋性']},
+    {source:'ESPN',emoji:'🏅',topic:'スポーツ・文化',keywords:['オリンピック','スポー��','テクノロジー','Olympic','LA','2028','eスポーツ','esports','AI審判','データ分析','athletics'],title:'Olympic Games 2028 LA: Technology and Inclusion Take Center Stage',summary:'2028年ロサンゼルス五輪に向けて、テクノロジー活用とインクルージョンが重点テーマに。AI審判システムの導入やeスポーツの正式種目化をめぐる議論が活発化している。',points:['スポーツとテクノロジーの融合','公平性と新技術','五輪の商業化と純粋性']},
     {source:'Sky Sports',emoji:'⚽',topic:'ビジネス',keywords:['サッカー','プレミアリーグ','スポーツビジネス','Premier League','salary','移籍','transfer','UEFA','FFP','ビジネス','経営'],title:'Premier League Clubs Face New Salary Cap Rules Amid Financial Fair Play Reforms',summary:'プレミアリーグがファイナンシャル・フェアプレー改革として新たな給与上限規制を導入。クラブ経営の透明性が高まる一方、競争力への影響を懸念する声もある。',points:['スポーツ経営と持続可能性','ビッグクラブ vs 中小クラブ','日本人選手への影響']}
   ],
   IT:[
@@ -2302,7 +2303,7 @@ function renderStatsBar(){
     warn.textContent = '今日の練習は達成済み ✓';
   } else if(alive && days > 0){
     warn.className = 'stat-warn';
-    warn.textContent = `今日練習しないと ${days}日の記録が途切れます`;
+    warn.textContent = `今日練習しないと ${days}日の記録が途切���ます`;
   } else if(streak.days > 0){
     warn.className = 'stat-warn';
     warn.textContent = '今日から新しい記録をスタートしよう';
@@ -3125,10 +3126,11 @@ const ACCENTS = {
   us: { lang:'en-US', label:'アメリカ', country:'the United States', variety:'American' },
   gb: { lang:'en-GB', label:'イギリス', country:'the United Kingdom', variety:'British' },
   in: { lang:'en-IN', label:'インド', country:'India', variety:'Indian' },
+  au: { lang:'en-AU', label:'オーストラリア', country:'Australia', variety:'Australian' },
 };
 // Browsers don't expose a voice's gender, so it is inferred from common voice names.
-const FEMALE_VOICE_HINTS = ['female','woman','samantha','victoria','karen','moira','tessa','fiona','veena','serena','kate','susan','zira','hazel','heera','libby','sonia','neerja','aria','jenny','michelle','ava','allison','nicky','joanna','salli','kimberly','amy','emma','raveena','aditi','kalpana','priya','isha','lekha','martha','catherine','stephanie','shelley','sandy','flo','grandma','google us english'];
-const MALE_VOICE_HINTS = ['male','daniel','alex','fred','tom','aaron','arthur','oliver','rishi','george','david','mark','james','ryan','guy','christopher','eric','prabhat','ravi','hemant','thomas','rocko','reed','eddy','grandpa','gordon','lee'];
+const FEMALE_VOICE_HINTS = ['female','woman','samantha','victoria','karen','moira','tessa','fiona','veena','serena','kate','susan','zira','hazel','heera','libby','sonia','neerja','aria','jenny','michelle','ava','allison','nicky','joanna','salli','kimberly','amy','emma','raveena','aditi','kalpana','priya','isha','lekha','martha','catherine','stephanie','natasha','annette','hayley','shelley','sandy','flo','grandma','google us english'];
+const MALE_VOICE_HINTS = ['male','daniel','alex','fred','tom','aaron','arthur','oliver','rishi','george','david','mark','james','ryan','guy','christopher','eric','prabhat','ravi','hemant','thomas','rocko','reed','william','liam','eddy','grandpa','gordon','lee'];
 
 function loadSpeechPrefs(){
   let saved = {};
