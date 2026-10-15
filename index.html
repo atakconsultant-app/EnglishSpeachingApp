@@ -1035,7 +1035,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   </section>
 
   <section class="final-cta" aria-labelledby="final-h">
-    <h2 id="final-h">今日のニュースで、英語を話してみよう。</h2>
+    <h2 id="final-h">今日��ニュースで、英語を話してみよう。</h2>
     <p>登録は30秒。すぐに最初のセッションを始められます。</p>
     <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める</button>
   </section>
@@ -1445,23 +1445,39 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="page-head">
       <p class="page-eyebrow">SPEAKER</p>
       <h1 class="page-title" id="speaker-h">スピーカー設定</h1>
-      <p class="page-sub">AIの英語を読み上げる声・速さ・高さを調整できます。変更はすぐに保存されます。</p>
+      <p class="page-sub">AIの話し相手の性別・発音・年齢を選べます。読み上げの声とAIの話し方（語彙・表現）の両方に反映され、アカウントに保存されます。</p>
     </div>
     <p class="form-msg show error" id="sp-unsupported" hidden>このブラウザは音声読み上げに対応していません。Chrome / Safari / Edge の最新版をお使いください。</p>
     <div class="page-card settings-stack">
       <div class="field">
-        <label for="sp-voice">音声</label>
-        <select id="sp-voice" class="page-input" onchange="updateSpeechPref('voiceURI', this.value)"></select>
-        <p class="field-hint">端末にインストールされている英語音声から選べます。</p>
+        <span class="field-label" id="sp-gender-label">性別</span>
+        <div class="seg" role="radiogroup" aria-labelledby="sp-gender-label">
+          <label class="seg-opt"><input type="radio" name="sp-gender" value="female" onchange="updateSpeechPref('gender', this.value)"><span>女性</span></label>
+          <label class="seg-opt"><input type="radio" name="sp-gender" value="male" onchange="updateSpeechPref('gender', this.value)"><span>男性</span></label>
+        </div>
       </div>
+      <div class="field">
+        <span class="field-label" id="sp-accent-label">発音</span>
+        <div class="seg" role="radiogroup" aria-labelledby="sp-accent-label">
+          <label class="seg-opt"><input type="radio" name="sp-accent" value="us" onchange="updateSpeechPref('accent', this.value)"><span>アメリカ</span></label>
+          <label class="seg-opt"><input type="radio" name="sp-accent" value="gb" onchange="updateSpeechPref('accent', this.value)"><span>イギリス</span></label>
+          <label class="seg-opt"><input type="radio" name="sp-accent" value="in" onchange="updateSpeechPref('accent', this.value)"><span>インド</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-row"><span class="field-label" id="sp-age-label">年齢</span><output class="field-val" id="sp-age-val"></output></div>
+        <div class="age-wheel-wrap">
+          <div class="age-wheel" id="sp-age" tabindex="0" role="spinbutton" aria-labelledby="sp-age-label" aria-valuemin="15" aria-valuemax="80"></div>
+        </div>
+        <p class="field-hint">スクロール（または上下キー）で年齢を選びます。</p>
+      </div>
+      <p class="field-hint" id="sp-voice-status" aria-live="polite"></p>
+    </div>
+    <div class="page-card settings-stack">
       <div class="field">
         <div class="field-row"><label for="sp-rate">話す速さ</label><output class="field-val" id="sp-rate-val" for="sp-rate"></output></div>
         <input type="range" id="sp-rate" class="page-range" min="0.5" max="1.5" step="0.05" oninput="updateSpeechPref('rate', this.value)">
         <div class="range-scale" aria-hidden="true"><span>ゆっくり</span><span>標準</span><span>速い</span></div>
-      </div>
-      <div class="field">
-        <div class="field-row"><label for="sp-pitch">声の高さ</label><output class="field-val" id="sp-pitch-val" for="sp-pitch"></output></div>
-        <input type="range" id="sp-pitch" class="page-range" min="0.5" max="1.5" step="0.05" oninput="updateSpeechPref('pitch', this.value)">
       </div>
       <div class="field">
         <div class="field-row"><label for="sp-volume">音量</label><output class="field-val" id="sp-volume-val" for="sp-volume"></output></div>
@@ -1640,7 +1656,7 @@ const ARTICLES = {
   ],
   経済:[
     {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
-    {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した。大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
+    {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した���大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
   ],
   エンタメ:[
     {source:'Variety',emoji:'🎵',topic:'スポーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
@@ -1913,7 +1929,7 @@ async function aiOpen(){
     showSuggestions();
   }catch(e){
     removeTyping();
-    addMsg('ai','セッションを開始できませんでした。もう一度お試しください。');
+    addMsg('ai','セッションを開��できませんでした。もう一度お試しください。');
   }
 }
 
@@ -1935,7 +1951,8 @@ function buildSystem(){
   return `${levelInst[state.level]} ${modeInst[state.mode]}
 Article: "${state.article.title}" — ${state.article.summary}
 Key discussion points: ${state.article.points.join(', ')}
-Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".${targetInst}`;
+Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".${targetInst}
+${speakerPersonaInstruction()}`;
 }
 
 function buildOpenPrompt(){
@@ -2175,6 +2192,7 @@ function loadVocab(){
 }
 function saveVocab(list){
   try{ localStorage.setItem('ns_vocab', JSON.stringify(list)); }catch(e){}
+  scheduleCloudSave();
 }
 function updateVocabBadge(){
   const list = loadVocab();
@@ -2256,6 +2274,7 @@ function saveScoreHistory(score){
   history.push({ date: new Date().toLocaleDateString('ja-JP'), score });
   if(history.length > 20) history.splice(0, history.length - 20);
   try{ localStorage.setItem('ns_score_history', JSON.stringify(history)); }catch(e){}
+  scheduleCloudSave();
 }
 function escHtml(s){
   return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -2874,6 +2893,7 @@ function applySession(session){
   if(userId){
     setIntroVideos(false);
     goTop();
+    pullCloudData(userId);
   }else{
     const wantsLogin = new URLSearchParams(location.search).get('auth');
     if(wantsLogin) openAuth(wantsLogin === 'signup' ? 'signup' : 'login'); else openIntro();
@@ -2881,9 +2901,78 @@ function applySession(session){
   document.body.classList.remove('auth-loading');
 }
 async function signOut(){
+  clearTimeout(cloudSaveTimer);
+  if(cloudDirty) await pushCloudData();
   if(sb) await sb.auth.signOut();
+  clearLocalLearningData();
   applySession(null);
 }
+
+// ══ Supabase 同期（学習履歴・単語帳・スピーカー設定） ══
+// localStorage is the fast local cache; the learning_data row (one per user, RLS-scoped) is the source of truth.
+const CLOUD_LOCAL_KEYS = { score_history:'ns_score_history', vocab:'ns_vocab', speaker:'ns_speech' };
+let cloudReady = false, cloudDirty = false, cloudSaveTimer = null;
+
+function readLocalJSON(key, fallback){
+  try{ const v = JSON.parse(localStorage.getItem(key) || 'null'); return v ?? fallback; }catch(e){ return fallback; }
+}
+function clearLocalLearningData(){
+  ['ns_vocab','ns_streak','ns_score_history','ns_last_article','ns_speech'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+}
+function refreshAfterCloudSync(){
+  try{ updateVocabBadge(); }catch(e){}
+  try{ updateReviewBadge(); }catch(e){}
+  try{ renderStatsBar(); }catch(e){}
+  const active = document.querySelector('.screen.active');
+  const key = active && Object.keys(NAV_SCREENS).find(k=>NAV_SCREENS[k] === active.id);
+  if(key && PAGE_RENDERERS[key]) PAGE_RENDERERS[key]();
+}
+async function pullCloudData(userId){
+  if(!sb) return;
+  cloudReady = false;
+  try{
+    const { data, error } = await sb.from('learning_data').select('score_history,vocab,speaker').eq('user_id', userId).maybeSingle();
+    if(error) throw error;
+    if(userId !== currentUserId) return;
+    if(data){
+      if(!cloudDirty){
+        localStorage.setItem('ns_score_history', JSON.stringify(data.score_history || []));
+        localStorage.setItem('ns_vocab', JSON.stringify(data.vocab || []));
+        localStorage.setItem('ns_speech', JSON.stringify(data.speaker || {}));
+      }
+      cloudReady = true;
+      if(cloudDirty) await pushCloudData();
+    }else{
+      // First sign-in on this account: upload whatever was recorded on this device.
+      cloudReady = true;
+      await pushCloudData();
+    }
+    refreshAfterCloudSync();
+  }catch(err){
+    console.error('[cloud] 学習データの読み込みに失敗しました:', err.message || err);
+  }
+}
+function scheduleCloudSave(){
+  if(!sb || !currentUserId) return;
+  cloudDirty = true;
+  if(!cloudReady) return;
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(pushCloudData, 700);
+}
+async function pushCloudData(){
+  if(!sb || !currentUserId || !cloudReady) return;
+  cloudDirty = false;
+  const payload = { user_id: currentUserId, updated_at: new Date().toISOString() };
+  payload.score_history = readLocalJSON(CLOUD_LOCAL_KEYS.score_history, []);
+  payload.vocab = readLocalJSON(CLOUD_LOCAL_KEYS.vocab, []);
+  payload.speaker = readLocalJSON(CLOUD_LOCAL_KEYS.speaker, {});
+  const { error } = await sb.from('learning_data').upsert(payload, { onConflict:'user_id' });
+  if(error){
+    cloudDirty = true;
+    console.error('[cloud] 学習データの保存に失敗しました:', error.message);
+  }
+}
+window.addEventListener('pagehide', ()=>{ if(cloudDirty) pushCloudData(); });
 
 // Runs after the whole script so state declared further down (e.g. recognition) is initialized.
 window.addEventListener('DOMContentLoaded', async function initAuth(){
@@ -3030,48 +3119,155 @@ function speakWord(idx){
   window.speechSynthesis.speak(utt);
 }
 
-const SPEECH_DEFAULTS = { voiceURI:'', rate:0.92, pitch:1, volume:1 };
+const SPEECH_DEFAULTS = { gender:'female', accent:'us', age:30, rate:0.92, volume:1 };
+const AGE_MIN = 15, AGE_MAX = 80, AGE_ITEM_H = 40;
+const ACCENTS = {
+  us: { lang:'en-US', label:'アメリカ', country:'the United States', variety:'American' },
+  gb: { lang:'en-GB', label:'イギリス', country:'the United Kingdom', variety:'British' },
+  in: { lang:'en-IN', label:'インド', country:'India', variety:'Indian' },
+};
+// Browsers don't expose a voice's gender, so it is inferred from common voice names.
+const FEMALE_VOICE_HINTS = ['female','woman','samantha','victoria','karen','moira','tessa','fiona','veena','serena','kate','susan','zira','hazel','heera','libby','sonia','neerja','aria','jenny','michelle','ava','allison','nicky','joanna','salli','kimberly','amy','emma','raveena','aditi','kalpana','priya','isha','lekha','martha','catherine','stephanie','shelley','sandy','flo','grandma','google us english'];
+const MALE_VOICE_HINTS = ['male','daniel','alex','fred','tom','aaron','arthur','oliver','rishi','george','david','mark','james','ryan','guy','christopher','eric','prabhat','ravi','hemant','thomas','rocko','reed','eddy','grandpa','gordon','lee'];
+
 function loadSpeechPrefs(){
-  try{ return { ...SPEECH_DEFAULTS, ...JSON.parse(localStorage.getItem('ns_speech') || '{}') }; }catch(e){ return { ...SPEECH_DEFAULTS }; }
+  let saved = {};
+  try{ saved = JSON.parse(localStorage.getItem('ns_speech') || '{}') || {}; }catch(e){}
+  const p = { ...SPEECH_DEFAULTS, ...saved };
+  if(!ACCENTS[p.accent]) p.accent = SPEECH_DEFAULTS.accent;
+  if(p.gender !== 'male' && p.gender !== 'female') p.gender = SPEECH_DEFAULTS.gender;
+  p.age = Math.min(AGE_MAX, Math.max(AGE_MIN, Math.round(Number(p.age) || SPEECH_DEFAULTS.age)));
+  return p;
+}
+function saveSpeechPrefs(p){
+  const { gender, accent, age, rate, volume } = p;
+  try{ localStorage.setItem('ns_speech', JSON.stringify({ gender, accent, age, rate, volume })); }catch(e){}
+  scheduleCloudSave();
 }
 function englishVoices(){
   if(!('speechSynthesis' in window)) return [];
   return window.speechSynthesis.getVoices().filter(v=>v.lang && v.lang.toLowerCase().startsWith('en'));
 }
+function voiceGender(voice){
+  const name = voice.name.toLowerCase();
+  if(FEMALE_VOICE_HINTS.some(h=>name.includes(h))) return 'female';
+  if(MALE_VOICE_HINTS.some(h=>name.includes(h))) return 'male';
+  return null;
+}
+function pickVoice(p){
+  const lang = ACCENTS[p.accent].lang.toLowerCase();
+  let best = null, bestScore = -Infinity;
+  englishVoices().forEach(v=>{
+    const vLang = v.lang.toLowerCase().replace('_','-');
+    let score = vLang === lang ? 10 : 0;
+    const g = voiceGender(v);
+    if(g === p.gender) score += 4; else if(g) score -= 4;
+    if(v.localService) score += 1;
+    if(score > bestScore){ best = v; bestScore = score; }
+  });
+  return best;
+}
+// Approximates the chosen age with pitch and pace, since browser voices have no age setting.
+function ageVoiceShape(p){
+  const base = p.gender === 'female' ? 1.08 : 0.92;
+  const ageShift = p.age < 25 ? 0.12 : p.age < 40 ? 0.04 : p.age < 60 ? -0.04 : -0.12;
+  const pace = p.age >= 65 ? 0.92 : p.age < 25 ? 1.04 : 1;
+  return { pitch: Math.min(2, Math.max(0.1, base + ageShift)), pace };
+}
 function applySpeechPrefs(utt){
   const p = loadSpeechPrefs();
-  utt.lang = 'en-US'; utt.rate = p.rate; utt.pitch = p.pitch; utt.volume = p.volume;
-  const voices = englishVoices();
-  const voice = (p.voiceURI && voices.find(v=>v.voiceURI === p.voiceURI))
-    || voices.find(v=>v.lang === 'en-US' && v.name.includes('Google')) || voices[0];
+  const shape = ageVoiceShape(p);
+  utt.lang = ACCENTS[p.accent].lang;
+  utt.rate = Math.min(2, p.rate * shape.pace);
+  utt.pitch = shape.pitch;
+  utt.volume = p.volume;
+  const voice = pickVoice(p);
   if(voice){ utt.voice = voice; utt.lang = voice.lang; }
+}
+function speakerPersonaInstruction(){
+  const p = loadSpeechPrefs();
+  const a = ACCENTS[p.accent];
+  return `Speaker persona: you are a ${p.age}-year-old ${p.gender === 'male' ? 'man' : 'woman'} from ${a.country}. Use ${a.variety} English spelling, vocabulary and natural expressions typical of someone your age from that region, while staying easy for a learner to follow. Stay in this persona, but do not announce it unless the learner asks.`;
 }
 function speechLabel(key, val){
   if(key === 'rate') return Number(val).toFixed(2) + 'x';
   if(key === 'volume') return Math.round(val * 100) + '%';
   return Number(val).toFixed(2);
 }
+function renderVoiceStatus(){
+  const el = document.getElementById('sp-voice-status');
+  if(!el || !('speechSynthesis' in window)) return;
+  const p = loadSpeechPrefs();
+  const voice = pickVoice(p);
+  if(!voice){ el.textContent = '英語の音声が見つかりません。端末の音声設定をご確認ください。'; return; }
+  const accentOk = voice.lang.toLowerCase().replace('_','-') === ACCENTS[p.accent].lang.toLowerCase();
+  const genderOk = voiceGender(voice) === p.gender;
+  let note = `読み上げ音声: ${voice.name}（${voice.lang}）`;
+  if(!accentOk) note += ` ／ この端末に${ACCENTS[p.accent].label}英語の音声がないため、近い音声で代用しています。`;
+  else if(!genderOk) note += ' ／ 選んだ性別の音声が見つからないため、近い音声で代用しています。';
+  el.textContent = note;
+}
+function renderAgeWheel(age){
+  const wheel = document.getElementById('sp-age');
+  if(!wheel.childElementCount){
+    let html = '<div class="age-pad" aria-hidden="true"></div>';
+    for(let a = AGE_MIN; a <= AGE_MAX; a++) html += `<div class="age-item" data-age="${a}" aria-hidden="true">${a}</div>`;
+    wheel.innerHTML = html + '<div class="age-pad" aria-hidden="true"></div>';
+    wheel.addEventListener('scroll', onAgeScroll, { passive:true });
+    wheel.addEventListener('keydown', onAgeKey);
+    wheel.addEventListener('click', e=>{
+      const item = e.target.closest('.age-item');
+      if(item) scrollAgeTo(Number(item.dataset.age), true);
+    });
+  }
+  scrollAgeTo(age, false);
+  markAge(age);
+}
+function scrollAgeTo(age, smooth){
+  document.getElementById('sp-age').scrollTo({ top:(age - AGE_MIN) * AGE_ITEM_H, behavior: smooth ? 'smooth' : 'auto' });
+}
+function markAge(age){
+  const wheel = document.getElementById('sp-age');
+  wheel.setAttribute('aria-valuenow', age);
+  wheel.setAttribute('aria-valuetext', age + '歳');
+  document.getElementById('sp-age-val').textContent = age + '歳';
+  wheel.querySelectorAll('.age-item').forEach(el=>el.classList.toggle('on', Number(el.dataset.age) === age));
+}
+let ageScrollTimer = null;
+function onAgeScroll(e){
+  const age = Math.min(AGE_MAX, Math.max(AGE_MIN, AGE_MIN + Math.round(e.currentTarget.scrollTop / AGE_ITEM_H)));
+  markAge(age);
+  clearTimeout(ageScrollTimer);
+  ageScrollTimer = setTimeout(()=>{ if(loadSpeechPrefs().age !== age) updateSpeechPref('age', age); }, 180);
+}
+function onAgeKey(e){
+  const step = { ArrowUp:-1, ArrowDown:1, PageUp:-5, PageDown:5 }[e.key];
+  if(!step) return;
+  e.preventDefault();
+  const age = Math.min(AGE_MAX, Math.max(AGE_MIN, loadSpeechPrefs().age + step));
+  scrollAgeTo(age, true);
+}
 function renderSpeaker(){
   const p = loadSpeechPrefs();
   document.getElementById('sp-unsupported').hidden = 'speechSynthesis' in window;
-  const voices = englishVoices();
-  const sel = document.getElementById('sp-voice');
-  sel.innerHTML = '<option value="">自動（おすすめ）</option>' +
-    voices.map(v=>`<option value="${escHtml(v.voiceURI)}">${escHtml(v.name)}（${escHtml(v.lang)}）</option>`).join('');
-  sel.value = voices.some(v=>v.voiceURI === p.voiceURI) ? p.voiceURI : '';
-  ['rate','pitch','volume'].forEach(k=>{
+  document.querySelectorAll('input[name="sp-gender"]').forEach(r=>{ r.checked = r.value === p.gender; });
+  document.querySelectorAll('input[name="sp-accent"]').forEach(r=>{ r.checked = r.value === p.accent; });
+  renderAgeWheel(p.age);
+  ['rate','volume'].forEach(k=>{
     document.getElementById('sp-'+k).value = p[k];
     document.getElementById('sp-'+k+'-val').textContent = speechLabel(k, p[k]);
   });
+  renderVoiceStatus();
 }
 function updateSpeechPref(key, value){
   const p = loadSpeechPrefs();
-  p[key] = key === 'voiceURI' ? value : parseFloat(value);
-  try{ localStorage.setItem('ns_speech', JSON.stringify(p)); }catch(e){}
-  if(key !== 'voiceURI') document.getElementById('sp-'+key+'-val').textContent = speechLabel(key, p[key]);
+  p[key] = (key === 'gender' || key === 'accent') ? value : Number(value);
+  saveSpeechPrefs(p);
+  if(key === 'rate' || key === 'volume') document.getElementById('sp-'+key+'-val').textContent = speechLabel(key, p[key]);
+  renderVoiceStatus();
 }
 function resetSpeechPrefs(){
-  try{ localStorage.removeItem('ns_speech'); }catch(e){}
+  saveSpeechPrefs({ ...SPEECH_DEFAULTS });
   renderSpeaker();
   showFormMsg('sp-msg','success','初期設定に戻しました。');
 }
@@ -3125,8 +3321,9 @@ document.getElementById('pw-form').addEventListener('submit', async e=>{
   }
 });
 function resetLearningData(){
-  if(!confirm('この端末の学習履歴・単語帳・連続学習日数を削除します。よろしいですか？')) return;
+  if(!confirm('アカウントに保存された学習履歴・単語帳と、この端末の連続学習日数を削除します。よろしいですか？')) return;
   ['ns_vocab','ns_streak','ns_score_history','ns_last_article'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+  scheduleCloudSave();
   updateVocabBadge();
   updateReviewBadge();
   showFormMsg('reset-msg','success','学習データを削除しました。');

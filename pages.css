@@ -205,3 +205,37 @@
 @media (prefers-reduced-motion: reduce) {
   .nav-item, .icon-btn, .page-input { transition: none; }
 }
+
+/* ── スピーカー設定：性別・発音・年齢 ── */
+.field-label { font-size: 13px; font-weight: 600; color: var(--text); }
+.seg-opt { position: relative; cursor: pointer; }
+.seg-opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg-opt span {
+  display: block; padding: 8px 18px; border-radius: 999px;
+  font-size: 13px; font-weight: 600; color: var(--text-sub); transition: background .15s, color .15s;
+}
+.seg-opt input:checked + span { background: var(--surface); color: var(--accent); box-shadow: 0 2px 0 var(--border2), 0 1px 3px rgba(17,17,24,.1); }
+.seg-opt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
+.seg-opt:hover input:not(:checked) + span { color: var(--text); }
+
+.age-wheel-wrap { position: relative; width: 140px; border-radius: 14px; background: var(--surface2); border: 1px solid var(--border2); overflow: hidden; }
+.age-wheel-wrap::before {
+  content: ''; position: absolute; left: 8px; right: 8px; top: 40px; height: 40px;
+  border-radius: 10px; background: var(--surface); box-shadow: 0 3px 0 var(--accent); pointer-events: none;
+}
+.age-wheel-wrap::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(var(--surface2), transparent 34%, transparent 66%, var(--surface2));
+}
+.age-wheel {
+  position: relative; height: 120px; overflow-y: auto; scroll-snap-type: y mandatory;
+  scrollbar-width: none; overscroll-behavior: contain;
+}
+.age-wheel::-webkit-scrollbar { display: none; }
+.age-wheel:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 14px; }
+.age-pad { height: 40px; }
+.age-item {
+  height: 40px; display: flex; align-items: center; justify-content: center; scroll-snap-align: center;
+  font-size: 16px; font-weight: 600; color: var(--text-dim); font-variant-numeric: tabular-nums; cursor: pointer;
+}
+.age-item.on { color: var(--accent); font-size: 20px; font-weight: 800; }
