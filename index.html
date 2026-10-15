@@ -37,7 +37,7 @@
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
 
 /* ─── App shell ─── */
-#app{display:flex;flex-direction:column;height:100vh;max-width:860px;margin:0 auto;}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
 
 /* ─── Header ─── */
 header{
@@ -802,6 +802,7 @@ button,input,textarea{font-family:inherit;}
 </style>
 <link id="theme-css" rel="stylesheet" href="themes/studio.css">
 <link rel="stylesheet" href="intro.css">
+<link rel="stylesheet" href="pages.css">
 <script>
 const THEMES=['studio','playful','gallery'];
 function applyTheme(t){
@@ -849,6 +850,10 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></symbol>
   <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
 </svg>
 <div id="app">
@@ -879,6 +884,23 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <button type="button" class="hdr-btn" onclick="signOut()">ログアウト</button>
   </div>
 </header>
+
+<div class="app-body">
+<nav class="side-nav authed-only" aria-label="メインメニュー">
+  <p class="side-nav-label">メニュー</p>
+  <ul>
+    <li><button type="button" class="nav-item" data-nav="home" onclick="openPage('home')"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg><span class="nl-full">ホームに戻る</span><span class="nl-short" aria-hidden="true">ホーム</span></button></li>
+    <li><button type="button" class="nav-item" data-nav="history" onclick="openPage('history')"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span class="nl-full">学習履歴</span><span class="nl-short" aria-hidden="true">履歴</span></button></li>
+    <li><button type="button" class="nav-item" data-nav="review" onclick="openPage('review')"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg><span class="nl-full">復習ポイント一覧</span><span class="nl-short" aria-hidden="true">復習</span><span class="nav-badge" id="nav-review-badge" hidden></span></button></li>
+    <li><button type="button" class="nav-item" data-nav="speaker" onclick="openPage('speaker')"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg><span class="nl-full">スピーカー設定</span><span class="nl-short" aria-hidden="true">音声</span></button></li>
+    <li><button type="button" class="nav-item" data-nav="account" onclick="openPage('account')"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg><span class="nl-full">アカウント設定</span><span class="nl-short" aria-hidden="true">アカウント</span></button></li>
+  </ul>
+  <div class="side-nav-foot">
+    <span class="side-nav-avatar" id="nav-avatar" aria-hidden="true">?</span>
+    <span class="side-nav-email" id="nav-email"></span>
+  </div>
+</nav>
+<div class="app-main">
 
 <!-- ════ SCREEN 0 — アプリ紹介 ════ -->
 <main class="screen" id="s-intro" aria-label="NewSpeak の紹介">
@@ -927,12 +949,12 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <article class="feature-card">
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
         <h3 class="feature-title">毎日届く最新ニュース</h3>
-        <p class="feature-text">世界の英字ニュースの最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
+        <p class="feature-text">世界の英字ニュースの最新記事を題材に。時事ネタで、実際に使える��彙と表現が身につきます。</p>
       </article>
       <article class="feature-card">
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <h3 class="feature-title">AIとディスカッション</h3>
-        <p class="feature-text">ディスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
+        <p class="feature-text">��ィスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
       </article>
       <article class="feature-card">
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
@@ -1373,6 +1395,135 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   </div>
 </div>
 
+<!-- ════ 学習履歴 ════ -->
+<section class="screen page-screen" id="s-history" aria-labelledby="history-h">
+  <div class="page-wrap">
+    <div class="page-head">
+      <p class="page-eyebrow">HISTORY</p>
+      <h1 class="page-title" id="history-h">学習履歴</h1>
+      <p class="page-sub">これまでの練習の記録とスコアの推移です。</p>
+    </div>
+    <div class="kpi-row" id="hist-kpis"></div>
+    <div id="hist-last"></div>
+    <div class="page-card">
+      <div class="page-card-head"><h2 class="page-card-title">スコア推移</h2><span class="page-card-note">直近20回</span></div>
+      <div id="hist-chart"></div>
+    </div>
+    <div class="page-card">
+      <div class="page-card-head"><h2 class="page-card-title">セッション一覧</h2></div>
+      <ol class="hist-list" id="hist-list"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 復習ポイント一覧 ════ -->
+<section class="screen page-screen" id="s-review" aria-labelledby="review-h">
+  <div class="page-wrap">
+    <div class="page-head">
+      <p class="page-eyebrow">REVIEW</p>
+      <h1 class="page-title" id="review-h">復習ポイント一覧</h1>
+      <p class="page-sub">単語帳に登録した表現です。復習タイミングが来た語彙は、次の練習で自動的に出題されます。</p>
+    </div>
+    <div class="kpi-row three" id="rv-kpis"></div>
+    <div class="page-card">
+      <div class="page-card-head">
+        <div class="seg" role="tablist" aria-label="表示の絞り込み">
+          <button type="button" role="tab" data-filter="all" onclick="setReviewFilter('all')">すべて</button>
+          <button type="button" role="tab" data-filter="due" onclick="setReviewFilter('due')">復習タイミング</button>
+          <button type="button" role="tab" data-filter="later" onclick="setReviewFilter('later')">復習予定</button>
+        </div>
+        <button type="button" class="ns-btn primary sm" onclick="goTop()">練習で復習する</button>
+      </div>
+      <ul class="rv-list" id="rv-list"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════ スピーカー設定 ════ -->
+<section class="screen page-screen" id="s-speaker" aria-labelledby="speaker-h">
+  <div class="page-wrap narrow">
+    <div class="page-head">
+      <p class="page-eyebrow">SPEAKER</p>
+      <h1 class="page-title" id="speaker-h">スピーカー設定</h1>
+      <p class="page-sub">AIの英語を読み上げる声・速さ・高さを調整できます。変更はすぐに保存されます。</p>
+    </div>
+    <p class="form-msg show error" id="sp-unsupported" hidden>このブラウザは音声読み上げに対応していません。Chrome / Safari / Edge の最新版をお使いください。</p>
+    <div class="page-card settings-stack">
+      <div class="field">
+        <label for="sp-voice">音声</label>
+        <select id="sp-voice" class="page-input" onchange="updateSpeechPref('voiceURI', this.value)"></select>
+        <p class="field-hint">端末にインストールされている英語音声から選べます。</p>
+      </div>
+      <div class="field">
+        <div class="field-row"><label for="sp-rate">話す速さ</label><output class="field-val" id="sp-rate-val" for="sp-rate"></output></div>
+        <input type="range" id="sp-rate" class="page-range" min="0.5" max="1.5" step="0.05" oninput="updateSpeechPref('rate', this.value)">
+        <div class="range-scale" aria-hidden="true"><span>ゆっくり</span><span>標準</span><span>速い</span></div>
+      </div>
+      <div class="field">
+        <div class="field-row"><label for="sp-pitch">声の高さ</label><output class="field-val" id="sp-pitch-val" for="sp-pitch"></output></div>
+        <input type="range" id="sp-pitch" class="page-range" min="0.5" max="1.5" step="0.05" oninput="updateSpeechPref('pitch', this.value)">
+      </div>
+      <div class="field">
+        <div class="field-row"><label for="sp-volume">音量</label><output class="field-val" id="sp-volume-val" for="sp-volume"></output></div>
+        <input type="range" id="sp-volume" class="page-range" min="0" max="1" step="0.05" oninput="updateSpeechPref('volume', this.value)">
+      </div>
+    </div>
+    <div class="page-card settings-stack">
+      <div class="field">
+        <label for="sp-sample">試聴する文章</label>
+        <input type="text" id="sp-sample" class="page-input" value="Good morning! Let's talk about today's top news story.">
+      </div>
+      <div class="btn-row">
+        <button type="button" class="ns-btn primary" onclick="testSpeech()"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg>試聴する</button>
+        <button type="button" class="ns-btn ghost" onclick="resetSpeechPrefs()">初期設定に戻す</button>
+      </div>
+      <p class="form-msg" id="sp-msg" role="status"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ アカウント設定 ════ -->
+<section class="screen page-screen" id="s-account" aria-labelledby="account-h">
+  <div class="page-wrap narrow">
+    <div class="page-head">
+      <p class="page-eyebrow">ACCOUNT</p>
+      <h1 class="page-title" id="account-h">アカウント設定</h1>
+      <p class="page-sub">ログイン情報の確認とパスワードの変更ができます。</p>
+    </div>
+    <div class="page-card acc-head">
+      <span class="acc-avatar" id="acc-avatar" aria-hidden="true">?</span>
+      <div class="acc-info">
+        <p class="acc-email" id="acc-email">—</p>
+        <p class="acc-meta">登録日 <span id="acc-created">—</span></p>
+      </div>
+      <button type="button" class="ns-btn ghost sm" onclick="signOut()">ログアウト</button>
+    </div>
+    <form class="page-card settings-stack" id="pw-form" novalidate>
+      <h2 class="page-card-title">パスワードを変更</h2>
+      <div class="field">
+        <label for="pw-new">新しいパスワード</label>
+        <input type="password" id="pw-new" class="page-input" autocomplete="new-password" minlength="8" required placeholder="8文字以上">
+      </div>
+      <div class="field">
+        <label for="pw-new2">新しいパスワード（確認）</label>
+        <input type="password" id="pw-new2" class="page-input" autocomplete="new-password" minlength="8" required>
+      </div>
+      <p class="form-msg" id="pw-msg" role="status"></p>
+      <div class="btn-row"><button type="submit" class="ns-btn primary" id="pw-submit">パスワードを変更する</button></div>
+    </form>
+    <div class="page-card settings-stack danger-card">
+      <div>
+        <h2 class="page-card-title">学習データの削除</h2>
+        <p class="page-card-desc">この端末に保存されている学習履歴・単語帳・連続学習日数を削除します。この操作は取り消せません。</p>
+      </div>
+      <p class="form-msg" id="reset-msg" role="status"></p>
+      <div class="btn-row"><button type="button" class="ns-btn danger" onclick="resetLearningData()"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg>学習データを削除する</button></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /app-main -->
+</div><!-- /app-body -->
 </div><!-- /app -->
 
 <script>applyTheme(document.documentElement.dataset.theme);</script>
@@ -1505,7 +1656,7 @@ const ARTICLES = {
   ],
   科学:[
     {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
-    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
+    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','��宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
   ],
   ライフ:[
     {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
@@ -1938,10 +2089,7 @@ function speakText(btn,text,shadowMode=false){
   }
   const plain=text.replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
   const utt=new SpeechSynthesisUtterance(plain);
-  utt.lang='en-US';utt.rate=0.92;utt.pitch=1;
-  const voices=window.speechSynthesis.getVoices();
-  const enVoice=voices.find(v=>v.lang==='en-US'&&v.name.includes('Google'))||voices.find(v=>v.lang.startsWith('en'));
-  if(enVoice)utt.voice=enVoice;
+  applySpeechPrefs(utt);
   utt.onend=()=>{
     ttsActive=null;btn.classList.remove('speaking');btn.title='読み上げる';
     if(shadowMode && bubble){
@@ -2316,7 +2464,7 @@ function showSummaryScreen(score, improvements, bestPhrase, bestReason, prevHist
   document.getElementById('summary-emoji').innerHTML =
     ICON(!scored ? 'book' : score >= 80 ? 'award' : score >= 60 ? 'star' : score >= 40 ? 'zap' : 'book');
 
-  // 前回比・自己ベスト（自分との比較）
+  // ���回比・自己ベスト（自分との比較）
   const delta = document.getElementById('score-delta');
   if(scored && prevHistory.length){
     const prev = prevHistory[prevHistory.length-1].score;
@@ -2367,6 +2515,7 @@ function goHome(){
   setStep(1);
   renderStatsBar();
   loadYesterdayBanner();
+  updateNavActive();
 }
 
 function restartSession(){
@@ -2404,7 +2553,8 @@ function goTop(){
   setStep(1);
   renderStatsBar();
   loadYesterdayBanner();
-  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('s-cat').scrollTo({top:0,behavior:'smooth'});
+  updateNavActive();
 }
 function show(from,to){
   document.getElementById(from).classList.remove('active');
@@ -2595,6 +2745,7 @@ function activateScreen(id){
   el.classList.add('active');
   el.scrollTop = 0;
   document.getElementById('back-btn').classList.remove('show');
+  updateNavActive();
 }
 function setIntroVideos(play){
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2715,6 +2866,8 @@ function applySession(session){
   const userId = session ? session.user.id : null;
   const changed = userId !== currentUserId || document.body.classList.contains('auth-loading');
   currentUserId = userId;
+  currentUser = session ? session.user : null;
+  renderNavUser();
   document.body.classList.toggle('is-authed', !!userId);
   document.body.classList.toggle('is-guest', !userId);
   if(!changed) return;
@@ -2743,6 +2896,241 @@ window.addEventListener('DOMContentLoaded', async function initAuth(){
   }
   sb.auth.onAuthStateChange((_event, session)=>{ setTimeout(()=>applySession(session), 0); });
 });
+
+// ══ サイドメニュー / ログイン後ページ ══
+let currentUser = null;
+const NAV_SCREENS = { home:'s-cat', history:'s-history', review:'s-review', speaker:'s-speaker', account:'s-account' };
+const PAGE_RENDERERS = { history:()=>renderHistory(), review:()=>renderReview(), speaker:()=>renderSpeaker(), account:()=>renderAccount() };
+
+function openPage(key){
+  if(document.body.classList.contains('is-guest')){ openIntro(); return; }
+  if(key === 'home'){ goTop(); return; }
+  activateScreen(NAV_SCREENS[key]);
+  setStep(1);
+  PAGE_RENDERERS[key]();
+}
+function updateNavActive(){
+  const active = document.querySelector('.screen.active');
+  const id = active ? active.id : 's-cat';
+  const key = Object.keys(NAV_SCREENS).find(k=>NAV_SCREENS[k] === id) || 'home';
+  document.querySelectorAll('.nav-item').forEach(b=>{
+    if(b.dataset.nav === key) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  updateReviewBadge();
+}
+function renderNavUser(){
+  const email = currentUser && currentUser.email ? currentUser.email : '';
+  document.getElementById('nav-email').textContent = email;
+  document.getElementById('nav-avatar').textContent = (email.charAt(0) || '?').toUpperCase();
+}
+function isVocabDue(v){ return !v.due || v.due <= Date.now(); }
+function updateReviewBadge(){
+  const due = loadVocab().filter(isVocabDue).length;
+  const badge = document.getElementById('nav-review-badge');
+  badge.hidden = due === 0;
+  badge.textContent = due > 99 ? '99+' : String(due);
+}
+function kpiHtml(items){
+  return items.map(([label, value, unit, icon])=>`
+    <div class="kpi">
+      <span class="kpi-label"><svg class="ic" aria-hidden="true"><use href="#${icon}"/></svg>${label}</span>
+      <span class="kpi-value">${value}${unit ? `<span class="kpi-unit">${unit}</span>` : ''}</span>
+    </div>`).join('');
+}
+function emptyState(text, withCta){
+  return `<div class="empty-state"><p>${text}</p>${withCta ? '<button type="button" class="ns-btn primary sm" onclick="goTop()">練習を始める</button>' : ''}</div>`;
+}
+
+function renderHistory(){
+  const hist = loadScoreHistory().filter(h=>typeof h.score === 'number');
+  const streak = loadStreak();
+  const scores = hist.map(h=>h.score);
+  const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0) / scores.length) : null;
+  const best = scores.length ? Math.max(...scores) : null;
+  document.getElementById('hist-kpis').innerHTML = kpiHtml([
+    ['連続学習', streak.days || 0, '日', 'i-flame'],
+    ['練習回数', hist.length, '回', 'i-chat'],
+    ['平均スコア', avg ?? '—', avg != null ? '点' : '', 'i-chart'],
+    ['最高スコア', best ?? '—', best != null ? '点' : '', 'i-award'],
+  ]);
+
+  let last = null;
+  try{ last = JSON.parse(localStorage.getItem('ns_last_article') || 'null'); }catch(e){}
+  document.getElementById('hist-last').innerHTML = last && last.article && last.article.title ? `
+    <div class="last-card">
+      <span class="last-icon"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg></span>
+      <div class="last-body">
+        <p class="last-label">前回の練習</p>
+        <p class="last-title">${escHtml(last.article.title)}</p>
+      </div>
+      <button type="button" class="ns-btn ghost sm" onclick="goTop()">ホームへ</button>
+    </div>` : '';
+
+  const chart = document.getElementById('hist-chart');
+  if(!hist.length){
+    chart.innerHTML = emptyState('まだ練習の記録がありません。セッションを完了すると、ここにスコアが記録されます。', true);
+    document.getElementById('hist-list').innerHTML = '';
+    return;
+  }
+  chart.innerHTML = `<div class="hist-chart" role="img" aria-label="直近${hist.length}回のスコア推移">${hist.map((h,i)=>`
+    <div class="hc-col"><div class="hc-bar${i === hist.length-1 ? ' latest' : ''}" style="height:${Math.max(4, Math.min(100, h.score))}%"><span class="hc-val">${h.score}</span></div></div>`).join('')}
+  </div>`;
+  document.getElementById('hist-list').innerHTML = hist.map((h,i)=>{
+    const prev = i > 0 ? hist[i-1].score : null;
+    const diff = prev == null ? null : h.score - prev;
+    const cls = diff == null || diff === 0 ? 'flat' : diff > 0 ? 'up' : 'down';
+    const label = diff == null ? '—' : diff === 0 ? '±0' : (diff > 0 ? '+' : '') + diff;
+    return `<li class="hist-row"><span class="hist-no">${i+1}</span><span class="hist-date">${escHtml(h.date || '')}</span><span class="delta ${cls}">${label}</span><span class="hist-score">${h.score}<small>点</small></span></li>`;
+  }).reverse().join('');
+}
+
+let reviewFilter = 'all';
+function setReviewFilter(f){ reviewFilter = f; renderReview(); }
+function renderReview(){
+  const list = loadVocab();
+  const dueCount = list.filter(isVocabDue).length;
+  document.getElementById('rv-kpis').innerHTML = kpiHtml([
+    ['登録語彙', list.length, '語', 'i-book'],
+    ['復習タイミング', dueCount, '語', 'i-target'],
+    ['復習予定', list.length - dueCount, '語', 'i-clock'],
+  ]);
+  document.querySelectorAll('#s-review .seg button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.filter === reviewFilter)));
+  const items = list.map((v,idx)=>({v,idx})).reverse().filter(({v})=>
+    reviewFilter === 'all' ? true : reviewFilter === 'due' ? isVocabDue(v) : !isVocabDue(v));
+  const el = document.getElementById('rv-list');
+  if(!list.length){ el.innerHTML = `<li>${emptyState('まだ復習ポイントがありません。練習中のフィードバックから「＋単語帳」で表現を追加しましょう。', true)}</li>`; updateReviewBadge(); return; }
+  if(!items.length){ el.innerHTML = `<li>${emptyState('この条件に当てはまる語彙はありません。', false)}</li>`; return; }
+  el.innerHTML = items.map(({v,idx})=>{
+    const due = isVocabDue(v);
+    return `<li class="rv-item">
+      <div class="rv-main">
+        <p class="rv-word">${escHtml(v.word)}</p>
+        ${v.note ? `<p class="rv-note">${escHtml(v.note)}</p>` : ''}
+        <p class="rv-meta">${escHtml(v.date || '')}${v.article ? ' · ' + escHtml(v.article) : ''}</p>
+      </div>
+      <span class="rv-badge${due ? ' due' : ''}">${due ? '復習タイミング' : '次の復習 ' + new Date(v.due).toLocaleDateString('ja-JP')}</span>
+      <button type="button" class="icon-btn" onclick="speakWord(${idx})" aria-label="${escHtml(v.word)} を読み上げる"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg></button>
+      <button type="button" class="icon-btn danger" onclick="deleteReviewItem(${idx})" aria-label="${escHtml(v.word)} を削除"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg></button>
+    </li>`;
+  }).join('');
+  updateReviewBadge();
+}
+function deleteReviewItem(idx){
+  const v = loadVocab()[idx];
+  if(!v || !confirm(`「${v.word}」を復習ポイントから削除しますか？`)) return;
+  deleteVocab(idx);
+  renderReview();
+}
+function speakWord(idx){
+  const v = loadVocab()[idx];
+  if(!v || !('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(v.word);
+  applySpeechPrefs(utt);
+  window.speechSynthesis.speak(utt);
+}
+
+const SPEECH_DEFAULTS = { voiceURI:'', rate:0.92, pitch:1, volume:1 };
+function loadSpeechPrefs(){
+  try{ return { ...SPEECH_DEFAULTS, ...JSON.parse(localStorage.getItem('ns_speech') || '{}') }; }catch(e){ return { ...SPEECH_DEFAULTS }; }
+}
+function englishVoices(){
+  if(!('speechSynthesis' in window)) return [];
+  return window.speechSynthesis.getVoices().filter(v=>v.lang && v.lang.toLowerCase().startsWith('en'));
+}
+function applySpeechPrefs(utt){
+  const p = loadSpeechPrefs();
+  utt.lang = 'en-US'; utt.rate = p.rate; utt.pitch = p.pitch; utt.volume = p.volume;
+  const voices = englishVoices();
+  const voice = (p.voiceURI && voices.find(v=>v.voiceURI === p.voiceURI))
+    || voices.find(v=>v.lang === 'en-US' && v.name.includes('Google')) || voices[0];
+  if(voice){ utt.voice = voice; utt.lang = voice.lang; }
+}
+function speechLabel(key, val){
+  if(key === 'rate') return Number(val).toFixed(2) + 'x';
+  if(key === 'volume') return Math.round(val * 100) + '%';
+  return Number(val).toFixed(2);
+}
+function renderSpeaker(){
+  const p = loadSpeechPrefs();
+  document.getElementById('sp-unsupported').hidden = 'speechSynthesis' in window;
+  const voices = englishVoices();
+  const sel = document.getElementById('sp-voice');
+  sel.innerHTML = '<option value="">自動（おすすめ）</option>' +
+    voices.map(v=>`<option value="${escHtml(v.voiceURI)}">${escHtml(v.name)}（${escHtml(v.lang)}）</option>`).join('');
+  sel.value = voices.some(v=>v.voiceURI === p.voiceURI) ? p.voiceURI : '';
+  ['rate','pitch','volume'].forEach(k=>{
+    document.getElementById('sp-'+k).value = p[k];
+    document.getElementById('sp-'+k+'-val').textContent = speechLabel(k, p[k]);
+  });
+}
+function updateSpeechPref(key, value){
+  const p = loadSpeechPrefs();
+  p[key] = key === 'voiceURI' ? value : parseFloat(value);
+  try{ localStorage.setItem('ns_speech', JSON.stringify(p)); }catch(e){}
+  if(key !== 'voiceURI') document.getElementById('sp-'+key+'-val').textContent = speechLabel(key, p[key]);
+}
+function resetSpeechPrefs(){
+  try{ localStorage.removeItem('ns_speech'); }catch(e){}
+  renderSpeaker();
+  showFormMsg('sp-msg','success','初期設定に戻しました。');
+}
+function testSpeech(){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const text = document.getElementById('sp-sample').value.trim() || "Good morning! Let's talk about today's top news story.";
+  const utt = new SpeechSynthesisUtterance(text.slice(0, 300));
+  applySpeechPrefs(utt);
+  window.speechSynthesis.speak(utt);
+}
+if('speechSynthesis' in window){
+  window.speechSynthesis.addEventListener('voiceschanged', ()=>{
+    if(document.getElementById('s-speaker').classList.contains('active')) renderSpeaker();
+  });
+}
+
+function renderAccount(){
+  const u = currentUser;
+  const email = u && u.email ? u.email : '—';
+  document.getElementById('acc-email').textContent = email;
+  document.getElementById('acc-avatar').textContent = (email.charAt(0) || '?').toUpperCase();
+  document.getElementById('acc-created').textContent = u && u.created_at ? new Date(u.created_at).toLocaleDateString('ja-JP') : '—';
+  document.getElementById('pw-form').reset();
+  showFormMsg('pw-msg','','');
+  showFormMsg('reset-msg','','');
+}
+document.getElementById('pw-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const pw = document.getElementById('pw-new').value;
+  const pw2 = document.getElementById('pw-new2').value;
+  if(pw.length < 8) return showFormMsg('pw-msg','error','パスワードは8文字以上で入力してください。');
+  if(pw !== pw2) return showFormMsg('pw-msg','error','確認用パスワードが一致しません。');
+  if(!sb) return showFormMsg('pw-msg','error','認証サービスに接続できません。時間をおいて再度お試しください。');
+  const btn = document.getElementById('pw-submit');
+  btn.disabled = true; btn.textContent = '変更中…';
+  try{
+    const { error } = await sb.auth.updateUser({ password: pw });
+    if(error){
+      const msg = error.code === 'same_password' ? '現在と同じパスワードは使用できません。'
+        : error.code === 'reauthentication_needed' ? 'セキュリティのため、一度ログアウトして再ログインしてから変更してください。'
+        : authErrorMessage(error);
+      return showFormMsg('pw-msg','error',msg);
+    }
+    e.target.reset();
+    showFormMsg('pw-msg','success','パスワードを変更しました。');
+  }catch(err){
+    showFormMsg('pw-msg','error','通信エラーが発生しました。接続を確認してください。');
+  }finally{
+    btn.disabled = false; btn.textContent = 'パスワードを変更する';
+  }
+});
+function resetLearningData(){
+  if(!confirm('この端末の学習履歴・単語帳・連続学習日数を削除します。よろしいですか？')) return;
+  ['ns_vocab','ns_streak','ns_score_history','ns_last_article'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+  updateVocabBadge();
+  updateReviewBadge();
+  showFormMsg('reset-msg','success','学習データを削除しました。');
+}
 
 (function initCategoryVideos(){
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
