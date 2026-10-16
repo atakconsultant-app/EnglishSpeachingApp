@@ -381,6 +381,9 @@ header .spacer{flex:1;}
 .strip-expand:hover{color:var(--text-sub);}
 .strip-expand svg{width:14px;height:14px;fill:currentColor;transition:transform .2s;}
 .strip-expand.open svg{transform:rotate(180deg);}
+.strip-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:6px;}
+.strip-actions .strip-expand{margin-top:0;text-decoration:none;}
+.strip-fulltext[hidden]{display:none;}
 .article-full{
   display:none;margin-top:10px;padding:12px 14px;
   background:var(--surface3);border-radius:10px;
@@ -891,6 +894,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <p class="side-nav-label">メニュー</p>
   <ul>
     <li><button type="button" class="nav-item" data-nav="home" onclick="openPage('home')"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg><span class="nl-full">ホームに戻る</span><span class="nl-short" aria-hidden="true">ホーム</span></button></li>
+    <li><button type="button" class="nav-item" data-nav="howto" onclick="openPage('howto')"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg><span class="nl-full">このアプリの使い方</span><span class="nl-short" aria-hidden="true">使い方</span></button></li>
     <li><button type="button" class="nav-item" data-nav="history" onclick="openPage('history')"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span class="nl-full">学習履歴</span><span class="nl-short" aria-hidden="true">履歴</span></button></li>
     <li><button type="button" class="nav-item" data-nav="review" onclick="openPage('review')"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg><span class="nl-full">復習ポイント一覧</span><span class="nl-short" aria-hidden="true">復習</span><span class="nav-badge" id="nav-review-badge" hidden></span></button></li>
     <li><button type="button" class="nav-item" data-nav="speaker" onclick="openPage('speaker')"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg><span class="nl-full">スピーカー設定</span><span class="nl-short" aria-hidden="true">音声</span></button></li>
@@ -1308,10 +1312,16 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <span class="strip-mode-badge" id="a-mode-badge"></span>
     </div>
     <div class="strip-title" id="a-title"></div>
-    <button class="strip-expand" id="expand-btn" onclick="toggleExpand()">
-      <span>記事の詳細を見る</span>
-      <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-    </button>
+    <div class="strip-actions">
+      <button class="strip-expand" id="expand-btn" onclick="toggleExpand()">
+        <span>記事の要約を見る</span>
+        <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+      </button>
+      <a class="strip-expand strip-fulltext" id="a-fulltext" href="#" target="_blank" rel="noopener noreferrer" hidden>
+        <span>記事の全文を見る</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3zM5 5h5v2H5v12h12v-5h2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
+      </a>
+    </div>
     <div class="article-full" id="article-full">
       <div id="a-summary"></div>
       <div class="article-points-mini" id="a-points-mini"></div>
@@ -1501,6 +1511,85 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 </section>
 
 <!-- ════ アカウント設定 ════ -->
+<!-- ════ このアプリの使い方 ════ -->
+<section class="screen page-screen" id="s-howto" aria-labelledby="howto-h">
+  <div class="page-wrap narrow">
+    <div class="page-head">
+      <p class="page-eyebrow">HOW TO USE</p>
+      <h1 class="page-title" id="howto-h">このアプリの使い方</h1>
+      <p class="page-sub">1日10分で「話せる英語」を伸ばすための使い方です。大切なのは、読むよりも<strong>たくさん声に出すこと</strong>と、<strong>毎日続けること</strong>の2つです。</p>
+    </div>
+
+    <div class="page-card">
+      <div class="page-card-head"><h2 class="page-card-title">基本の10分メニュー</h2><span class="page-card-note">毎日この流れで</span></div>
+      <ol class="howto-steps">
+        <li class="howto-step">
+          <span class="howto-time">1分</span>
+          <div class="howto-body">
+            <h3>準備：記事と論点をつかむ</h3>
+            <p>ホームの「今日の10分を始める」で開始します。「記事の要約を見る」で概要と論点を確認しましょう。背景をもっと知りたいときは「記事の全文を見る」で元の記事を開けます。ただし、読み込みすぎず、話すことに時間を使ってください。</p>
+          </div>
+        </li>
+        <li class="howto-step">
+          <span class="howto-time">6分</span>
+          <div class="howto-body">
+            <h3>発話：ゴールバーを満タンにする</h3>
+            <p>AIの質問に答え、画面上部のゴールバー（7ステップ）を満たすことを目指します。1回の発言は<strong>2〜3文以上</strong>が目安です。迷ったら「I think … because … For example, …」の型で話すと、意見・理由・具体例がそろいます。キーボードより<strong>マイクで話す</strong>ほうが効果的です。言い直しても構いません。</p>
+          </div>
+        </li>
+        <li class="howto-step">
+          <span class="howto-time">2分</span>
+          <div class="howto-body">
+            <h3>シャドーイング：AIの英語をまねる</h3>
+            <p>AIの返答の「影」ボタンを押すと、文字が隠れて読み上げが始まります。聞こえた音を少し遅れて追いかけるように声に出してください。終わると文字が戻るので、聞き取れなかった部分を確認し、もう一度繰り返します。使ってみたい表現は、文中を選択して「＋単語帳」で保存しましょう。</p>
+          </div>
+        </li>
+        <li class="howto-step">
+          <span class="howto-time">1分</span>
+          <div class="howto-body">
+            <h3>振り返り：良かった点と直す点を声に出す</h3>
+            <p>「終了」を押すとスコア画面が開きます。まず「今日のベストフレーズ」を1回、次に「改善すべき表現」の<strong>より良い言い方を3回ずつ音読</strong>します。正しい形を口で覚えることで、次の会話で自然に出てくるようになります。</p>
+          </div>
+        </li>
+      </ol>
+      <button type="button" class="ns-btn primary howto-cta" onclick="quickStart()">今日の10分を始める</button>
+    </div>
+
+    <div class="page-card">
+      <div class="page-card-head"><h2 class="page-card-title">伸びる人が続けている5つのコツ</h2></div>
+      <ul class="howto-tips">
+        <li><h3>毎日、同じ時間に開く</h3><p>通勤中や朝食後など、時間を決めると習慣になります。ホームの「連続学習」が途切れそうなときはお知らせが出ます。1日5分でも、休まないことを優先してください。</p></li>
+        <li><h3>同じ記事で2日続けて話す</h3><p>ホームに出る「昨日の記事でもう一度練習しますか？」を使うと、同じ話題を翌日もう一度話せます。2回目は使う語彙が増え、格段に滑らかになります。週に2回ほど取り入れるのがおすすめです。</p></li>
+        <li><h3>単語帳は「使って」覚える</h3><p>単語帳の語句は、復習のタイミングが来ると次の会話の画面上部に「復習語彙」として表示されます。会話の中で意識して使うと✓が付き、次の復習日が自動で延びていきます（3日後→7日後→14日後…）。</p></li>
+        <li><h3>レベルは少し背伸びする</h3><p>スコアが70点以上で3回続いたら、レベルを1段階上げてみましょう。少し難しいと感じるくらいが、いちばん伸びる負荷です。</p></li>
+        <li><h3>いろいろなアクセントを聞く</h3><p>「スピーカー設定」でAIの話者のアクセント・性別・年齢を変えられます。週ごとに変えると、実際の会議や旅行で出会う英語に強くなります（選べる声はお使いの端末によって異なります）。</p></li>
+      </ul>
+    </div>
+
+    <div class="page-card">
+      <div class="page-card-head"><h2 class="page-card-title">練習モードの選び方</h2></div>
+      <dl class="howto-modes">
+        <div><dt>ディスカッション</dt><dd>自分の意見を理由とともに伝える、話す力の土台を作ります。最初はこのモードがおすすめです。</dd></div>
+        <div><dt>ファシリテーション</dt><dd>会議の司会として、話を振る・まとめる・次に進める表現を練習します。仕事で英語の会議がある方に向いています。</dd></div>
+        <div><dt>面接スピーチ</dt><dd>質問に対して、結論→理由→具体例の順で答える練習です。外資系や海外での就職・転職を目指す方に向いています。</dd></div>
+      </dl>
+    </div>
+
+    <div class="page-card">
+      <div class="page-card-head"><h2 class="page-card-title">1週間のおすすめメニュー</h2></div>
+      <table class="howto-week">
+        <tbody>
+          <tr><th scope="row">月・水・金</th><td>ディスカッション（10分）</td></tr>
+          <tr><th scope="row">火</th><td>面接スピーチ（10分）</td></tr>
+          <tr><th scope="row">木</th><td>ファシリテーション（10分）</td></tr>
+          <tr><th scope="row">土</th><td>「昨日の記事でもう一度」＋「復習ポイント一覧」で単語の見直し</td></tr>
+          <tr><th scope="row">日</th><td>お休み。「学習履歴」でスコアの推移を眺めて、1週間の成長を確認</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 <section class="screen page-screen" id="s-account" aria-labelledby="account-h">
   <div class="page-wrap narrow">
     <div class="page-head">
@@ -1922,6 +2011,16 @@ function renderArticle(){
   document.getElementById('a-cat').textContent = state.cat;
   document.getElementById('a-title').textContent = a.title;
   document.getElementById('a-summary').textContent = a.summary;
+  // 元記事のURLがある記事だけ「記事の全文を見る」を表示（配信元のサイトを新しいタブで開く）
+  const full = document.getElementById('a-fulltext');
+  if(a.url && /^https?:\/\//.test(a.url)){
+    full.href = a.url;
+    full.title = `${a.source || '配信元'} のサイトで記事の全文を開きます（新しいタブ）`;
+    full.hidden = false;
+  } else {
+    full.removeAttribute('href');
+    full.hidden = true;
+  }
   const ul = document.createElement('ul');
   ul.className='article-points-mini';
   a.points.forEach(p=>{const li=document.createElement('li');li.textContent=p;ul.appendChild(li);});
@@ -3050,8 +3149,8 @@ window.addEventListener('DOMContentLoaded', async function initAuth(){
 
 // ══ サイドメニュー / ログイン後ページ ══
 let currentUser = null;
-const NAV_SCREENS = { home:'s-cat', history:'s-history', review:'s-review', speaker:'s-speaker', account:'s-account' };
-const PAGE_RENDERERS = { history:()=>renderHistory(), review:()=>renderReview(), speaker:()=>renderSpeaker(), account:()=>renderAccount() };
+const NAV_SCREENS = { home:'s-cat', howto:'s-howto', history:'s-history', review:'s-review', speaker:'s-speaker', account:'s-account' };
+const PAGE_RENDERERS = { howto:()=>{}, history:()=>renderHistory(), review:()=>renderReview(), speaker:()=>renderSpeaker(), account:()=>renderAccount() };
 
 function openPage(key){
   if(document.body.classList.contains('is-guest')){ openIntro(); return; }
