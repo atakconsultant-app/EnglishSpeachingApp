@@ -424,6 +424,7 @@ header .spacer{flex:1;}
 .shadow-hint.show{display:flex;}
 .action-btn.speaking{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);animation:tts-pulse 1.5s infinite;}
 @keyframes tts-pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.sys-note{align-self:center;font-size:12px;color:var(--text-sub);background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:4px 12px;}
 .typing{display:flex;gap:4px;align-items:center;padding:4px 0;}
 .typing span{width:6px;height:6px;border-radius:50%;background:var(--text-dim);animation:pulse 1.2s infinite;}
 .typing span:nth-child(2){animation-delay:.2s;}
@@ -2069,7 +2070,7 @@ function renderFeedbackCard(rawText){
   if(cleanText){
     html+=`<div class="feedback-section">
       <div class="feedback-section-title">コメント</div>
-      <div class="feedback-text">${cleanText.replace(/\n/g,'<br>')}</div>
+      <div class="feedback-text">${escHtml(cleanText).replace(/\n/g,'<br>')}</div>
     </div>`;
   }
 
@@ -2080,7 +2081,7 @@ function renderFeedbackCard(rawText){
     html+=`<div class="feedback-section">
       <div class="feedback-section-title">${ICON('book')}語彙を単語帳に追加</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
-        ${uniq.map(w=>`<button class="add-vocab-btn" data-word="${w}" onclick="promptAddVocab(this)">＋ ${w}</button>`).join('')}
+        ${uniq.map(w=>`<button class="add-vocab-btn" data-word="${escHtml(w)}" onclick="promptAddVocab(this)">＋ ${escHtml(w)}</button>`).join('')}
       </div>
     </div>`;
   }
@@ -2128,7 +2129,7 @@ function speakText(btn,text,shadowMode=false){
   if(shadowMode && bubble){
     bubble.classList.add('hidden');
   }
-  const plain=text.replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
+  const plain=text.replace(/\*+/g,'').replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
   const utt=new SpeechSynthesisUtterance(plain);
   applySpeechPrefs(utt);
   utt.onend=()=>{
@@ -2165,15 +2166,53 @@ function addMsg(role,text){
   const d=document.createElement('div');
   d.className=`msg ${role}`;
   const av=role==='ai'?ICON('sparkle'):ICON('user');
-  const bubbleHtml=text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  // 本文はHTMLとして解釈させない（AIの文中の < や " で表示・ボタンが壊れないように）
+  const bubbleHtml=escHtml(text).replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
   if(role==='ai'){
-    const escaped=text.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
-    d.innerHTML=`<div class="av">${av}</div><div class="msg-col"><div class="bubble">${bubbleHtml}</div><div class="msg-actions"><button class="action-btn hide-btn" title="テキストを隠す" onclick="toggleHide(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="action-btn tts-btn" title="読み上げる" onclick="speakText(this,'${escaped}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button><button class="action-btn shadow-btn" title="シャドーイング：再生中に文字を隠す" onclick="speakText(this.closest('.msg').querySelector('.tts-btn'),\'${escaped}\',true)" style="font-size:10px;width:auto;padding:0 7px;letter-spacing:.3px;font-weight:700;font-family:\'DM Sans\',sans-serif;">影</button></div></div>`;
+    d.innerHTML=`<div class="av">${av}</div><div class="msg-col"><div class="bubble">${bubbleHtml}</div><div class="msg-actions"><button class="action-btn hide-btn" title="テキストを隠す" onclick="toggleHide(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="action-btn tts-btn" title="読み上げる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button><button class="action-btn shadow-btn" title="シャドーイング：再生中に文字を隠す" style="font-size:10px;width:auto;padding:0 7px;letter-spacing:.3px;font-weight:700;font-family:'DM Sans',sans-serif;">影</button><button class="action-btn vocab-add-btn" title="選択した語句を単語帳に追加（文中をドラッグで選択してから押す）" style="font-size:10px;width:auto;padding:0 8px;font-weight:700;">＋単語帳</button></div></div>`;
+    // 文字列を属性に埋め込まず、ボタンに直接処理を結びつける
+    const ttsBtn=d.querySelector('.tts-btn');
+    ttsBtn.addEventListener('click',()=>speakText(ttsBtn,text));
+    d.querySelector('.shadow-btn').addEventListener('click',()=>speakText(ttsBtn,text,true));
+    const vocabBtn=d.querySelector('.vocab-add-btn');
+    let picked='';
+    // ボタンを押すと選択が外れることがあるため、押し始めの時点で選択中の語句を控えておく
+    vocabBtn.addEventListener('pointerdown',()=>{ picked=selectedTextIn(d.querySelector('.bubble')); });
+    vocabBtn.addEventListener('click',()=>{
+      const sel=picked||selectedTextIn(d.querySelector('.bubble'));
+      picked='';
+      addVocabFromMessage(sel);
+    });
   } else {
     d.innerHTML=`<div class="av">${av}</div><div class="bubble">${bubbleHtml}</div>`;
   }
   chat.appendChild(d);
   chat.scrollTop=chat.scrollHeight;
+}
+// 吹き出しの中で選択されている語句（なければ空文字）
+function selectedTextIn(el){
+  const s=window.getSelection ? window.getSelection() : null;
+  if(!s || s.isCollapsed || !el) return '';
+  if(!el.contains(s.anchorNode) || !el.contains(s.focusNode)) return '';
+  return s.toString().replace(/\s+/g,' ').trim().slice(0,80);
+}
+function addVocabFromMessage(selected){
+  const word = prompt('単語帳に追加する語句（文中をドラッグで選択してから押すと自動で入ります）：', selected||'');
+  if(!word || !word.trim()) return;
+  const note = prompt('メモ（意味・使い方など。省略可）：','');
+  const before = loadVocab().length;
+  addVocab(word.trim(), note||'');
+  const added = loadVocab().length > before;
+  addSystemNote(added ? `「${word.trim()}」を単語帳に追加しました` : `「${word.trim()}」はすでに単語帳にあります`);
+}
+function addSystemNote(msg){
+  const chat=document.getElementById('chat');
+  const n=document.createElement('div');
+  n.className='sys-note';
+  n.textContent=msg;
+  chat.appendChild(n);
+  chat.scrollTop=chat.scrollHeight;
+  setTimeout(()=>n.remove(),4000);
 }
 function showTyping(){
   const chat=document.getElementById('chat');

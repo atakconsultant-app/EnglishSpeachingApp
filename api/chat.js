@@ -12,9 +12,18 @@ const ANTHROPIC_VERSION = '2023-06-01';
 
 const PURPOSES = {
   // 会話は速くて安いモデル、最後の採点は精度の高いモデル（環境変数で変更可）
-  chat: { model: () => process.env.AI_CHAT_MODEL || 'claude-haiku-5-5', maxTokens: 700 },
-  score: { model: () => process.env.AI_SCORE_MODEL || 'claude-sonnet-5-5', maxTokens: 900 },
+  // max_tokens は上限であって課金量ではない（実際に出力した分だけ課金）。返答が途中で切れないよう余裕を持たせる
+  chat: { model: () => process.env.AI_CHAT_MODEL || 'claude-haiku-5-5', maxTokens: 1500 },
+  score: { model: () => process.env.AI_SCORE_MODEL || 'claude-sonnet-5-5', maxTokens: 4000 },
 };
+
+// Claude 5系は既定で「考えてから答える」。考えた分も max_tokens に含まれ、返答が途中で切れる原因になるため、
+// 会話・採点では事前の思考を止める（Haiku 5.5 は disabled、Sonnet 5.5 は disabled 不可のため between_tools）。
+function thinkingFor(model) {
+  if (/^claude-haiku-5/.test(model)) return { type: 'disabled' };
+  if (/^claude-sonnet-5/.test(model)) return { type: 'between_tools' };
+  return null;
+}
 const MAX_MESSAGES = 40;
 const MAX_TOTAL_CHARS = 30000;
 const DEFAULT_DAILY_LIMIT = 60;
@@ -109,8 +118,10 @@ module.exports = async function handler(req, res) {
   }
 
   const p = PURPOSES[body.purpose];
-  try {
-    const upstream = await fetch(ANTHROPIC_URL, {
+  const model = p.model();
+  const callClaude = (withThinkingSetting) => {
+    const thinking = withThinkingSetting ? thinkingFor(model) : null;
+    return fetch(ANTHROPIC_URL, {
       method: 'POST',
       headers: {
         'x-api-key': apiKey,
@@ -118,19 +129,30 @@ module.exports = async function handler(req, res) {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: p.model(),
+        model,
         max_tokens: p.maxTokens,
+        ...(thinking ? { thinking } : {}),
         messages: body.messages.map(m => ({ role: m.role, content: m.content })),
       }),
     });
-    const data = await upstream.json().catch(() => null);
+  };
+  try {
+    let upstream = await callClaude(true);
+    let data = await upstream.json().catch(() => null);
+    // 思考の設定をモデルが受け付けなかった場合は、設定なしで1回だけやり直す
+    if (upstream.status === 400 && thinkingFor(model)) {
+      console.warn('Retrying without thinking setting', data && data.error);
+      upstream = await callClaude(false);
+      data = await upstream.json().catch(() => null);
+    }
     if (!upstream.ok) {
       console.error('Anthropic API error', upstream.status, data && data.error);
       const detail = data && data.error && data.error.message ? String(data.error.message).slice(0, 300) : '';
       return send(res, 502, { error: 'upstream_error', status: upstream.status, detail });
     }
+    if (data.stop_reason === 'max_tokens') console.warn('Claude response hit max_tokens', body.purpose, model);
     const text = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
-    return send(res, 200, { text, remaining });
+    return send(res, 200, { text, remaining, stop_reason: data.stop_reason || null });
   } catch (e) {
     console.error('Anthropic API unreachable', e);
     return send(res, 502, { error: 'upstream_unreachable' });
