@@ -949,12 +949,12 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <article class="feature-card">
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
         <h3 class="feature-title">毎日届く最新ニュース</h3>
-        <p class="feature-text">世界の英字ニュースの最新記事を題材に。時事ネタで、実際に使える��彙と表現が身につきます。</p>
+        <p class="feature-text">世界の英字ニュースの最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
       </article>
       <article class="feature-card">
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <h3 class="feature-title">AIとディスカッション</h3>
-        <p class="feature-text">��ィスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
+        <p class="feature-text">ディスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
       </article>
       <article class="feature-card">
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
@@ -1035,7 +1035,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   </section>
 
   <section class="final-cta" aria-labelledby="final-h">
-    <h2 id="final-h">今日��ニュースで、英語を話してみよう。</h2>
+    <h2 id="final-h">今日のニュースで、英語を話してみよう。</h2>
     <p>登録は30秒。すぐに最初のセッションを始められます。</p>
     <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める</button>
   </section>
@@ -1566,6 +1566,37 @@ const CAT_EMOJIS = {'主要':'📰','国内':'🗾','国際':'🌏','経済':'�
 (async()=>{
   try{ sample = await claude.use('sample'); }catch(e){ sample = null; }
 })();
+
+// ══ AI呼び出し：claude.ai上では claude.use、公開サイトではサーバー（/api/chat）経由 ══
+function aiAvailable(){ return !!sample || /^https?:$/.test(location.protocol); }
+async function callAI(messages, purpose, onText){
+  if(sample){
+    let text = '';
+    await sample(messages, { onText:({text:t})=>{ text = t; if(onText) onText(t); }, cache:false });
+    return text;
+  }
+  let token = '';
+  try{
+    const { data } = await sb.auth.getSession();
+    token = data && data.session ? data.session.access_token : '';
+  }catch(e){}
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+    body: JSON.stringify({ purpose, messages })
+  });
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok){
+    const err = new Error(data.error || ('http ' + res.status));
+    err.userMessage = res.status === 401 ? 'ログインの有効期限が切れました。もう一度ログインしてください。'
+      : res.status === 429 ? '本日のAI利用回数の上限に達しました。明日また練習しましょう。'
+      : null;
+    throw err;
+  }
+  const text = data.text || '';
+  if(onText) onText(text);
+  return text;
+}
 try{ localStorage.removeItem('guardian_api_key'); }catch(e){} // 旧方式で保存されたキーを削除
 try{ loadYesterdayBanner(); }catch(e){}
 fetchLiveNews();
@@ -1653,18 +1684,18 @@ const ARTICLES = {
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
-    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能してい���ものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
   ],
   経済:[
     {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
-    {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した���大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
+    {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した。大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
   ],
   エンタメ:[
     {source:'Variety',emoji:'🎵',topic:'スポーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
     {source:'The Hollywood Reporter',emoji:'🎬',topic:'ビジネス',keywords:['ストリーミング','映画','メディア','Netflix','streaming','content','動画配信','サブスク','subscription','データセンター','クラウド','コンテンツ','OTT'],title:'Streaming Wars Enter New Phase as Studios Merge Content Libraries',summary:'大手スタジオのコンテンツライブラリ統合が進み、ストリーミング戦争が新局面へ。消費者の選択肢が変わる中、クリエイターへの報酬体系の見直しを求める声も上がっている。',points:['コンテンツの多様性','クリエイターエコノミー','日本コンテンツのグローバル展開']}
   ],
   スポーツ:[
-    {source:'ESPN',emoji:'🏅',topic:'スポーツ・文化',keywords:['オリンピック','スポー��','テクノロジー','Olympic','LA','2028','eスポーツ','esports','AI審判','データ分析','athletics'],title:'Olympic Games 2028 LA: Technology and Inclusion Take Center Stage',summary:'2028年ロサンゼルス五輪に向けて、テクノロジー活用とインクルージョンが重点テーマに。AI審判システムの導入やeスポーツの正式種目化をめぐる議論が活発化している。',points:['スポーツとテクノロジーの融合','公平性と新技術','五輪の商業化と純粋性']},
+    {source:'ESPN',emoji:'🏅',topic:'スポーツ・文化',keywords:['オリンピック','スポーツ','テクノロジー','Olympic','LA','2028','eスポーツ','esports','AI審判','データ分析','athletics'],title:'Olympic Games 2028 LA: Technology and Inclusion Take Center Stage',summary:'2028年ロサンゼルス五輪に向けて、テクノロジー活用とインクルージョンが重点テーマに。AI審判システムの導入やeスポーツの正式種目化をめぐる議論が活発化している。',points:['スポーツとテクノロジーの融合','公平性と新技術','五輪の商業化と純粋性']},
     {source:'Sky Sports',emoji:'⚽',topic:'ビジネス',keywords:['サッカー','プレミアリーグ','スポーツビジネス','Premier League','salary','移籍','transfer','UEFA','FFP','ビジネス','経営'],title:'Premier League Clubs Face New Salary Cap Rules Amid Financial Fair Play Reforms',summary:'プレミアリーグがファイナンシャル・フェアプレー改革として新たな給与上限規制を導入。クラブ経営の透明性が高まる一方、競争力への影響を懸念する声もある。',points:['スポーツ経営と持続可能性','ビッグクラブ vs 中小クラブ','日本人選手への影響']}
   ],
   IT:[
@@ -1673,7 +1704,7 @@ const ARTICLES = {
   ],
   科学:[
     {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
-    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','��宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
+    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
   ],
   ライフ:[
     {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
@@ -1914,23 +1945,18 @@ function toggleExpand(){
 
 // ══ AI opening ══
 async function aiOpen(){
-  if(!sample){addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。');return;}
+  if(!aiAvailable()){addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。');return;}
   showTyping();
-  const sys = buildSystem();
   const openPrompt = buildOpenPrompt();
   try{
-    let text='';
-    await sample([{role:'user',content:openPrompt}],{
-      onText:({text:t})=>{text=t;updateTyping(text);},
-      cache:false
-    });
+    const text = await callAI([{role:'user',content:openPrompt}], 'chat', t => updateTyping(t));
     removeTyping();
     addMsg('ai',text);
     state.history=[{role:'user',content:openPrompt},{role:'assistant',content:text}];
     showSuggestions();
   }catch(e){
     removeTyping();
-    addMsg('ai','セッションを開��できませんでした。もう一度お試しください。');
+    addMsg('ai', e.userMessage || 'セッションを開始できませんでした。もう一度お試しください。');
   }
 }
 
@@ -1983,11 +2009,7 @@ async function send(txt){
   const fullHistory = [{role:'user',content:buildOpenPrompt()},...state.history.slice(1)];
 
   try{
-    let text='';
-    await sample(fullHistory,{
-      onText:({text:t})=>{text=t;updateTyping(text);},
-      cache:false
-    });
+    const text = await callAI(fullHistory, 'chat', t => updateTyping(t));
     removeTyping();
 
     // Check for feedback
@@ -2002,7 +2024,8 @@ async function send(txt){
     showSuggestions();
   }catch(e){
     removeTyping();
-    addMsg('ai','Error connecting to AI. Please try again.');
+    state.history.pop(); // 失敗した発言は履歴から外し、同じ内容をもう一度送れるようにする
+    addMsg('ai', e.userMessage || 'AIに接続できませんでした。もう一度送信してください。');
   }
   state.busy=false;
 }
@@ -2303,7 +2326,7 @@ function renderStatsBar(){
     warn.textContent = '今日の練習は達成済み ✓';
   } else if(alive && days > 0){
     warn.className = 'stat-warn';
-    warn.textContent = `今日練習しないと ${days}日の記録が途切���ます`;
+    warn.textContent = `今日練習しないと ${days}日の記録が途切れます`;
   } else if(streak.days > 0){
     warn.className = 'stat-warn';
     warn.textContent = '今日から新しい記録をスタートしよう';
@@ -2420,7 +2443,7 @@ async function endSession(){
     addMsg('ai','もう少し会話を続けてから終了しましょう！スコア評価には2回以上の発話が必要です。');
     return;
   }
-  if(!sample){ addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。'); return; }
+  if(!aiAvailable()){ addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。'); return; }
   state.busy = true;
   loading('スコアを計算中…');
   document.getElementById('vocab-fab').classList.remove('show');
@@ -2453,8 +2476,7 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
 
   const prevHistory = loadScoreHistory();
   try {
-    let raw = '';
-    await sample([{role:'user', content:prompt}], { onText:({text:t}) => { raw = t; }, cache:false });
+    const raw = await callAI([{role:'user', content:prompt}], 'score');
     const match = raw.match(/\{[\s\S]*\}/);
     if(!match) throw new Error('no json');
     const result = JSON.parse(match[0]);
@@ -2468,7 +2490,7 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
     loading(null);
     updateStreak();
     showSummaryScreen(null, [
-      'AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しください。'
+      e.userMessage || 'AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しください。'
     ], null, null, prevHistory, false);
   }
   state.busy = false;
@@ -2484,7 +2506,7 @@ function showSummaryScreen(score, improvements, bestPhrase, bestReason, prevHist
   document.getElementById('summary-emoji').innerHTML =
     ICON(!scored ? 'book' : score >= 80 ? 'award' : score >= 60 ? 'star' : score >= 40 ? 'zap' : 'book');
 
-  // ���回比・自己ベスト（自分との比較）
+  // 前回比・自己ベスト（自分との比較）
   const delta = document.getElementById('score-delta');
   if(scored && prevHistory.length){
     const prev = prevHistory[prevHistory.length-1].score;
