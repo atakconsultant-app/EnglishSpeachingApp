@@ -53,7 +53,9 @@ async function consumeQuota(userId) {
     method: 'POST',
     headers: {
       apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
+      // 旧形式（JWT）の service_role キーだけ Authorization にも載せる。
+      // 新形式の sb_secret_… キーはJWTではないため、apikey ヘッダーだけで送る（Supabaseの指定）
+      ...(serviceKey.startsWith('eyJ') ? { Authorization: `Bearer ${serviceKey}` } : {}),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ p_user_id: userId, p_limit: limit }),
