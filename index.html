@@ -37,7 +37,7 @@
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
 
 /* ─── App shell ─── */
-#app{display:flex;flex-direction:column;height:100vh;max-width:860px;margin:0 auto;}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;}
 
 /* ─── Header ─── */
 header{
@@ -802,6 +802,7 @@ button,input,textarea{font-family:inherit;}
 </style>
 <link id="theme-css" rel="stylesheet" href="themes/studio.css">
 <link rel="stylesheet" href="intro.css">
+<link rel="stylesheet" href="pages.css">
 <script>
 const THEMES=['studio','playful','gallery'];
 function applyTheme(t){
@@ -849,6 +850,10 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></symbol>
   <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
 </svg>
 <div id="app">
@@ -879,6 +884,23 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <button type="button" class="hdr-btn" onclick="signOut()">ログアウト</button>
   </div>
 </header>
+
+<div class="app-body">
+<nav class="side-nav authed-only" aria-label="メインメニュー">
+  <p class="side-nav-label">メニュー</p>
+  <ul>
+    <li><button type="button" class="nav-item" data-nav="home" onclick="openPage('home')"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg><span class="nl-full">ホームに戻る</span><span class="nl-short" aria-hidden="true">ホーム</span></button></li>
+    <li><button type="button" class="nav-item" data-nav="history" onclick="openPage('history')"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><span class="nl-full">学習履歴</span><span class="nl-short" aria-hidden="true">履歴</span></button></li>
+    <li><button type="button" class="nav-item" data-nav="review" onclick="openPage('review')"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg><span class="nl-full">復習ポイント一覧</span><span class="nl-short" aria-hidden="true">復習</span><span class="nav-badge" id="nav-review-badge" hidden></span></button></li>
+    <li><button type="button" class="nav-item" data-nav="speaker" onclick="openPage('speaker')"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg><span class="nl-full">スピーカー設定</span><span class="nl-short" aria-hidden="true">音声</span></button></li>
+    <li><button type="button" class="nav-item" data-nav="account" onclick="openPage('account')"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg><span class="nl-full">アカウント設定</span><span class="nl-short" aria-hidden="true">アカウント</span></button></li>
+  </ul>
+  <div class="side-nav-foot">
+    <span class="side-nav-avatar" id="nav-avatar" aria-hidden="true">?</span>
+    <span class="side-nav-email" id="nav-email"></span>
+  </div>
+</nav>
+<div class="app-main">
 
 <!-- ════ SCREEN 0 — アプリ紹介 ════ -->
 <main class="screen" id="s-intro" aria-label="NewSpeak の紹介">
@@ -1373,6 +1395,152 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   </div>
 </div>
 
+<!-- ════ 学習履歴 ════ -->
+<section class="screen page-screen" id="s-history" aria-labelledby="history-h">
+  <div class="page-wrap">
+    <div class="page-head">
+      <p class="page-eyebrow">HISTORY</p>
+      <h1 class="page-title" id="history-h">学習履歴</h1>
+      <p class="page-sub">これまでの練習の記録とスコアの推移です。</p>
+    </div>
+    <div class="kpi-row" id="hist-kpis"></div>
+    <div id="hist-last"></div>
+    <div class="page-card">
+      <div class="page-card-head"><h2 class="page-card-title">スコア推移</h2><span class="page-card-note">直近20回</span></div>
+      <div id="hist-chart"></div>
+    </div>
+    <div class="page-card">
+      <div class="page-card-head"><h2 class="page-card-title">セッション一覧</h2></div>
+      <ol class="hist-list" id="hist-list"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ════ 復習ポイント一覧 ════ -->
+<section class="screen page-screen" id="s-review" aria-labelledby="review-h">
+  <div class="page-wrap">
+    <div class="page-head">
+      <p class="page-eyebrow">REVIEW</p>
+      <h1 class="page-title" id="review-h">復習ポイント一覧</h1>
+      <p class="page-sub">単語帳に登録した表現です。復習タイミングが来た語彙は、次の練習で自動的に出題されます。</p>
+    </div>
+    <div class="kpi-row three" id="rv-kpis"></div>
+    <div class="page-card">
+      <div class="page-card-head">
+        <div class="seg" role="tablist" aria-label="表示の絞り込み">
+          <button type="button" role="tab" data-filter="all" onclick="setReviewFilter('all')">すべて</button>
+          <button type="button" role="tab" data-filter="due" onclick="setReviewFilter('due')">復習タイミング</button>
+          <button type="button" role="tab" data-filter="later" onclick="setReviewFilter('later')">復習予定</button>
+        </div>
+        <button type="button" class="ns-btn primary sm" onclick="goTop()">練習で復習する</button>
+      </div>
+      <ul class="rv-list" id="rv-list"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════ スピーカー設定 ════ -->
+<section class="screen page-screen" id="s-speaker" aria-labelledby="speaker-h">
+  <div class="page-wrap narrow">
+    <div class="page-head">
+      <p class="page-eyebrow">SPEAKER</p>
+      <h1 class="page-title" id="speaker-h">スピーカー設定</h1>
+      <p class="page-sub">AIの話し相手の性別・発音・年齢を選べます。読み上げの声とAIの話し方（語彙・表現）の両方に反映され、アカウントに保存されます。</p>
+    </div>
+    <p class="form-msg show error" id="sp-unsupported" hidden>このブラウザは音声読み上げに対応していません。Chrome / Safari / Edge の最新版をお使いください。</p>
+    <div class="page-card settings-stack">
+      <div class="field">
+        <span class="field-label" id="sp-gender-label">性別</span>
+        <div class="seg" role="radiogroup" aria-labelledby="sp-gender-label">
+          <label class="seg-opt"><input type="radio" name="sp-gender" value="female" onchange="updateSpeechPref('gender', this.value)"><span>女性</span></label>
+          <label class="seg-opt"><input type="radio" name="sp-gender" value="male" onchange="updateSpeechPref('gender', this.value)"><span>男性</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label" id="sp-accent-label">発音</span>
+        <div class="seg" role="radiogroup" aria-labelledby="sp-accent-label">
+          <label class="seg-opt"><input type="radio" name="sp-accent" value="us" onchange="updateSpeechPref('accent', this.value)"><span>アメリカ</span></label>
+          <label class="seg-opt"><input type="radio" name="sp-accent" value="gb" onchange="updateSpeechPref('accent', this.value)"><span>イギリス</span></label>
+          <label class="seg-opt"><input type="radio" name="sp-accent" value="in" onchange="updateSpeechPref('accent', this.value)"><span>インド</span></label>
+<label class="seg-opt"><input type="radio" name="sp-accent" value="au" onchange="updateSpeechPref('accent', this.value)"><span>オーストラリア</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-row"><span class="field-label" id="sp-age-label">年齢</span><output class="field-val" id="sp-age-val"></output></div>
+        <div class="age-wheel-wrap">
+          <div class="age-wheel" id="sp-age" tabindex="0" role="spinbutton" aria-labelledby="sp-age-label" aria-valuemin="15" aria-valuemax="80"></div>
+        </div>
+        <p class="field-hint">スクロール（または上下キー）で年齢を選びます。</p>
+      </div>
+      <p class="field-hint" id="sp-voice-status" aria-live="polite"></p>
+    </div>
+    <div class="page-card settings-stack">
+      <div class="field">
+        <div class="field-row"><label for="sp-rate">話す速さ</label><output class="field-val" id="sp-rate-val" for="sp-rate"></output></div>
+        <input type="range" id="sp-rate" class="page-range" min="0.5" max="1.5" step="0.05" oninput="updateSpeechPref('rate', this.value)">
+        <div class="range-scale" aria-hidden="true"><span>ゆっくり</span><span>標準</span><span>速い</span></div>
+      </div>
+      <div class="field">
+        <div class="field-row"><label for="sp-volume">音量</label><output class="field-val" id="sp-volume-val" for="sp-volume"></output></div>
+        <input type="range" id="sp-volume" class="page-range" min="0" max="1" step="0.05" oninput="updateSpeechPref('volume', this.value)">
+      </div>
+    </div>
+    <div class="page-card settings-stack">
+      <div class="field">
+        <label for="sp-sample">試聴する文章</label>
+        <input type="text" id="sp-sample" class="page-input" value="Good morning! Let's talk about today's top news story.">
+      </div>
+      <div class="btn-row">
+        <button type="button" class="ns-btn primary" onclick="testSpeech()"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg>試聴する</button>
+        <button type="button" class="ns-btn ghost" onclick="resetSpeechPrefs()">初期設定に戻す</button>
+      </div>
+      <p class="form-msg" id="sp-msg" role="status"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ アカウント設定 ════ -->
+<section class="screen page-screen" id="s-account" aria-labelledby="account-h">
+  <div class="page-wrap narrow">
+    <div class="page-head">
+      <p class="page-eyebrow">ACCOUNT</p>
+      <h1 class="page-title" id="account-h">アカウント設定</h1>
+      <p class="page-sub">ログイン情報の確認とパスワードの変更ができます。</p>
+    </div>
+    <div class="page-card acc-head">
+      <span class="acc-avatar" id="acc-avatar" aria-hidden="true">?</span>
+      <div class="acc-info">
+        <p class="acc-email" id="acc-email">—</p>
+        <p class="acc-meta">登録日 <span id="acc-created">—</span></p>
+      </div>
+      <button type="button" class="ns-btn ghost sm" onclick="signOut()">ログアウト</button>
+    </div>
+    <form class="page-card settings-stack" id="pw-form" novalidate>
+      <h2 class="page-card-title">パスワードを変更</h2>
+      <div class="field">
+        <label for="pw-new">新しいパスワード</label>
+        <input type="password" id="pw-new" class="page-input" autocomplete="new-password" minlength="8" required placeholder="8文字以上">
+      </div>
+      <div class="field">
+        <label for="pw-new2">新しいパスワード（確認）</label>
+        <input type="password" id="pw-new2" class="page-input" autocomplete="new-password" minlength="8" required>
+      </div>
+      <p class="form-msg" id="pw-msg" role="status"></p>
+      <div class="btn-row"><button type="submit" class="ns-btn primary" id="pw-submit">パスワードを変更する</button></div>
+    </form>
+    <div class="page-card settings-stack danger-card">
+      <div>
+        <h2 class="page-card-title">学習データの削除</h2>
+        <p class="page-card-desc">この端末に保存されている学習履歴・単語帳・連続学習日数を削除します。この操作は取り消せません。</p>
+      </div>
+      <p class="form-msg" id="reset-msg" role="status"></p>
+      <div class="btn-row"><button type="button" class="ns-btn danger" onclick="resetLearningData()"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg>学習データを削除する</button></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /app-main -->
+</div><!-- /app-body -->
 </div><!-- /app -->
 
 <script>applyTheme(document.documentElement.dataset.theme);</script>
@@ -1810,7 +1978,8 @@ function buildSystem(){
   return `${levelInst[state.level]} ${modeInst[state.mode]}
 Article: "${state.article.title}" — ${state.article.summary}
 Key discussion points: ${state.article.points.join(', ')}
-Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".${targetInst}`;
+Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".${targetInst}
+${speakerPersonaInstruction()}`;
 }
 
 function buildOpenPrompt(){
@@ -1961,10 +2130,7 @@ function speakText(btn,text,shadowMode=false){
   }
   const plain=text.replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
   const utt=new SpeechSynthesisUtterance(plain);
-  utt.lang='en-US';utt.rate=0.92;utt.pitch=1;
-  const voices=window.speechSynthesis.getVoices();
-  const enVoice=voices.find(v=>v.lang==='en-US'&&v.name.includes('Google'))||voices.find(v=>v.lang.startsWith('en'));
-  if(enVoice)utt.voice=enVoice;
+  applySpeechPrefs(utt);
   utt.onend=()=>{
     ttsActive=null;btn.classList.remove('speaking');btn.title='読み上げる';
     if(shadowMode && bubble){
@@ -2050,6 +2216,7 @@ function loadVocab(){
 }
 function saveVocab(list){
   try{ localStorage.setItem('ns_vocab', JSON.stringify(list)); }catch(e){}
+  scheduleCloudSave();
 }
 function updateVocabBadge(){
   const list = loadVocab();
@@ -2131,6 +2298,7 @@ function saveScoreHistory(score){
   history.push({ date: new Date().toLocaleDateString('ja-JP'), score });
   if(history.length > 20) history.splice(0, history.length - 20);
   try{ localStorage.setItem('ns_score_history', JSON.stringify(history)); }catch(e){}
+  scheduleCloudSave();
 }
 function escHtml(s){
   return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -2389,6 +2557,7 @@ function goHome(){
   setStep(1);
   renderStatsBar();
   loadYesterdayBanner();
+  updateNavActive();
 }
 
 function restartSession(){
@@ -2426,7 +2595,8 @@ function goTop(){
   setStep(1);
   renderStatsBar();
   loadYesterdayBanner();
-  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('s-cat').scrollTo({top:0,behavior:'smooth'});
+  updateNavActive();
 }
 function show(from,to){
   document.getElementById(from).classList.remove('active');
@@ -2617,6 +2787,7 @@ function activateScreen(id){
   el.classList.add('active');
   el.scrollTop = 0;
   document.getElementById('back-btn').classList.remove('show');
+  updateNavActive();
 }
 function setIntroVideos(play){
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2737,12 +2908,15 @@ function applySession(session){
   const userId = session ? session.user.id : null;
   const changed = userId !== currentUserId || document.body.classList.contains('auth-loading');
   currentUserId = userId;
+  currentUser = session ? session.user : null;
+  renderNavUser();
   document.body.classList.toggle('is-authed', !!userId);
   document.body.classList.toggle('is-guest', !userId);
   if(!changed) return;
   if(userId){
     setIntroVideos(false);
     goTop();
+    pullCloudData(userId);
   }else{
     const wantsLogin = new URLSearchParams(location.search).get('auth');
     if(wantsLogin) openAuth(wantsLogin === 'signup' ? 'signup' : 'login'); else openIntro();
@@ -2750,9 +2924,78 @@ function applySession(session){
   document.body.classList.remove('auth-loading');
 }
 async function signOut(){
+  clearTimeout(cloudSaveTimer);
+  if(cloudDirty) await pushCloudData();
   if(sb) await sb.auth.signOut();
+  clearLocalLearningData();
   applySession(null);
 }
+
+// ══ Supabase 同期（学習履歴・単語帳・スピーカー設定） ══
+// localStorage is the fast local cache; the learning_data row (one per user, RLS-scoped) is the source of truth.
+const CLOUD_LOCAL_KEYS = { score_history:'ns_score_history', vocab:'ns_vocab', speaker:'ns_speech' };
+let cloudReady = false, cloudDirty = false, cloudSaveTimer = null;
+
+function readLocalJSON(key, fallback){
+  try{ const v = JSON.parse(localStorage.getItem(key) || 'null'); return v ?? fallback; }catch(e){ return fallback; }
+}
+function clearLocalLearningData(){
+  ['ns_vocab','ns_streak','ns_score_history','ns_last_article','ns_speech'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+}
+function refreshAfterCloudSync(){
+  try{ updateVocabBadge(); }catch(e){}
+  try{ updateReviewBadge(); }catch(e){}
+  try{ renderStatsBar(); }catch(e){}
+  const active = document.querySelector('.screen.active');
+  const key = active && Object.keys(NAV_SCREENS).find(k=>NAV_SCREENS[k] === active.id);
+  if(key && PAGE_RENDERERS[key]) PAGE_RENDERERS[key]();
+}
+async function pullCloudData(userId){
+  if(!sb) return;
+  cloudReady = false;
+  try{
+    const { data, error } = await sb.from('learning_data').select('score_history,vocab,speaker').eq('user_id', userId).maybeSingle();
+    if(error) throw error;
+    if(userId !== currentUserId) return;
+    if(data){
+      if(!cloudDirty){
+        localStorage.setItem('ns_score_history', JSON.stringify(data.score_history || []));
+        localStorage.setItem('ns_vocab', JSON.stringify(data.vocab || []));
+        localStorage.setItem('ns_speech', JSON.stringify(data.speaker || {}));
+      }
+      cloudReady = true;
+      if(cloudDirty) await pushCloudData();
+    }else{
+      // First sign-in on this account: upload whatever was recorded on this device.
+      cloudReady = true;
+      await pushCloudData();
+    }
+    refreshAfterCloudSync();
+  }catch(err){
+    console.error('[cloud] 学習データの読み込みに失敗しました:', err.message || err);
+  }
+}
+function scheduleCloudSave(){
+  if(!sb || !currentUserId) return;
+  cloudDirty = true;
+  if(!cloudReady) return;
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(pushCloudData, 700);
+}
+async function pushCloudData(){
+  if(!sb || !currentUserId || !cloudReady) return;
+  cloudDirty = false;
+  const payload = { user_id: currentUserId, updated_at: new Date().toISOString() };
+  payload.score_history = readLocalJSON(CLOUD_LOCAL_KEYS.score_history, []);
+  payload.vocab = readLocalJSON(CLOUD_LOCAL_KEYS.vocab, []);
+  payload.speaker = readLocalJSON(CLOUD_LOCAL_KEYS.speaker, {});
+  const { error } = await sb.from('learning_data').upsert(payload, { onConflict:'user_id' });
+  if(error){
+    cloudDirty = true;
+    console.error('[cloud] 学習データの保存に失敗しました:', error.message);
+  }
+}
+window.addEventListener('pagehide', ()=>{ if(cloudDirty) pushCloudData(); });
 
 // Runs after the whole script so state declared further down (e.g. recognition) is initialized.
 window.addEventListener('DOMContentLoaded', async function initAuth(){
@@ -2765,6 +3008,350 @@ window.addEventListener('DOMContentLoaded', async function initAuth(){
   }
   sb.auth.onAuthStateChange((_event, session)=>{ setTimeout(()=>applySession(session), 0); });
 });
+
+// ══ サイドメニュー / ログイン後ページ ══
+let currentUser = null;
+const NAV_SCREENS = { home:'s-cat', history:'s-history', review:'s-review', speaker:'s-speaker', account:'s-account' };
+const PAGE_RENDERERS = { history:()=>renderHistory(), review:()=>renderReview(), speaker:()=>renderSpeaker(), account:()=>renderAccount() };
+
+function openPage(key){
+  if(document.body.classList.contains('is-guest')){ openIntro(); return; }
+  if(key === 'home'){ goTop(); return; }
+  activateScreen(NAV_SCREENS[key]);
+  setStep(1);
+  PAGE_RENDERERS[key]();
+}
+function updateNavActive(){
+  const active = document.querySelector('.screen.active');
+  const id = active ? active.id : 's-cat';
+  const key = Object.keys(NAV_SCREENS).find(k=>NAV_SCREENS[k] === id) || 'home';
+  document.querySelectorAll('.nav-item').forEach(b=>{
+    if(b.dataset.nav === key) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  updateReviewBadge();
+}
+function renderNavUser(){
+  const email = currentUser && currentUser.email ? currentUser.email : '';
+  document.getElementById('nav-email').textContent = email;
+  document.getElementById('nav-avatar').textContent = (email.charAt(0) || '?').toUpperCase();
+}
+function isVocabDue(v){ return !v.due || v.due <= Date.now(); }
+function updateReviewBadge(){
+  const due = loadVocab().filter(isVocabDue).length;
+  const badge = document.getElementById('nav-review-badge');
+  badge.hidden = due === 0;
+  badge.textContent = due > 99 ? '99+' : String(due);
+}
+function kpiHtml(items){
+  return items.map(([label, value, unit, icon])=>`
+    <div class="kpi">
+      <span class="kpi-label"><svg class="ic" aria-hidden="true"><use href="#${icon}"/></svg>${label}</span>
+      <span class="kpi-value">${value}${unit ? `<span class="kpi-unit">${unit}</span>` : ''}</span>
+    </div>`).join('');
+}
+function emptyState(text, withCta){
+  return `<div class="empty-state"><p>${text}</p>${withCta ? '<button type="button" class="ns-btn primary sm" onclick="goTop()">練習を始める</button>' : ''}</div>`;
+}
+
+function renderHistory(){
+  const hist = loadScoreHistory().filter(h=>typeof h.score === 'number');
+  const streak = loadStreak();
+  const scores = hist.map(h=>h.score);
+  const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0) / scores.length) : null;
+  const best = scores.length ? Math.max(...scores) : null;
+  document.getElementById('hist-kpis').innerHTML = kpiHtml([
+    ['連続学習', streak.days || 0, '日', 'i-flame'],
+    ['練習回数', hist.length, '回', 'i-chat'],
+    ['平均スコア', avg ?? '—', avg != null ? '点' : '', 'i-chart'],
+    ['最高スコア', best ?? '—', best != null ? '点' : '', 'i-award'],
+  ]);
+
+  let last = null;
+  try{ last = JSON.parse(localStorage.getItem('ns_last_article') || 'null'); }catch(e){}
+  document.getElementById('hist-last').innerHTML = last && last.article && last.article.title ? `
+    <div class="last-card">
+      <span class="last-icon"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg></span>
+      <div class="last-body">
+        <p class="last-label">前回の練習</p>
+        <p class="last-title">${escHtml(last.article.title)}</p>
+      </div>
+      <button type="button" class="ns-btn ghost sm" onclick="goTop()">ホームへ</button>
+    </div>` : '';
+
+  const chart = document.getElementById('hist-chart');
+  if(!hist.length){
+    chart.innerHTML = emptyState('まだ練習の記録がありません。セッションを完了すると、ここにスコアが記録されます。', true);
+    document.getElementById('hist-list').innerHTML = '';
+    return;
+  }
+  chart.innerHTML = `<div class="hist-chart" role="img" aria-label="直近${hist.length}回のスコア推移">${hist.map((h,i)=>`
+    <div class="hc-col"><div class="hc-bar${i === hist.length-1 ? ' latest' : ''}" style="height:${Math.max(4, Math.min(100, h.score))}%"><span class="hc-val">${h.score}</span></div></div>`).join('')}
+  </div>`;
+  document.getElementById('hist-list').innerHTML = hist.map((h,i)=>{
+    const prev = i > 0 ? hist[i-1].score : null;
+    const diff = prev == null ? null : h.score - prev;
+    const cls = diff == null || diff === 0 ? 'flat' : diff > 0 ? 'up' : 'down';
+    const label = diff == null ? '—' : diff === 0 ? '±0' : (diff > 0 ? '+' : '') + diff;
+    return `<li class="hist-row"><span class="hist-no">${i+1}</span><span class="hist-date">${escHtml(h.date || '')}</span><span class="delta ${cls}">${label}</span><span class="hist-score">${h.score}<small>点</small></span></li>`;
+  }).reverse().join('');
+}
+
+let reviewFilter = 'all';
+function setReviewFilter(f){ reviewFilter = f; renderReview(); }
+function renderReview(){
+  const list = loadVocab();
+  const dueCount = list.filter(isVocabDue).length;
+  document.getElementById('rv-kpis').innerHTML = kpiHtml([
+    ['登録語彙', list.length, '語', 'i-book'],
+    ['復習タイミング', dueCount, '語', 'i-target'],
+    ['復習予定', list.length - dueCount, '語', 'i-clock'],
+  ]);
+  document.querySelectorAll('#s-review .seg button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.filter === reviewFilter)));
+  const items = list.map((v,idx)=>({v,idx})).reverse().filter(({v})=>
+    reviewFilter === 'all' ? true : reviewFilter === 'due' ? isVocabDue(v) : !isVocabDue(v));
+  const el = document.getElementById('rv-list');
+  if(!list.length){ el.innerHTML = `<li>${emptyState('まだ復習ポイントがありません。練習中のフィードバックから「＋単語帳」で表現を追加しましょう。', true)}</li>`; updateReviewBadge(); return; }
+  if(!items.length){ el.innerHTML = `<li>${emptyState('この条件に当てはまる語彙はありません。', false)}</li>`; return; }
+  el.innerHTML = items.map(({v,idx})=>{
+    const due = isVocabDue(v);
+    return `<li class="rv-item">
+      <div class="rv-main">
+        <p class="rv-word">${escHtml(v.word)}</p>
+        ${v.note ? `<p class="rv-note">${escHtml(v.note)}</p>` : ''}
+        <p class="rv-meta">${escHtml(v.date || '')}${v.article ? ' · ' + escHtml(v.article) : ''}</p>
+      </div>
+      <span class="rv-badge${due ? ' due' : ''}">${due ? '復習タイミング' : '次の復習 ' + new Date(v.due).toLocaleDateString('ja-JP')}</span>
+      <button type="button" class="icon-btn" onclick="speakWord(${idx})" aria-label="${escHtml(v.word)} を読み上げる"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg></button>
+      <button type="button" class="icon-btn danger" onclick="deleteReviewItem(${idx})" aria-label="${escHtml(v.word)} を削除"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg></button>
+    </li>`;
+  }).join('');
+  updateReviewBadge();
+}
+function deleteReviewItem(idx){
+  const v = loadVocab()[idx];
+  if(!v || !confirm(`「${v.word}」を復習ポイントから削除しますか？`)) return;
+  deleteVocab(idx);
+  renderReview();
+}
+function speakWord(idx){
+  const v = loadVocab()[idx];
+  if(!v || !('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(v.word);
+  applySpeechPrefs(utt);
+  window.speechSynthesis.speak(utt);
+}
+
+const SPEECH_DEFAULTS = { gender:'female', accent:'us', age:30, rate:0.92, volume:1 };
+const AGE_MIN = 15, AGE_MAX = 80, AGE_ITEM_H = 40;
+const ACCENTS = {
+  us: { lang:'en-US', label:'アメリカ', country:'the United States', variety:'American' },
+  gb: { lang:'en-GB', label:'イギリス', country:'the United Kingdom', variety:'British' },
+  in: { lang:'en-IN', label:'インド', country:'India', variety:'Indian' },
+  au: { lang:'en-AU', label:'オーストラリア', country:'Australia', variety:'Australian' },
+};
+// Browsers don't expose a voice's gender, so it is inferred from common voice names.
+const FEMALE_VOICE_HINTS = ['female','woman','samantha','victoria','karen','moira','tessa','fiona','veena','serena','kate','susan','zira','hazel','heera','libby','sonia','neerja','aria','jenny','michelle','ava','allison','nicky','joanna','salli','kimberly','amy','emma','raveena','aditi','kalpana','priya','isha','lekha','martha','catherine','stephanie','natasha','annette','hayley','shelley','sandy','flo','grandma','google us english'];
+const MALE_VOICE_HINTS = ['male','daniel','alex','fred','tom','aaron','arthur','oliver','rishi','george','david','mark','james','ryan','guy','christopher','eric','prabhat','ravi','hemant','thomas','rocko','reed','william','liam','eddy','grandpa','gordon','lee'];
+
+function loadSpeechPrefs(){
+  let saved = {};
+  try{ saved = JSON.parse(localStorage.getItem('ns_speech') || '{}') || {}; }catch(e){}
+  const p = { ...SPEECH_DEFAULTS, ...saved };
+  if(!ACCENTS[p.accent]) p.accent = SPEECH_DEFAULTS.accent;
+  if(p.gender !== 'male' && p.gender !== 'female') p.gender = SPEECH_DEFAULTS.gender;
+  p.age = Math.min(AGE_MAX, Math.max(AGE_MIN, Math.round(Number(p.age) || SPEECH_DEFAULTS.age)));
+  return p;
+}
+function saveSpeechPrefs(p){
+  const { gender, accent, age, rate, volume } = p;
+  try{ localStorage.setItem('ns_speech', JSON.stringify({ gender, accent, age, rate, volume })); }catch(e){}
+  scheduleCloudSave();
+}
+function englishVoices(){
+  if(!('speechSynthesis' in window)) return [];
+  return window.speechSynthesis.getVoices().filter(v=>v.lang && v.lang.toLowerCase().startsWith('en'));
+}
+function voiceGender(voice){
+  const name = voice.name.toLowerCase();
+  if(FEMALE_VOICE_HINTS.some(h=>name.includes(h))) return 'female';
+  if(MALE_VOICE_HINTS.some(h=>name.includes(h))) return 'male';
+  return null;
+}
+function pickVoice(p){
+  const lang = ACCENTS[p.accent].lang.toLowerCase();
+  let best = null, bestScore = -Infinity;
+  englishVoices().forEach(v=>{
+    const vLang = v.lang.toLowerCase().replace('_','-');
+    let score = vLang === lang ? 10 : 0;
+    const g = voiceGender(v);
+    if(g === p.gender) score += 4; else if(g) score -= 4;
+    if(v.localService) score += 1;
+    if(score > bestScore){ best = v; bestScore = score; }
+  });
+  return best;
+}
+// Approximates the chosen age with pitch and pace, since browser voices have no age setting.
+function ageVoiceShape(p){
+  const base = p.gender === 'female' ? 1.08 : 0.92;
+  const ageShift = p.age < 25 ? 0.12 : p.age < 40 ? 0.04 : p.age < 60 ? -0.04 : -0.12;
+  const pace = p.age >= 65 ? 0.92 : p.age < 25 ? 1.04 : 1;
+  return { pitch: Math.min(2, Math.max(0.1, base + ageShift)), pace };
+}
+function applySpeechPrefs(utt){
+  const p = loadSpeechPrefs();
+  const shape = ageVoiceShape(p);
+  utt.lang = ACCENTS[p.accent].lang;
+  utt.rate = Math.min(2, p.rate * shape.pace);
+  utt.pitch = shape.pitch;
+  utt.volume = p.volume;
+  const voice = pickVoice(p);
+  if(voice){ utt.voice = voice; utt.lang = voice.lang; }
+}
+function speakerPersonaInstruction(){
+  const p = loadSpeechPrefs();
+  const a = ACCENTS[p.accent];
+  return `Speaker persona: you are a ${p.age}-year-old ${p.gender === 'male' ? 'man' : 'woman'} from ${a.country}. Use ${a.variety} English spelling, vocabulary and natural expressions typical of someone your age from that region, while staying easy for a learner to follow. Stay in this persona, but do not announce it unless the learner asks.`;
+}
+function speechLabel(key, val){
+  if(key === 'rate') return Number(val).toFixed(2) + 'x';
+  if(key === 'volume') return Math.round(val * 100) + '%';
+  return Number(val).toFixed(2);
+}
+function renderVoiceStatus(){
+  const el = document.getElementById('sp-voice-status');
+  if(!el || !('speechSynthesis' in window)) return;
+  const p = loadSpeechPrefs();
+  const voice = pickVoice(p);
+  if(!voice){ el.textContent = '英語の音声が見つかりません。端末の音声設定をご確認ください。'; return; }
+  const accentOk = voice.lang.toLowerCase().replace('_','-') === ACCENTS[p.accent].lang.toLowerCase();
+  const genderOk = voiceGender(voice) === p.gender;
+  let note = `読み上げ音声: ${voice.name}（${voice.lang}）`;
+  if(!accentOk) note += ` ／ この端末に${ACCENTS[p.accent].label}英語の音声がないため、近い音声で代用しています。`;
+  else if(!genderOk) note += ' ／ 選んだ性別の音声が見つからないため、近い音声で代用しています。';
+  el.textContent = note;
+}
+function renderAgeWheel(age){
+  const wheel = document.getElementById('sp-age');
+  if(!wheel.childElementCount){
+    let html = '<div class="age-pad" aria-hidden="true"></div>';
+    for(let a = AGE_MIN; a <= AGE_MAX; a++) html += `<div class="age-item" data-age="${a}" aria-hidden="true">${a}</div>`;
+    wheel.innerHTML = html + '<div class="age-pad" aria-hidden="true"></div>';
+    wheel.addEventListener('scroll', onAgeScroll, { passive:true });
+    wheel.addEventListener('keydown', onAgeKey);
+    wheel.addEventListener('click', e=>{
+      const item = e.target.closest('.age-item');
+      if(item) scrollAgeTo(Number(item.dataset.age), true);
+    });
+  }
+  scrollAgeTo(age, false);
+  markAge(age);
+}
+function scrollAgeTo(age, smooth){
+  document.getElementById('sp-age').scrollTo({ top:(age - AGE_MIN) * AGE_ITEM_H, behavior: smooth ? 'smooth' : 'auto' });
+}
+function markAge(age){
+  const wheel = document.getElementById('sp-age');
+  wheel.setAttribute('aria-valuenow', age);
+  wheel.setAttribute('aria-valuetext', age + '歳');
+  document.getElementById('sp-age-val').textContent = age + '歳';
+  wheel.querySelectorAll('.age-item').forEach(el=>el.classList.toggle('on', Number(el.dataset.age) === age));
+}
+let ageScrollTimer = null;
+function onAgeScroll(e){
+  const age = Math.min(AGE_MAX, Math.max(AGE_MIN, AGE_MIN + Math.round(e.currentTarget.scrollTop / AGE_ITEM_H)));
+  markAge(age);
+  clearTimeout(ageScrollTimer);
+  ageScrollTimer = setTimeout(()=>{ if(loadSpeechPrefs().age !== age) updateSpeechPref('age', age); }, 180);
+}
+function onAgeKey(e){
+  const step = { ArrowUp:-1, ArrowDown:1, PageUp:-5, PageDown:5 }[e.key];
+  if(!step) return;
+  e.preventDefault();
+  const age = Math.min(AGE_MAX, Math.max(AGE_MIN, loadSpeechPrefs().age + step));
+  scrollAgeTo(age, true);
+}
+function renderSpeaker(){
+  const p = loadSpeechPrefs();
+  document.getElementById('sp-unsupported').hidden = 'speechSynthesis' in window;
+  document.querySelectorAll('input[name="sp-gender"]').forEach(r=>{ r.checked = r.value === p.gender; });
+  document.querySelectorAll('input[name="sp-accent"]').forEach(r=>{ r.checked = r.value === p.accent; });
+  renderAgeWheel(p.age);
+  ['rate','volume'].forEach(k=>{
+    document.getElementById('sp-'+k).value = p[k];
+    document.getElementById('sp-'+k+'-val').textContent = speechLabel(k, p[k]);
+  });
+  renderVoiceStatus();
+}
+function updateSpeechPref(key, value){
+  const p = loadSpeechPrefs();
+  p[key] = (key === 'gender' || key === 'accent') ? value : Number(value);
+  saveSpeechPrefs(p);
+  if(key === 'rate' || key === 'volume') document.getElementById('sp-'+key+'-val').textContent = speechLabel(key, p[key]);
+  renderVoiceStatus();
+}
+function resetSpeechPrefs(){
+  saveSpeechPrefs({ ...SPEECH_DEFAULTS });
+  renderSpeaker();
+  showFormMsg('sp-msg','success','初期設定に戻しました。');
+}
+function testSpeech(){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const text = document.getElementById('sp-sample').value.trim() || "Good morning! Let's talk about today's top news story.";
+  const utt = new SpeechSynthesisUtterance(text.slice(0, 300));
+  applySpeechPrefs(utt);
+  window.speechSynthesis.speak(utt);
+}
+if('speechSynthesis' in window){
+  window.speechSynthesis.addEventListener('voiceschanged', ()=>{
+    if(document.getElementById('s-speaker').classList.contains('active')) renderSpeaker();
+  });
+}
+
+function renderAccount(){
+  const u = currentUser;
+  const email = u && u.email ? u.email : '—';
+  document.getElementById('acc-email').textContent = email;
+  document.getElementById('acc-avatar').textContent = (email.charAt(0) || '?').toUpperCase();
+  document.getElementById('acc-created').textContent = u && u.created_at ? new Date(u.created_at).toLocaleDateString('ja-JP') : '—';
+  document.getElementById('pw-form').reset();
+  showFormMsg('pw-msg','','');
+  showFormMsg('reset-msg','','');
+}
+document.getElementById('pw-form').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const pw = document.getElementById('pw-new').value;
+  const pw2 = document.getElementById('pw-new2').value;
+  if(pw.length < 8) return showFormMsg('pw-msg','error','パスワードは8文字以上で入力してください。');
+  if(pw !== pw2) return showFormMsg('pw-msg','error','確認用パスワードが一致しません。');
+  if(!sb) return showFormMsg('pw-msg','error','認証サービスに接続できません。時間をおいて再度お試しください。');
+  const btn = document.getElementById('pw-submit');
+  btn.disabled = true; btn.textContent = '変更中…';
+  try{
+    const { error } = await sb.auth.updateUser({ password: pw });
+    if(error){
+      const msg = error.code === 'same_password' ? '現在と同じパスワードは使用できません。'
+        : error.code === 'reauthentication_needed' ? 'セキュリティのため、一度ログアウトして再ログインしてから変更してください。'
+        : authErrorMessage(error);
+      return showFormMsg('pw-msg','error',msg);
+    }
+    e.target.reset();
+    showFormMsg('pw-msg','success','パスワードを変更しました。');
+  }catch(err){
+    showFormMsg('pw-msg','error','通信エラーが発生しました。接続を確認してください。');
+  }finally{
+    btn.disabled = false; btn.textContent = 'パスワードを変更する';
+  }
+});
+function resetLearningData(){
+  if(!confirm('アカウントに保存された学習履歴・単語帳と、この端末の連続学習日数を削除します。よろしいですか？')) return;
+  ['ns_vocab','ns_streak','ns_score_history','ns_last_article'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+  scheduleCloudSave();
+  updateVocabBadge();
+  updateReviewBadge();
+  showFormMsg('reset-msg','success','学習データを削除しました。');
+}
 
 (function initCategoryVideos(){
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
