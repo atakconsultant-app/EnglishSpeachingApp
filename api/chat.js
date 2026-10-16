@@ -2,7 +2,7 @@
 // ブラウザの代わりにサーバーで Claude API を呼ぶ。APIキーは環境変数 ANTHROPIC_API_KEY にだけ置く。
 //
 // 受け付けるのはログイン中の利用者だけ（Supabase のログイン情報をサーバー側で確認）。
-// SUPABASE_SERVICE_ROLE_KEY があれば、1人1日あたりの呼び出し回数を Supabase で数えて上限を設ける。
+// SUPABASE_SECRET_KEY（旧名 SUPABASE_SERVICE_ROLE_KEY）があれば、1人1日あたりの呼び出し回数を Supabase で数えて上限を設ける。
 //
 // リクエスト: { purpose: 'chat' | 'score', messages: [{ role: 'user'|'assistant', content: string }, ...] }
 // レスポンス: { text, remaining }   remaining は今日の残り回数（上限未設定なら null）
@@ -46,7 +46,7 @@ async function getUserId(req) {
 
 // 今日の利用回数を1つ増やし、残り回数を返す（上限超過なら -1）。上限の仕組みが未設定なら null
 async function consumeQuota(userId) {
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const serviceKey = env('SUPABASE_SECRET_KEY', 'SUPABASE_SERVICE_ROLE_KEY');
   if (!serviceKey) return null;
   const limit = parseInt(process.env.AI_DAILY_LIMIT, 10) || DEFAULT_DAILY_LIMIT;
   const r = await fetch(`${supabaseUrl()}/rest/v1/rpc/consume_ai_quota`, {
