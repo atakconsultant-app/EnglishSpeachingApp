@@ -2078,7 +2078,8 @@ function buildSystem(){
   return `${levelInst[state.level]} ${modeInst[state.mode]}
 Article: "${state.article.title}" — ${state.article.summary}
 Key discussion points: ${state.article.points.join(', ')}
-Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".${targetInst}
+Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".
+Never mix Japanese into English sentences. If you give a Japanese hint or explanation, put it on its own separate line that starts with "💬 " (the app reads English aloud and skips those lines).${targetInst}
 ${speakerPersonaInstruction()}`;
 }
 
@@ -2202,6 +2203,25 @@ function toggleHide(btn){
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`:
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 }
+// 読み上げ用に英語だけを残す：💬で始まる行、日本語などを含む括弧書き、日本語が主体の行を除く
+const NON_LATIN_RE = /[\u3000-\u30ff\u3400-\u9fff\uac00-\ud7af\u1100-\u11ff\uff00-\uffef]/;
+const NON_LATIN_G = /[\u3000-\u30ff\u3400-\u9fff\uac00-\ud7af\u1100-\u11ff\uff00-\uffef]/g;
+function englishOnlyForSpeech(text){
+  return String(text).split(/\n+/)
+    .filter(line => !/^\s*💬/.test(line))
+    .map(line => {
+      if(!NON_LATIN_RE.test(line)) return line;
+      // 日本語などを含む括弧書きを丸ごと除く（入れ子の「」にも対応するため2回）
+      let s = line;
+      for(let i=0;i<2;i++) s = s.replace(/[（(【\[「『][^（(【\[「『）)】\]」』]*[）)】\]」』]/g, m => NON_LATIN_RE.test(m) ? ' ' : m);
+      const cjk = (s.match(NON_LATIN_G) || []).length;
+      const words = (s.match(/[A-Za-z]+(?:'[A-Za-z]+)?/g) || []).length;
+      if(cjk > words) return '';            // 日本語が主体の行は読まない
+      return s.replace(NON_LATIN_G, ' ');   // 英文中に混じった文字だけ除く
+    })
+    .filter(line => /[A-Za-z]/.test(line))
+    .join('\n').replace(/[ \t]+/g,' ').replace(/ ([,.!?;:])/g,'$1').trim();
+}
 function speakText(btn,text,shadowMode=false){
   if(!window.speechSynthesis)return;
   const msgDiv=btn.closest('.msg');
@@ -2228,7 +2248,8 @@ function speakText(btn,text,shadowMode=false){
   if(shadowMode && bubble){
     bubble.classList.add('hidden');
   }
-  const plain=text.replace(/\*+/g,'').replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
+  const plain=englishOnlyForSpeech(text.replace(/\*+/g,'')).replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
+  if(!plain){ if(bubble) bubble.classList.remove('hidden'); return; } // 読み上げる英語がない
   const utt=new SpeechSynthesisUtterance(plain);
   applySpeechPrefs(utt);
   utt.onend=()=>{
