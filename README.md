@@ -11,7 +11,7 @@ Using for English
 | `ANTHROPIC_API_KEY` | Claude API のキー。`api/chat.js` だけが使う | ✕ 絶対にブラウザ側に出さない |
 | `SUPABASE_SECRET_KEY` | AIの1日あたり利用回数を数えるためのサーバー専用キー（Supabaseの Secret key `sb_secret_…`。旧名 `SUPABASE_SERVICE_ROLE_KEY` も可） | ✕ 絶対にブラウザ側に出さない |
 | `AI_DAILY_LIMIT`（任意） | 1人1日あたりのAI呼び出し回数の上限。未設定なら60 | ○ |
-| `AI_CHAT_MODEL` / `AI_SCORE_MODEL`（任意） | 会話・採点に使うモデル。未設定なら `claude-haiku-5-5` / `claude-sonnet-5-5` | ○ |
+| `AI_CHAT_MODEL` / `AI_SCORE_MODEL` / `AI_TRANSLATE_MODEL`（任意） | 会話・採点・翻訳に使うモデル。未設定なら `claude-haiku-5-5` / `claude-sonnet-5-5` / `claude-haiku-5-5` | ○ |
 
 ## AI（会話・フィードバック・採点）の仕組み
 
@@ -20,7 +20,8 @@ Using for English
 - claude.ai のアーティファクト上で開いたときは、これまでどおり `claude.use('sample')` を使う（自動で切り替わる）。
 - 利用回数の上限には Supabase のテーブルと関数が必要。`supabase/ai_usage.sql` を
   Supabase の SQL Editor で一度だけ実行する。`SUPABASE_SECRET_KEY` が未設定なら上限なしで動く。
-- 1回の発言・採点がそれぞれ1回と数えられる（1セッション ≒ 8〜10回）。上限は日本時間の0時にリセット。
+- 1回の発言・採点・翻訳がそれぞれ1回と数えられる（1セッション ≒ 8〜10回）。上限は日本時間の0時にリセット。
+- 翻訳（purpose: 'translate'）は、訳す文章と訳す先の言語だけを受け取り、指示文はサーバー側で組み立てる。
 
 ## ニュース取得の仕組み
 
