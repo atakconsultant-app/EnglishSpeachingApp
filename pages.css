@@ -289,3 +289,37 @@
   .howto-item { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }
   .howto-ill { max-width: 96px; }
 }
+
+/* ── 自分の題材で練習する（ホーム） ── */
+.my-topic {
+  margin: 0 24px 40px; padding: 22px; border-radius: 18px;
+  background: var(--surface); border: 1px solid var(--border2); box-shadow: 0 4px 0 var(--border2);
+  display: flex; flex-direction: column; gap: 18px;
+}
+.mt-head { display: flex; gap: 14px; align-items: flex-start; }
+.mt-icon { flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; background: var(--accent-dim); color: var(--accent); }
+.mt-icon .ic { width: 21px; height: 21px; }
+.mt-title { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -.2px; }
+.mt-sub { font-size: 13px; color: var(--text-sub); line-height: 1.7; margin-top: 4px; text-wrap: pretty; }
+.mt-form { display: flex; flex-direction: column; gap: 14px; }
+.mt-form textarea { min-height: 140px; }
+.mt-submit { align-self: flex-start; }
+.mt-recent { border-top: 1px solid var(--border); padding-top: 14px; }
+.mt-recent[hidden] { display: none; }
+.mt-recent-label { font-size: 12px; font-weight: 700; color: var(--text-dim); letter-spacing: .04em; margin-bottom: 8px; }
+.mt-recent ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.mt-recent li { display: flex; gap: 8px; align-items: stretch; }
+.mt-recent-use {
+  flex: 1; min-width: 0; text-align: left; font: inherit; cursor: pointer;
+  padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border2); background: var(--surface2);
+  display: flex; flex-direction: column; gap: 2px; transition: border-color .15s;
+}
+.mt-recent-use:hover { border-color: var(--accent); }
+.mt-recent-use:focus-visible, .mt-recent-del:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mt-recent-title { font-size: 14px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mt-recent-scene { font-size: 12px; color: var(--text-sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mt-recent-del { flex-shrink: 0; width: 38px; border-radius: 12px; border: 1px solid var(--border2); background: var(--surface); color: var(--text-dim); font-size: 18px; cursor: pointer; }
+.mt-recent-del:hover { color: #d03b3b; border-color: #f1a7a1; }
+@media (max-width: 600px) {
+  .my-topic { margin: 0 16px 32px; padding: 18px; }
+}
