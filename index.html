@@ -2,6 +2,11 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<script src="i18n.js"></script>
+<script>/* i18n.js が読み込めなかったときも日本語で動くようにする */
+if(!window.I18N){window.I18N={lang:'ja',locale:'ja-JP',aiLanguage:'Japanese',home:'Japan',homeShort:'Japan',langs:{ja:{name:'日本語'}},order:['ja'],
+t:function(k,p){k=String(k).replace(/@[\w-]+$/,'');return p?k.replace(/\{(\w+)\}/g,function(m,n){return n in p?p[n]:m;}):k;},
+has:function(){return false;},set:function(){},onChange:function(){},add:function(){},apply:function(){}};window.t=window.I18N.t;}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NewSpeak — 英語力を鍛える国際ニュースアプリ</title>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -869,6 +874,10 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 <header>
   <button type="button" class="wordmark" onclick="goTop()" aria-label="NewSpeak ホームに戻る">New<span>Speak</span></button>
   <div class="spacer"></div>
+  <label class="lang-switch" title="言語 / Language">
+    <svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>
+    <select id="lang-select" aria-label="言語 / Language"></select>
+  </label>
   <div class="theme-switch" role="group" aria-label="デザイン案の切り替え">
     <button type="button" data-theme="studio" onclick="applyTheme('studio')">A<span class="ts-label">スタジオ</span></button>
     <button type="button" data-theme="playful" onclick="applyTheme('playful')">B<span class="ts-label">プレイフル</span></button>
@@ -1846,8 +1855,8 @@ async function callAI(messages, purpose, onText){
   const data = await res.json().catch(() => ({}));
   if(!res.ok){
     const err = new Error(data.error || ('http ' + res.status));
-    err.userMessage = res.status === 401 ? 'ログインの有効期限が切れました。もう一度ログインしてください。'
-      : res.status === 429 ? '本日のAI利用回数の上限に達しました。明日また練習しましょう。'
+    err.userMessage = res.status === 401 ? t('ログインの有効期限が切れました。もう一度ログインしてください。')
+      : res.status === 429 ? t('本日のAI利用回数の上限に達しました。明日また練習しましょう。')
       : null;
     throw err;
   }
@@ -1879,7 +1888,7 @@ function loadYesterdayBanner(){
     const banner = document.getElementById('yesterday-banner');
     document.getElementById('yesterday-title').textContent = data.article.title;
     const modeLabel = {discussion:'ディスカッション', facilitation:'ファシリテーション', interview:'面接スピーチ'}[data.mode] || data.mode;
-    document.getElementById('yesterday-meta').textContent = `${data.cat} · ${modeLabel} · ${data.date}`;
+    document.getElementById('yesterday-meta').textContent = `${t(data.cat)} · ${t(modeLabel)} · ${data.date}`;
     banner._savedData = data;
     banner.classList.add('show');
   }catch(e){}
@@ -1916,7 +1925,7 @@ async function fetchLiveNews(){
   if(!/^https?:$/.test(location.protocol)) return; // ローカルファイルで開いた場合は内蔵記事のみ
   const results = await Promise.all(LIVE_CATS.map(async cat => {
     try{
-      const res = await fetch('/api/news?cat=' + encodeURIComponent(cat));
+      const res = await fetch('/api/news?cat=' + encodeURIComponent(cat) + (cat === '国内' && I18N.lang !== 'ja' ? '&home=' + encodeURIComponent(I18N.lang) : ''));
       if(!res.ok) return false;
       const data = await res.json();
       const items = (data.articles || []).slice(0, 5).map(a => toAppArticle(a, cat));
@@ -1969,6 +1978,38 @@ const ARTICLES = {
     {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
   ]
 };
+
+// ══ 内蔵記事の要約・論点の英語版（日本語以外の利用者に表示。最新ニュースが取れないときの予備の記事） ══
+const ARTICLE_EN = {
+  'G7 Leaders Reach Historic Climate Financing Deal at Summit':["G7 leaders agreed on a landmark climate finance deal at their summit. Advanced economies renewed their commitment of $100 billion a year to support developing countries and pledged to speed up the shift to renewable energy.",['Fair distribution of climate finance','Responsibility of developed countries',"Fit with your country's energy policy"]],
+  'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread':["The World Health Organization declared an international public health emergency as a new respiratory virus spreads. Countries are under pressure to tighten border measures and strengthen their healthcare systems.",['Lessons from pandemic response','Weaknesses in healthcare systems','Challenges of global cooperation']],
+  "Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy":["Japan's birth rate has hit a new record low. While the government is stepping up support for families, calls for a fundamental review of immigration policy are growing, fueling public debate.",['Root causes of the falling birth rate','Pros and cons of immigration policy','How Japanese society is changing']],
+  "Tokyo to Launch World's First AI-Powered Disaster Response System":["Tokyo is introducing the world's first AI-powered disaster response system. By analyzing data in real time, it aims to guide evacuations more accurately and respond to disasters much faster.",['AI and public safety','Privacy and security','Digitalization of local governments']],
+  'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility':["Ukraine peace talks have resumed in Vienna. As both sides show some flexibility, negotiations continue over territory and security arrangements. Continued Western support will be key.",['Conditions for a lasting peace','The future of European security',"Your country's diplomatic role"]],
+  'South China Sea Tensions Escalate as New Military Drills Begin':["New military drills in the South China Sea are raising tensions. Diplomatic channels between the countries involved are still working, but the international community is increasingly worried about the risk of an accidental clash.",['Freedom of navigation and sovereignty','Limits of multilateral diplomacy','Regional stability and the economy']],
+  'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally':["The US Federal Reserve signaled rate cuts as inflation cools around the world. Attention is on the knock-on effects for the global economy, including the risk of capital leaving emerging markets.",['Interest rates and the real economy','Exchange rates and business competitiveness','Impact on individual investors']],
+  'AI Startups Attract Record $180 Billion in Global Investment in 2026':["Global investment in AI startups hit a record $180 billion in 2026. Big tech companies are competing harder to buy them, raising concerns about market concentration.",['Risk of an AI investment bubble','Innovation vs. market concentration',"Your country's AI ecosystem"]],
+  'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices':["The K-pop industry is facing criticism over artists' mental health and working conditions. Extreme fan culture and contract disputes with agencies are drawing international attention.",['Exploitation in the entertainment industry','Cultural exports and ethics','Relationships between fans and artists']],
+  'Streaming Wars Enter New Phase as Studios Merge Content Libraries':["As major studios combine their content libraries, the streaming wars are entering a new phase. Consumer choice is changing, and creators are calling for a review of how they are paid.",['Diversity of content','The creator economy','Taking local content global']],
+  'Olympic Games 2028 LA: Technology and Inclusion Take Center Stage':["Technology and inclusion are key themes for the 2028 Los Angeles Olympics. Debate is growing over AI judging systems and whether esports should become an official event.",['Sport meets technology','Fairness and new technology','Commercialization vs. the spirit of the Games']],
+  'Premier League Clubs Face New Salary Cap Rules Amid Financial Fair Play Reforms':["The Premier League is introducing a new salary cap as part of its Financial Fair Play reforms. Club finances will become more transparent, but some worry about the impact on competitiveness.",['Sports management and sustainability','Big clubs vs. smaller clubs','Impact on players from your country']],
+  'OpenAI Launches GPT-6 with Real-Time Reasoning and Multimodal Capabilities':["OpenAI announced GPT-6 with real-time reasoning and multimodal capabilities. As its impact on industry spreads, debates about AI safety and governance are becoming even more important.",['AI progress and jobs','International standards for AI regulation',"Your country's AI strategy"]],
+  'Quantum Computing Breakthrough Threatens Current Encryption Standards':["New research marks a breakthrough in quantum computing and could put today's encryption standards at risk. Governments and tech companies are rushing to move to post-quantum security.",['The future of cybersecurity','Military use of quantum technology','Protecting digital infrastructure']],
+  'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough':["Scientists say they have reversed aging in human cells using mRNA therapy. It could transform the treatment of age-related diseases, but it also raises ethical questions.",['Ethics of extending lifespan','Unequal access to healthcare','Where technology meets nature']],
+  'First Evidence of Water Ice Confirmed on Mars Surface':["Water ice has been confirmed on the surface of Mars for the first time. Space agencies and private companies see it as an important milestone for future crewed missions and settlement plans.",['The future of Mars exploration','Space development and global competition','Scientific discovery vs. commercial use']],
+  'The 15-Minute City: Urban Planning Revolution Spreads Across Europe':["The idea of the \"15-minute city\", where daily needs are within a 15-minute walk, is spreading across Europe. It is seen as a revolution in urban planning, but moving away from car-centered life brings its own challenges.",['Cities and quality of life','Reducing environmental impact','Lessons for urban planning in your country']],
+  'The Loneliness Epidemic: How Social Media Failed to Connect Us':["Loneliness is emerging as a serious problem in modern society. Researchers warn that people have become more isolated even as social media has spread.",['Technology and relationships','Mental health and social design','Loneliness in your culture']],
+};
+// 日本語の利用者には元の日本語、それ以外の言語の利用者には英語の要約・論点を使う
+function localizeArticle(a){
+  const en = ARTICLE_EN[a.title];
+  if(!en || a.live) return a;
+  if(!a._ja) a._ja = { summary: a.summary, points: a.points };
+  if(I18N.lang === 'ja'){ a.summary = a._ja.summary; a.points = a._ja.points; }
+  else { a.summary = en[0]; a.points = en[1]; }
+  return a;
+}
+Object.values(ARTICLES).forEach(arr => arr.forEach(localizeArticle));
 
 // ══ Flat article list for search ══
 const ALL_ARTICLES = [];
@@ -2055,7 +2096,7 @@ function showResults(hits, query, loading=false){
     ? `<div class="search-loading"><span class="search-spin"></span>最新ニュースを検索中…</div>` : '';
 
   if(hits.length === 0 && !loading){
-    box.innerHTML=`<div class="no-results">「${query||activeTopic}」に一致する記事が見つかりませんでした</div>${spinner}`;
+    box.innerHTML=`<div class="no-results">${escHtml(t('「{q}」に一致する記事が見つかりませんでした', {q: query || t(activeTopic)}))}</div>${spinner}`;
     return;
   }
   box.innerHTML = hits.map((a,i)=>`
@@ -2065,7 +2106,7 @@ function showResults(hits, query, loading=false){
         <div class="result-title">${escHtml(a.title)}</div>
         <div class="result-meta">
           <span class="result-cat">${escHtml(a.source||'GNews')}</span>
-          <span class="result-topic">${a.cat} · ${a.topic||''}</span>
+          <span class="result-topic">${escHtml(t(a.cat))} · ${escHtml(a.topic ? t(a.topic) : '')}</span>
           ${a._fromApiSearch?'<span class="result-live-tag">LIVE</span>':''}
         </div>
       </div>
@@ -2131,7 +2172,7 @@ function renderMyTopics(){
   ul.innerHTML = list.map((t, i) => `
     <li>
       <button type="button" class="mt-recent-use" data-i="${i}"><span class="mt-recent-title">${escHtml(t.title)}</span>${t.scene ? `<span class="mt-recent-scene">${escHtml(t.scene)}</span>` : ''}</button>
-      <button type="button" class="mt-recent-del" data-i="${i}" aria-label="「${escHtml(t.title)}」を削除">×</button>
+      <button type="button" class="mt-recent-del" data-i="${i}" aria-label="${escHtml(I18N.t('「{name}」を削除', {name: t.title}))}">×</button>
     </li>`).join('');
   ul.querySelectorAll('.mt-recent-use').forEach(b => b.addEventListener('click', () => startMyTopic(loadMyTopics()[+b.dataset.i])));
   ul.querySelectorAll('.mt-recent-del').forEach(b => b.addEventListener('click', () => deleteMyTopic(+b.dataset.i)));
@@ -2142,7 +2183,7 @@ function startMyTopic(t){
   state.article = {
     source: CUSTOM_CAT, emoji: '📝', topic: CUSTOM_CAT, custom: true, keywords: [],
     title: t.title, scene: t.scene || '',
-    summary: t.scene ? `【練習したい場面】${t.scene}\n\n${t.body}` : t.body,
+    summary: t.scene ? `${I18N.t('【練習したい場面】')}${t.scene}\n\n${t.body}` : t.body,
     body: t.body, points: MY_TOPIC_POINTS
   };
   selectedResultArticle = null;
@@ -2245,7 +2286,7 @@ async function startSession(){
 
 function renderArticle(){
   const a = state.article;
-  document.getElementById('a-source').textContent = a.source;
+  document.getElementById('a-source').textContent = a.custom ? t(a.source) : a.source;
   document.getElementById('a-cat').textContent = state.cat;
   document.getElementById('a-title').textContent = a.title;
   document.getElementById('a-summary').textContent = a.summary;
@@ -2254,7 +2295,7 @@ function renderArticle(){
   const full = document.getElementById('a-fulltext');
   if(a.url && /^https?:\/\//.test(a.url)){
     full.href = a.url;
-    full.title = `${a.source || '配信元'} のサイトで記事の全文を開きます（新しいタブ）`;
+    full.title = t('{source} のサイトで記事の全文を開きます（新しいタブ）', {source: a.source || t('配信元')});
     full.hidden = false;
   } else {
     full.removeAttribute('href');
@@ -2284,7 +2325,7 @@ function toggleExpand(){
 
 // ══ AI opening ══
 async function aiOpen(){
-  if(!aiAvailable()){addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。');return;}
+  if(!aiAvailable()){addMsg('ai',t('AIに接続できませんでした。ページを再読み込みしてください。'));return;}
   showTyping();
   const openPrompt = buildOpenPrompt();
   try{
@@ -2295,16 +2336,18 @@ async function aiOpen(){
     showSuggestions();
   }catch(e){
     removeTyping();
-    addMsg('ai', e.userMessage || 'セッションを開始できませんでした。もう一度お試しください。');
+    addMsg('ai', e.userMessage || t('セッションを開始できませんでした。もう一度お試しください。'));
   }
 }
 
 function buildSystem(){
+  const L = I18N.aiLanguage; // 利用者の母国語（ヒント・フィードバックの言語）
   const levelInst = {
-    beginner:'You support the user in English but may provide Japanese explanations when they struggle. Keep English simple (A2-B1).',
-    intermediate:'Conduct the session mainly in English. Occasionally offer a Japanese hint if needed. Target B2 level.',
+    beginner:`You support the user in English but may provide ${L} explanations when they struggle. Keep English simple (A2-B1).`,
+    intermediate:`Conduct the session mainly in English. Occasionally offer a ${L} hint if needed. Target B2 level.`,
     advanced:'Conduct everything in English only. Target C1-C2 level. Use natural, sophisticated vocabulary.'
   };
+  const feedbackLang = state.level === 'advanced' ? 'English' : L;
   const modeInst = {
     discussion:`You are an engaging discussion partner. Ask thought-provoking questions. After every 2-3 user responses, provide brief feedback on their English (grammar, vocabulary, fluency) in a "💡 Feedback" section.`,
     facilitation:`You play the role of a meeting participant (sometimes agreeable, sometimes challenging). The user is the facilitator. After every 2-3 user responses, evaluate their facilitation skills and English in a "💡 Feedback" section.`,
@@ -2318,13 +2361,14 @@ function buildSystem(){
   const material = a.custom
     ? `Topic provided by the learner. This is their own real situation (for example an upcoming project, meeting or interview), not a news article: "${a.title}"
 ${a.scene ? `Situation they want to rehearse: ${a.scene}\n` : ''}Details: ${a.body || a.summary}
-The details may be written in Japanese or another language; always conduct the session in English. Treat this as a realistic rehearsal: raise the questions, concerns and counterpoints the learner is likely to face in this real situation, and keep everything specific to these details.`
+The details may be written in any language; always conduct the session in English. Treat this as a realistic rehearsal: raise the questions, concerns and counterpoints the learner is likely to face in this real situation, and keep everything specific to these details.`
     : `Article: "${a.title}" — ${a.summary}`;
   return `${levelInst[state.level]} ${modeInst[state.mode]}
 ${material}
 Key discussion points: ${a.points.join(', ')}
 Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".
-Never mix Japanese into English sentences. If you give a Japanese hint or explanation, put it on its own separate line that starts with "💬 " (the app reads English aloud and skips those lines).${targetInst}
+In "💡 Feedback", write each score as "Label: n/10" with an English label (for example "Grammar: 7/10"), and write the comments in ${feedbackLang}; keep the English expressions you quote or suggest in English.
+Never mix ${L} into English sentences. If you give a ${L} hint or explanation, put it on its own separate line that starts with "💬 " (the app reads English aloud and skips those lines).${targetInst}
 ${speakerPersonaInstruction()}`;
 }
 
@@ -2372,7 +2416,7 @@ async function send(txt){
   }catch(e){
     removeTyping();
     state.history.pop(); // 失敗した発言は履歴から外し、同じ内容をもう一度送れるようにする
-    addMsg('ai', e.userMessage || 'AIに接続できませんでした。もう一度送信してください。');
+    addMsg('ai', e.userMessage || t('AIに接続できませんでした。もう一度送信してください。'));
   }
   state.busy=false;
 }
@@ -2558,10 +2602,7 @@ function addMsg(role,text){
   chat.scrollTop=chat.scrollHeight;
 }
 // ══ 翻訳：AIのメッセージを母国語に訳して吹き出しの下に表示（もう一度押すと隠す） ══
-function nativeLang(){
-  try{ const l = localStorage.getItem('ns_lang'); if(l) return l; }catch(e){}
-  return 'ja';
-}
+function nativeLang(){ return I18N.lang; }
 const TRANSLATE_LANG_NAMES = { ja:'Japanese', ko:'Korean', 'zh-TW':'Traditional Chinese as used in Taiwan', fr:'French', es:'Spanish' };
 async function translateText(text, target){
   if(sample){
@@ -2582,8 +2623,8 @@ async function translateText(text, target){
   const data = await res.json().catch(()=>({}));
   if(!res.ok){
     const err = new Error(data.error || ('http ' + res.status));
-    err.userMessage = res.status === 401 ? 'ログインの有効期限が切れました。もう一度ログインしてください。'
-      : res.status === 429 ? '本日のAI利用回数の上限に達しました。'
+    err.userMessage = res.status === 401 ? t('ログインの有効期限が切れました。もう一度ログインしてください。')
+      : res.status === 429 ? t('本日のAI利用回数の上限に達しました。')
       : null;
     throw err;
   }
@@ -2600,13 +2641,13 @@ async function toggleTranslation(msgEl, btn, text){
   if(box) return; // 翻訳中
   box = document.createElement('div');
   box.className = 'translation loading';
-  box.textContent = '翻訳中…';
+  box.textContent = t('翻訳中…');
   col.querySelector('.bubble').after(box);
   btn.classList.add('active');
   try{
     const out = await translateText(String(text).slice(0, 3000), nativeLang());
     box.classList.remove('loading');
-    box.textContent = out.trim() || '翻訳できませんでした。';
+    box.textContent = out.trim() || t('翻訳できませんでした。');
   }catch(e){
     box.remove();
     btn.classList.remove('active');
@@ -2623,13 +2664,13 @@ function selectedTextIn(el){
   return s.toString().replace(/\s+/g,' ').trim().slice(0,80);
 }
 function addVocabFromMessage(selected){
-  const word = prompt('単語帳に追加する語句（文中をドラッグで選択してから押すと自動で入ります）：', selected||'');
+  const word = prompt(t('単語帳に追加する語句（文中をドラッグで選択してから押すと自動で入ります）：'), selected||'');
   if(!word || !word.trim()) return;
-  const note = prompt('メモ（意味・使い方など。省略可）：','');
+  const note = prompt(t('メモ（意味・使い方など。省略可）：'),'');
   const before = loadVocab().length;
   addVocab(word.trim(), note||'');
   const added = loadVocab().length > before;
-  addSystemNote(added ? `「${word.trim()}」を単語帳に追加しました` : `「${word.trim()}」はすでに単語帳にあります`);
+  addSystemNote(added ? t('「{word}」を単語帳に追加しました', {word: word.trim()}) : t('「{word}」はすでに単語帳にあります', {word: word.trim()}));
 }
 function addSystemNote(msg){
   const chat=document.getElementById('chat');
@@ -2656,7 +2697,7 @@ function updateTyping(text){
 function removeTyping(){if(typingEl){typingEl.remove();typingEl=null;}}
 
 const SUGGESTIONS = {
-  discussion:["I think...", "On the other hand,", "Could you elaborate on that?","In Japan, we tend to...","I'm not sure I agree because..."],
+  discussion:["I think...", "On the other hand,", "Could you elaborate on that?","In {home}, we tend to...","I'm not sure I agree because..."],
   facilitation:["Let's move on to...", "What's your view on this?","To summarize so far,","Does anyone have concerns about...","Let's take a vote on..."],
   interview:["In my experience...", "That's a great question.", "I believe the key challenge is...","To give you a specific example,","My approach would be to..."]
 };
@@ -2668,7 +2709,7 @@ function showSuggestions(){
   const idxs=new Set();
   while(picks.length<3&&picks.length<pool.length){
     const i=(suggIdx+picks.length)%pool.length;
-    picks.push(pool[i]);
+    picks.push(pool[i].replace('{home}', I18N.homeShort));
   }
   suggIdx=(suggIdx+3)%pool.length;
   row.innerHTML=picks.map(s=>`<button class="sugg" onclick="send('${s.replace(/'/g,"\\'")}')"> ${s}</button>`).join('');
@@ -2708,7 +2749,7 @@ function renderVocabList(){
         <div class="vocab-word">${v.word}</div>
         ${v.note?`<div class="vocab-note">${v.note}</div>`:''}
         <div class="vocab-date">${v.date} · ${v.article||''}</div>
-        <div class="vocab-date">${v.due && v.due > Date.now() ? '次の復習 '+new Date(v.due).toLocaleDateString('ja-JP') : '復習タイミング（次のセッションで出題）'}</div>
+        <div class="vocab-date">${v.due && v.due > Date.now() ? t('次の復習 {date}', {date: new Date(v.due).toLocaleDateString(I18N.locale)}) : t('復習タイミング（次のセッションで出題）')}</div>
       </div>
       <button class="vocab-del" onclick="deleteVocab(${list.length-1-i})" title="削除">×</button>
     </div>
@@ -2726,16 +2767,16 @@ function addVocab(word, note){
   if(list.some(v=>v.word.toLowerCase()===word.toLowerCase())) return; // 重複チェック
   list.push({
     word, note,
-    date: new Date().toLocaleDateString('ja-JP'),
+    date: new Date().toLocaleDateString(I18N.locale),
     article: state.article ? state.article.title.substring(0,40)+'…' : ''
   });
   saveVocab(list);
   updateVocabBadge();
 }
 function promptAddVocab(btn){
-  const word = prompt('単語帳に追加する語彙を入力してください：', btn.dataset.word||'');
+  const word = prompt(t('単語帳に追加する語彙を入力してください：'), btn.dataset.word||'');
   if(!word) return;
-  const note = prompt('メモ（例：使い方・例文）を入力してください（省略可）：','');
+  const note = prompt(t('メモ（例：使い方・例文）を入力してください（省略可）：'),'');
   addVocab(word.trim(), note||'');
   btn.textContent='✓ 追加済み';
   btn.style.opacity='0.5';
@@ -2760,7 +2801,7 @@ function loadScoreHistory(){
 }
 function saveScoreHistory(score){
   const history = loadScoreHistory();
-  history.push({ date: new Date().toLocaleDateString('ja-JP'), score });
+  history.push({ date: new Date().toLocaleDateString(I18N.locale), score });
   if(history.length > 20) history.splice(0, history.length - 20);
   try{ localStorage.setItem('ns_score_history', JSON.stringify(history)); }catch(e){}
   scheduleCloudSave();
@@ -2791,7 +2832,7 @@ function renderStatsBar(){
     warn.textContent = '今日の練習は達成済み ✓';
   } else if(alive && days > 0){
     warn.className = 'stat-warn';
-    warn.textContent = `今日練習しないと ${days}日の記録が途切れます`;
+    warn.textContent = t('今日練習しないと {n}日の記録が途切れます', {n: days});
   } else if(streak.days > 0){
     warn.className = 'stat-warn';
     warn.textContent = '今日から新しい記録をスタートしよう';
@@ -2803,7 +2844,7 @@ function renderStatsBar(){
   const svg = document.getElementById('sparkline-line');
   if(scores.length < 2){
     svg.setAttribute('points','');
-    document.getElementById('sparkline-sub').textContent = scores.length === 1 ? `直近: ${scores[0]}点` : 'まだデータなし';
+    document.getElementById('sparkline-sub').textContent = scores.length === 1 ? t('直近: {n}点', {n: scores[0]}) : t('まだデータなし');
   } else {
     const W=160, H=32, pad=3;
     const minS=Math.min(...scores), maxS=Math.max(...scores);
@@ -2815,7 +2856,7 @@ function renderStatsBar(){
     }).join(' ');
     svg.setAttribute('points', pts);
     const avg = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
-    document.getElementById('sparkline-sub').textContent = `平均 ${avg}点 (${scores.length}回)`;
+    document.getElementById('sparkline-sub').textContent = t('平均 {avg}点 ({n}回)', {avg, n: scores.length});
   }
   renderQuickStart();
 }
@@ -2834,7 +2875,7 @@ function savePrefs(){
 function renderQuickStart(){
   const p = loadPrefs();
   const sub = document.getElementById('qs-sub');
-  if(sub) sub.textContent = `${MODE_JA[p.mode]||''}・${LEVEL_JA[p.level]||''} ／ ${p.cat}カテゴリのおすすめ記事を自動選択`;
+  if(sub) sub.textContent = t('{mode}・{level} ／ {cat}カテゴリのおすすめ記事を自動選択', {mode: t(MODE_JA[p.mode]||''), level: t(LEVEL_JA[p.level]||''), cat: t(p.cat)});
 }
 function quickStart(){
   const p = loadPrefs();
@@ -2889,9 +2930,12 @@ function renderGoal(){
   const reached = done >= GOAL_STEPS;
   document.getElementById('goal-fill').style.width = (done/GOAL_STEPS*100) + '%';
   document.getElementById('goal-count').textContent = `${done} / ${GOAL_STEPS} · ${state.words||0} words`;
+  const left = {n: GOAL_STEPS-done};
   document.getElementById('goal-label').textContent = reached
-    ? 'ゴール達成！「終了」でスコアを確認しよう'
-    : (done === 1 ? ((state.article && state.article.custom) ? '題材を確認した ✓ ― ゴールまであと' : '記事を開いた ✓ ― ゴールまであと') : 'ゴールまであと') + ` ${GOAL_STEPS-done}回 発話`;
+    ? t('ゴール達成！「終了」でスコアを確認しよう')
+    : done === 1
+      ? ((state.article && state.article.custom) ? t('題材を確認した ✓ ― ゴールまであと {n}回 発話', left) : t('記事を開いた ✓ ― ゴールまであと {n}回 発話', left))
+      : t('ゴールまであと {n}回 発話', left);
   document.getElementById('goal-strip').classList.toggle('done', reached);
   document.getElementById('end-btn').classList.toggle('ready', reached);
   const row = document.getElementById('target-row');
@@ -2906,10 +2950,10 @@ function renderGoal(){
 async function endSession(){
   if(state.busy) return;
   if((state.userTurns||0) < 2){
-    addMsg('ai','もう少し会話を続けてから終了しましょう！スコア評価には2回以上の発話が必要です。');
+    addMsg('ai',t('もう少し会話を続けてから終了しましょう！スコア評価には2回以上の発話が必要です。'));
     return;
   }
-  if(!aiAvailable()){ addMsg('ai','AIに接続できませんでした。ページを再読み込みしてください。'); return; }
+  if(!aiAvailable()){ addMsg('ai',t('AIに接続できませんでした。ページを再読み込みしてください。')); return; }
   state.busy = true;
   loading('スコアを計算中…');
   document.getElementById('vocab-fab').classList.remove('show');
@@ -2930,14 +2974,15 @@ Return ONLY JSON (no markdown) in exactly this format:
 {
   "score": <integer 0-100>,
   "best_phrase": "<the student's single best sentence, quoted exactly as they said it>",
-  "best_reason": "<why it was good, 1 sentence in Japanese>",
+  "best_reason": "<why it was good, 1 sentence in ${I18N.aiLanguage}>",
   "improvements": [
-    "<improvement 1 in Japanese: quote what the student said → better English version>",
+    "<improvement 1 in ${I18N.aiLanguage}: quote what the student said → better English version>",
     "<improvement 2>",
     "<improvement 3>"
   ]
 }
 
+Write best_reason and the explanations in improvements in ${I18N.aiLanguage}, but keep the quoted student sentences and the better English versions in English.
 Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 20. Be fair and encouraging but honest.`;
 
   const prevHistory = loadScoreHistory();
@@ -2956,7 +3001,7 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
     loading(null);
     updateStreak();
     showSummaryScreen(null, [
-      e.userMessage || 'AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しください。'
+      e.userMessage || t('AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しください。')
     ], null, null, prevHistory, false);
   }
   state.busy = false;
@@ -2964,7 +3009,7 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
 
 function showSummaryScreen(score, improvements, bestPhrase, bestReason, prevHistory, scored){
   document.getElementById('summary-date').textContent =
-    new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+    new Date().toLocaleDateString(I18N.locale,{year:'numeric',month:'long',day:'numeric',weekday:'short'});
 
   document.getElementById('score-num').textContent = scored ? score : '—';
   document.getElementById('score-ring').className = 'score-ring ' +
@@ -3134,7 +3179,7 @@ let interimText = '';
     if(e.error === 'no-speech') return; // 無音は無視
     stopVoice();
     if(e.error === 'not-allowed'){
-      addMsg('ai','マイクへのアクセスが拒否されました。ブラウザの設定からマイクを許可してください。');
+      addMsg('ai',t('マイクへのアクセスが拒否されました。ブラウザの設定からマイクを許可してください。'));
     }
   };
 
@@ -3233,7 +3278,7 @@ function updateVoiceTimer(){
     clone.classList.remove('selected');
     clone.setAttribute('role','button');
     clone.setAttribute('tabindex','0');
-    clone.setAttribute('aria-label', clone.querySelector('.cat-name').textContent + ' のニュースで練習する（無料登録）');
+    clone.setAttribute('aria-label', t('{cat} のニュースで練習する（無料登録）', {cat: t(card.dataset.cat)}));
     clone.addEventListener('click',()=>openAuth('signup'));
     clone.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openAuth('signup'); } });
     gallery.appendChild(clone);
@@ -3526,7 +3571,7 @@ function renderHistory(){
   const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0) / scores.length) : null;
   const best = scores.length ? Math.max(...scores) : null;
   document.getElementById('hist-kpis').innerHTML = kpiHtml([
-    ['連続学習', streak.days || 0, '日', 'i-flame'],
+    ['連続学習', streak.days || 0, t('日@unit'), 'i-flame'],
     ['練習回数', hist.length, '回', 'i-chat'],
     ['平均スコア', avg ?? '—', avg != null ? '点' : '', 'i-chart'],
     ['最高スコア', best ?? '—', best != null ? '点' : '', 'i-award'],
@@ -3550,7 +3595,7 @@ function renderHistory(){
     document.getElementById('hist-list').innerHTML = '';
     return;
   }
-  chart.innerHTML = `<div class="hist-chart" role="img" aria-label="直近${hist.length}回のスコア推移">${hist.map((h,i)=>`
+  chart.innerHTML = `<div class="hist-chart" role="img" aria-label="${escHtml(t('直近{n}回のスコア推移', {n: hist.length}))}">${hist.map((h,i)=>`
     <div class="hc-col"><div class="hc-bar${i === hist.length-1 ? ' latest' : ''}" style="height:${Math.max(4, Math.min(100, h.score))}%"><span class="hc-val">${h.score}</span></div></div>`).join('')}
   </div>`;
   document.getElementById('hist-list').innerHTML = hist.map((h,i)=>{
@@ -3586,16 +3631,16 @@ function renderReview(){
         ${v.note ? `<p class="rv-note">${escHtml(v.note)}</p>` : ''}
         <p class="rv-meta">${escHtml(v.date || '')}${v.article ? ' · ' + escHtml(v.article) : ''}</p>
       </div>
-      <span class="rv-badge${due ? ' due' : ''}">${due ? '復習タイミング' : '次の復習 ' + new Date(v.due).toLocaleDateString('ja-JP')}</span>
-      <button type="button" class="icon-btn" onclick="speakWord(${idx})" aria-label="${escHtml(v.word)} を読み上げる"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg></button>
-      <button type="button" class="icon-btn danger" onclick="deleteReviewItem(${idx})" aria-label="${escHtml(v.word)} を削除"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg></button>
+      <span class="rv-badge${due ? ' due' : ''}">${due ? t('復習タイミング') : t('次の復習 {date}', {date: new Date(v.due).toLocaleDateString(I18N.locale)})}</span>
+      <button type="button" class="icon-btn" onclick="speakWord(${idx})" aria-label="${escHtml(t('{word} を読み上げる', {word: v.word}))}"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg></button>
+      <button type="button" class="icon-btn danger" onclick="deleteReviewItem(${idx})" aria-label="${escHtml(t('{word} を削除', {word: v.word}))}"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg></button>
     </li>`;
   }).join('');
   updateReviewBadge();
 }
 function deleteReviewItem(idx){
   const v = loadVocab()[idx];
-  if(!v || !confirm(`「${v.word}」を復習ポイントから削除しますか？`)) return;
+  if(!v || !confirm(t('「{word}」を復習ポイントから削除しますか？', {word: v.word}))) return;
   deleteVocab(idx);
   renderReview();
 }
@@ -3692,9 +3737,9 @@ function renderVoiceStatus(){
   if(!voice){ el.textContent = '英語の音声が見つかりません。端末の音声設定をご確認ください。'; return; }
   const accentOk = voice.lang.toLowerCase().replace('_','-') === ACCENTS[p.accent].lang.toLowerCase();
   const genderOk = voiceGender(voice) === p.gender;
-  let note = `読み上げ音声: ${voice.name}（${voice.lang}）`;
-  if(!accentOk) note += ` ／ この端末に${ACCENTS[p.accent].label}英語の音声がないため、近い音声で代用しています。`;
-  else if(!genderOk) note += ' ／ 選んだ性別の音声が見つからないため、近い音声で代用しています。';
+  let note = t('読み上げ音声: {name}（{lang}）', {name: voice.name, lang: voice.lang});
+  if(!accentOk) note += ' ／ ' + t('この端末に{accent}英語の音声がないため、近い音声で代用しています。', {accent: t(ACCENTS[p.accent].label)});
+  else if(!genderOk) note += ' ／ ' + t('選んだ性別の音声が見つからないため、近い音声で代用しています。');
   el.textContent = note;
 }
 function renderAgeWheel(age){
@@ -3719,8 +3764,8 @@ function scrollAgeTo(age, smooth){
 function markAge(age){
   const wheel = document.getElementById('sp-age');
   wheel.setAttribute('aria-valuenow', age);
-  wheel.setAttribute('aria-valuetext', age + '歳');
-  document.getElementById('sp-age-val').textContent = age + '歳';
+  wheel.setAttribute('aria-valuetext', t('{n}歳', {n: age}));
+  document.getElementById('sp-age-val').textContent = t('{n}歳', {n: age});
   wheel.querySelectorAll('.age-item').forEach(el=>el.classList.toggle('on', Number(el.dataset.age) === age));
 }
 let ageScrollTimer = null;
@@ -3780,7 +3825,7 @@ function renderAccount(){
   const email = u && u.email ? u.email : '—';
   document.getElementById('acc-email').textContent = email;
   document.getElementById('acc-avatar').textContent = (email.charAt(0) || '?').toUpperCase();
-  document.getElementById('acc-created').textContent = u && u.created_at ? new Date(u.created_at).toLocaleDateString('ja-JP') : '—';
+  document.getElementById('acc-created').textContent = u && u.created_at ? new Date(u.created_at).toLocaleDateString(I18N.locale) : '—';
   document.getElementById('pw-form').reset();
   showFormMsg('pw-msg','','');
   showFormMsg('reset-msg','','');
@@ -3811,13 +3856,36 @@ document.getElementById('pw-form').addEventListener('submit', async e=>{
   }
 });
 function resetLearningData(){
-  if(!confirm('アカウントに保存された学習履歴・単語帳と、この端末の連続学習日数を削除します。よろしいですか？')) return;
+  if(!confirm(t('アカウントに保存された学習履歴・単語帳と、この端末の連続学習日数を削除します。よろしいですか？'))) return;
   ['ns_vocab','ns_streak','ns_score_history','ns_last_article'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
   scheduleCloudSave();
   updateVocabBadge();
   updateReviewBadge();
   showFormMsg('reset-msg','success','学習データを削除しました。');
 }
+
+// ══ 言語の切り替え（画面右上） ══
+(function initLangSwitch(){
+  const sel = document.getElementById('lang-select');
+  if(!sel) return;
+  sel.innerHTML = I18N.order.map(l => `<option value="${l}" lang="${l}">${I18N.langs[l].name}</option>`).join('');
+  sel.value = I18N.lang;
+  sel.addEventListener('change', () => I18N.set(sel.value));
+  // 数値を含む文言などは、言語を切り替えたあとに描き直す
+  I18N.onChange(l => {
+    sel.value = l;
+    Object.values(ARTICLES).forEach(arr => arr.forEach(localizeArticle));
+    ALL_ARTICLES.forEach(localizeArticle);
+    try{ renderStatsBar(); }catch(e){}
+    try{ renderMyTopics(); }catch(e){}
+    try{ loadYesterdayBanner(); }catch(e){}
+    const active = document.querySelector('.screen.active');
+    if(active && active.id === 's-session' && state.article){ try{ renderArticle(); renderGoal(); }catch(e){} }
+    const key = active && Object.keys(NAV_SCREENS).find(k => NAV_SCREENS[k] === active.id);
+    if(key && key !== 'home' && PAGE_RENDERERS[key]) try{ PAGE_RENDERERS[key](); }catch(e){}
+    if(active && active.id === 's-cat' && searchMode){ const q = document.getElementById('cat-search').value.trim(); if(q) doSearch(q); }
+  });
+})();
 
 (function initCategoryVideos(){
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

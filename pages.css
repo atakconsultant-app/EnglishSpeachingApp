@@ -323,3 +323,36 @@
 @media (max-width: 600px) {
   .my-topic { margin: 0 16px 32px; padding: 18px; }
 }
+
+/* ── 言語の切り替え（ヘッダー右上） ── */
+.lang-switch {
+  position: relative; display: inline-flex; align-items: center; flex-shrink: 0;
+  height: 32px; border-radius: 999px; border: 1px solid var(--border2);
+  background: var(--surface); color: var(--text-sub);
+}
+.lang-switch:hover { color: var(--text); }
+.lang-switch:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.lang-switch .ic { position: absolute; left: 10px; width: 15px; height: 15px; pointer-events: none; }
+.lang-switch select {
+  appearance: none; -webkit-appearance: none; border: none; background: transparent; color: inherit;
+  font: 600 12px/1 var(--font-sans); height: 100%; padding: 0 12px 0 30px; border-radius: 999px; cursor: pointer;
+}
+.lang-switch select:focus { outline: none; }
+/* スマホ幅ではアイコンだけを表示し、タップすると言語の一覧が開く */
+@media (max-width: 600px) {
+  .lang-switch { width: 34px; height: 34px; justify-content: center; }
+  .lang-switch .ic { left: 50%; transform: translateX(-50%); width: 17px; height: 17px; }
+  .lang-switch select { width: 100%; padding: 0; color: transparent; }
+  .lang-switch select option { color: #111118; }
+  header { gap: 8px; }
+  .hdr-actions { gap: 6px; }
+  .hdr-btn { padding: 8px 11px; font-size: 12px; }
+}
+/* 日本語以外のカテゴリー名は長くなることがあるため、カードの幅に収まらないときは折り返す */
+@media (max-width: 600px) {
+  html:not([lang="ja"]) .cat-name { font-size: 12.5px; hyphens: auto; }
+}
+/* 小さいスマホではデザイン案の切り替え（A/B/C）を隠し、ヘッダーが横にはみ出さないようにする */
+@media (max-width: 480px) {
+  .theme-switch { display: none; }
+}
