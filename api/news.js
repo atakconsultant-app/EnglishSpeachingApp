@@ -1,4 +1,5 @@
-// Vercel Serverless Function: GET /api/news?cat=<カテゴリ> | ?q=<キーワード>
+// Vercel Serverless Function: GET /api/news?cat=<カテゴリ>[&home=<言語>] | ?q=<キーワード>
+// home は「国内」カテゴリのときだけ使う。利用者の言語に合わせ、その国の英語ニュースを返す（ko→韓国 など）。
 // GNews APIをサーバー側で呼び出す。APIキーは環境変数 GNEWS_API_KEY にだけ置き、ブラウザには出さない。
 // 同じURLへの応答はVercelのCDNに1時間キャッシュされるため、GNewsへの呼び出しは
 // 「カテゴリ数 × 1時間に1回」＋「検索語ごとに1時間に1回」程度に収まる。
@@ -10,7 +11,7 @@ const CACHE_OK = 'public, s-maxage=3600, stale-while-revalidate=86400';
 // アプリのカテゴリ → GNewsのtop-headlinesカテゴリ（国内だけは「日本」の英語記事を検索）
 const CATEGORY_MAP = {
   '主要': { category: 'general' },
-  '国内': { q: 'Japan' },
+  '国内': { q: 'Japan', home: true },
   '国際': { category: 'world' },
   '経済': { category: 'business' },
   'エンタメ': { category: 'entertainment' },
@@ -35,14 +36,63 @@ const JA_KEYWORDS = {
   '少子化': 'birth rate', '移民': 'immigration', '雇用': 'jobs', '働き方': 'remote work',
 };
 
+// 「国内」= 利用者の国（言語から決める）
+const HOME_QUERY = { ja: 'Japan', ko: '"South Korea"', 'zh-TW': 'Taiwan', fr: 'France', es: 'Spain' };
+
+// 韓国語・繁体字中国語・フランス語・スペイン語のよく使われるキーワード → 英語
+const OTHER_KEYWORDS = {
+  // 한국어
+  '축구': 'soccer OR football', '야구': 'baseball', '농구': 'basketball', '테니스': 'tennis', '골프': 'golf', '올림픽': 'Olympics',
+  '인공지능': 'artificial intelligence', '생성형 AI': 'generative AI', '반도체': 'semiconductor', '기후 변화': 'climate change', '기후변화': 'climate change',
+  '환경': 'environment', '에너지': 'energy', '경제': 'economy', '주식': 'stocks', '금리': 'interest rates', '인플레이션': 'inflation', '환율': 'currency',
+  '스타트업': 'startup', '암호화폐': 'cryptocurrency', '비트코인': 'bitcoin', '선거': 'election', '전쟁': 'war', '우크라이나': 'Ukraine', '러시아': 'Russia',
+  '중국': 'China', '대만': 'Taiwan', '미국': 'United States', '한국': 'South Korea', '일본': 'Japan', '서울': 'Seoul', '의료': 'healthcare', '건강': 'health',
+  '백신': 'vaccine', '우주': 'space', '영화': 'film', '음악': 'music', '게임': 'video games', '여행': 'travel', '관광': 'tourism', '교육': 'education',
+  '저출산': 'birth rate', '이민': 'immigration', '일자리': 'jobs', '재택근무': 'remote work', 'K팝': 'K-pop', '케이팝': 'K-pop',
+  // 繁體中文
+  '足球': 'soccer OR football', '棒球': 'baseball', '籃球': 'basketball', '網球': 'tennis', '高爾夫': 'golf', '奧運': 'Olympics',
+  '人工智慧': 'artificial intelligence', '生成式AI': 'generative AI', '半導體': 'semiconductor', '晶片': 'chips', '氣候變遷': 'climate change',
+  '環境': 'environment', '能源': 'energy', '經濟': 'economy', '股票': 'stocks', '股市': 'stock market', '利率': 'interest rates', '通膨': 'inflation', '匯率': 'currency',
+  '新創': 'startup', '加密貨幣': 'cryptocurrency', '比特幣': 'bitcoin', '選舉': 'election', '戰爭': 'war', '烏克蘭': 'Ukraine', '俄羅斯': 'Russia',
+  '中國': 'China', '台灣': 'Taiwan', '臺灣': 'Taiwan', '美國': 'United States', '韓國': 'South Korea', '日本': 'Japan', '台北': 'Taipei', '醫療': 'healthcare',
+  '健康': 'health', '疫苗': 'vaccine', '太空': 'space', '電影': 'film', '音樂': 'music', '遊戲': 'video games', '旅遊': 'travel', '觀光': 'tourism', '教育': 'education',
+  '少子化': 'birth rate', '移民': 'immigration', '就業': 'jobs', '遠距工作': 'remote work',
+  // Français
+  'football': 'soccer OR football', 'basket': 'basketball', 'jeux olympiques': 'Olympics', 'intelligence artificielle': 'artificial intelligence',
+  'ia': 'AI', 'ia générative': 'generative AI', 'semi-conducteurs': 'semiconductor', 'changement climatique': 'climate change', 'climat': 'climate',
+  'environnement': 'environment', 'énergie': 'energy', 'économie': 'economy', 'bourse': 'stock market', 'actions': 'stocks', "taux d'intérêt": 'interest rates',
+  'inflation': 'inflation', 'cryptomonnaie': 'cryptocurrency', 'élection': 'election', 'élections': 'election', 'guerre': 'war', 'chine': 'China',
+  'états-unis': 'United States', 'japon': 'Japan', 'corée du sud': 'South Korea', 'russie': 'Russia', 'santé': 'health', 'vaccin': 'vaccine',
+  'espace': 'space', 'cinéma': 'film', 'musique': 'music', 'jeux vidéo': 'video games', 'voyage': 'travel', 'tourisme': 'tourism', 'éducation': 'education',
+  'natalité': 'birth rate', 'immigration': 'immigration', 'emploi': 'jobs', 'télétravail': 'remote work',
+  // Español
+  'fútbol': 'soccer OR football', 'futbol': 'soccer OR football', 'béisbol': 'baseball', 'baloncesto': 'basketball', 'tenis': 'tennis', 'juegos olímpicos': 'Olympics',
+  'inteligencia artificial': 'artificial intelligence', 'ia generativa': 'generative AI', 'semiconductores': 'semiconductor', 'cambio climático': 'climate change',
+  'clima': 'climate', 'medio ambiente': 'environment', 'energía': 'energy', 'economía': 'economy', 'bolsa': 'stock market', 'acciones': 'stocks',
+  'tasas de interés': 'interest rates', 'inflación': 'inflation', 'criptomonedas': 'cryptocurrency', 'elecciones': 'election', 'guerra': 'war', 'ucrania': 'Ukraine',
+  'rusia': 'Russia', 'estados unidos': 'United States', 'japón': 'Japan', 'corea del sur': 'South Korea', 'españa': 'Spain', 'méxico': 'Mexico',
+  'salud': 'health', 'vacuna': 'vaccine', 'espacio': 'space', 'cine': 'film', 'música': 'music', 'videojuegos': 'video games', 'viajes': 'travel',
+  'turismo': 'tourism', 'educación': 'education', 'natalidad': 'birth rate', 'inmigración': 'immigration', 'empleo': 'jobs', 'teletrabajo': 'remote work',
+};
+const KEYWORDS = { ...JA_KEYWORDS, ...OTHER_KEYWORDS };
+// 文中から探すときは、長い語から順に（「ia」のような短い語は別の単語の一部と誤って一致するので除く）
+const KEY_LIST = Object.keys(KEYWORDS).filter(k => k.length > 2 || /[^\x00-\x7F]/.test(k)).sort((a, b) => b.length - a.length);
+
 function toEnglishQuery(raw) {
   const text = String(raw || '').trim().slice(0, 100);
   if (!text) return '';
-  if (JA_KEYWORDS[text]) return JA_KEYWORDS[text];
-  // 日本語が含まれる場合は、辞書にある語だけを英語に置き換えて使う
+  const lower = text.toLowerCase();
+  if (KEYWORDS[text]) return KEYWORDS[text];
+  if (KEYWORDS[lower]) return KEYWORDS[lower];
+  // 英語以外（日本語・韓国語・中国語・アクセント付きの文字など）を含む場合は、辞書にある語だけを英語に置き換えて使う
   if (/[^\x00-\x7F]/.test(text)) {
-    const hits = Object.keys(JA_KEYWORDS).filter(k => text.includes(k)).map(k => `(${JA_KEYWORDS[k]})`);
-    return hits.slice(0, 3).join(' AND ');
+    const hits = [];
+    let rest = lower;
+    for (const k of KEY_LIST) {
+      if (hits.length >= 3) break;
+      if (rest.includes(k.toLowerCase())) { hits.push(`(${KEYWORDS[k]})`); rest = rest.split(k.toLowerCase()).join(' '); }
+    }
+    return [...new Set(hits)].join(' AND ');
   }
   // 英語はGNewsのクエリ構文を壊す記号を除いて使う
   return text.replace(/["()\\]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -74,7 +124,7 @@ module.exports = async function handler(req, res) {
     return res.status(503).json({ error: 'not_configured', message: 'GNEWS_API_KEY が設定されていません' });
   }
 
-  const { cat, q } = req.query || {};
+  const { cat, q, home } = req.query || {};
   let endpoint;
   const params = new URLSearchParams({ lang: 'en', max: String(MAX_ARTICLES), apikey: apiKey });
   let resultCat = '国際';
@@ -96,7 +146,7 @@ module.exports = async function handler(req, res) {
       params.set('category', m.category);
     } else {
       endpoint = 'search';
-      params.set('q', m.q);
+      params.set('q', (m.home && HOME_QUERY[home]) || m.q);
       params.set('sortby', 'publishedAt');
     }
   } else {
