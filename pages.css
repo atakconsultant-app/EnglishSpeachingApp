@@ -272,6 +272,7 @@
 .howto-ill .ill-blur { opacity: .45; }
 .howto-ill text { font-family: var(--font-sans); font-weight: 800; }
 .howto-ill .ill-label { fill: var(--accent); font-size: 12px; }
+.howto-ill .ill-label-sm { font-size: 9.5px; letter-spacing: .02em; }
 .howto-ill .ill-label-on { fill: var(--on-accent); font-size: 11px; }
 .howto-ill .ill-score { fill: var(--text); font-size: 22px; }
 
