@@ -1884,6 +1884,12 @@ const CAT_EMOJIS = {'主要':'📰','国内':'🗾','国際':'🌏','経済':'�
   try{ sample = await claude.use('sample'); }catch(e){ sample = null; }
 })();
 
+// ══ サーバーへのログイン情報の渡し方 ══
+// Azure Static Web Apps は Authorization ヘッダーを自分の認証用に書き換えるため、
+// 同じトークンを X-NS-Auth ヘッダーにも載せる（サーバーはこちらを優先して読む）
+function authHeaders(token){
+  return token ? { Authorization: 'Bearer ' + token, 'X-NS-Auth': 'Bearer ' + token } : {};
+}
 // ══ AI呼び出し：claude.ai上では claude.use、公開サイトではサーバー（/api/chat）経由 ══
 function aiAvailable(){ return !!sample || /^https?:$/.test(location.protocol); }
 async function callAI(messages, purpose, onText){
@@ -1899,7 +1905,7 @@ async function callAI(messages, purpose, onText){
   }catch(e){}
   const res = await fetch('/api/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+    headers: { 'Content-Type': 'application/json', ...authHeaders(token) },
     body: JSON.stringify({ purpose, messages })
   });
   const data = await res.json().catch(() => ({}));
@@ -2599,7 +2605,7 @@ async function azureAudioUrl(text, p){
   if(!token) return null;
   const res = await fetch('/api/tts', {
     method:'POST',
-    headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + token },
+    headers:{ 'Content-Type':'application/json', ...authHeaders(token) },
     body: JSON.stringify({ text: text.slice(0, 1500), accent: p.accent, gender: p.gender, age: p.age, rate: p.rate })
   });
   if(res.status === 503 || res.status === 404){ azureTts = 'off'; return null; } // Azure が未設定
@@ -2733,7 +2739,7 @@ async function translateText(text, target){
   try{ const { data } = await sb.auth.getSession(); token = data && data.session ? data.session.access_token : ''; }catch(e){}
   const res = await fetch('/api/chat', {
     method:'POST',
-    headers:{ 'Content-Type':'application/json', ...(token ? { Authorization:'Bearer ' + token } : {}) },
+    headers:{ 'Content-Type':'application/json', ...authHeaders(token) },
     body: JSON.stringify({ purpose:'translate', text, target })
   });
   const data = await res.json().catch(()=>({}));
@@ -4004,7 +4010,7 @@ async function loadBilling(){
   if(!sb || !/^https?:$/.test(location.protocol)) return billing;
   try{
     const token = await authToken();
-    const res = await fetch('/api/billing/status', { headers: token ? { Authorization:'Bearer ' + token } : {} });
+    const res = await fetch('/api/billing/status', { headers: authHeaders(token) });
     if(res.ok) billing = await res.json();
   }catch(e){ /* 読み込めないときはこれまでの状態のまま */ }
   renderBillingUI();
@@ -4074,7 +4080,7 @@ async function startCheckout(){
   try{
     const res = await fetch('/api/billing/checkout', {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + await authToken() },
+      headers:{ 'Content-Type':'application/json', ...authHeaders(await authToken()) },
       body: JSON.stringify({ interval: planInterval, lang: I18N.lang })
     });
     const data = await res.json().catch(() => ({}));
@@ -4090,7 +4096,7 @@ async function openBillingPortal(){
   try{
     const res = await fetch('/api/billing/portal', {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + await authToken() },
+      headers:{ 'Content-Type':'application/json', ...authHeaders(await authToken()) },
       body: JSON.stringify({ lang: I18N.lang })
     });
     const data = await res.json().catch(() => ({}));

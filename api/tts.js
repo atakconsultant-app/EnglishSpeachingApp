@@ -55,7 +55,8 @@ function sendJson(res, status, body) {
 }
 
 async function getUserId(req) {
-  const auth = req.headers.authorization || req.headers.Authorization || '';
+  // Azure Static Web Apps は Authorization ヘッダーを書き換えるため、画面から送る X-NS-Auth を優先する
+  const auth = req.headers['x-ns-auth'] || req.headers.authorization || req.headers.Authorization || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
   if (!token) return null;
   const r = await fetch(`${supabaseUrl()}/auth/v1/user`, {
