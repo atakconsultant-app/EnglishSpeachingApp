@@ -8,6 +8,8 @@
 // - SUPABASE_SECRET_KEY があれば、1人1日あたりの読み上げ文字数を Supabase で数えて上限を設ける（supabase/tts_usage.sql）。
 // - Azure には年齢の設定がないため、年齢は「話者の選び分け」と「声の高さ・速さ」で表現する。
 
+const billing = require('../lib/billing');
+
 const ACCENTS = {
   us: 'en-US', gb: 'en-GB', in: 'en-IN', au: 'en-AU',
 };
@@ -163,6 +165,14 @@ module.exports = async function handler(req, res) {
   let userId;
   try { userId = await getUserId(req); } catch (e) { userId = null; }
   if (!userId) return sendJson(res, 401, { error: 'unauthorized' });
+
+  // Azure の高品質な音声は Pro のみ（無料プランはブラウザの音声）
+  try {
+    if (await billing.getPlan(userId) !== 'pro') return sendJson(res, 403, { error: 'pro_only' });
+  } catch (e) {
+    console.error('plan check failed', e);
+    return sendJson(res, 503, { error: 'quota_check_failed' });
+  }
 
   const text = body.text.replace(/\s+/g, ' ').trim();
   let remaining = null;

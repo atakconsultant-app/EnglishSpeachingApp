@@ -15,6 +15,10 @@ Using for English
 | `AZURE_SPEECH_KEY` | Azure AI Speech のキー。`api/tts.js` だけが使う | ✕ 絶対にブラウザ側に出さない |
 | `AZURE_SPEECH_REGION` | Azure AI Speech のリージョン（例: `japaneast`） | ○ |
 | `TTS_DAILY_CHAR_LIMIT`（任意） | 1人1日あたりの Azure 読み上げ文字数の上限。未設定なら20000 | ○ |
+| `STRIPE_SECRET_KEY` | Stripe の秘密キー（`sk_test_…` / `sk_live_…`）。`lib/billing.js` だけが使う | ✕ 絶対にブラウザ側に出さない |
+| `STRIPE_WEBHOOK_SECRET` | Stripe の Webhook の署名シークレット（`whsec_…`） | ✕ 絶対にブラウザ側に出さない |
+| `STRIPE_PRICE_MONTHLY` / `STRIPE_PRICE_YEARLY` | Pro の料金ID（`price_…`）。月額990円・年額9,900円 | ○ |
+| `APP_URL`（任意） | サイトのURL（例: `https://xxx.azurestaticapps.net`）。決済後に戻る先に使う | ○ |
 
 ## AI（会話・フィードバック・採点）の仕組み
 
@@ -53,3 +57,21 @@ Using for English
 - `AZURE_SPEECH_KEY` が未設定、1日の上限に達した、通信に失敗した、のいずれかのときは、自動でブラウザの音声に切り替わる。
 - 1日の文字数の上限には `supabase/tts_usage.sql` を SQL Editor で一度だけ実行する（未実行なら上限なし）。
 - 同じ文章をもう一度読むとき（Shadowing の繰り返しなど）は、取得済みの音声を使うので文字数は増えない。
+
+## 有料プラン（Stripe）
+
+- 無料：1日1往復の会話（AIの最初の質問＋返答）とその翻訳だけ。採点と Azure の読み上げは Pro のみ。
+- Pro：月990円／年9,900円。初回のみ7日間の無料お試し（カード入力あり）。上限は `AI_DAILY_LIMIT` と `TTS_DAILY_CHAR_LIMIT`。
+- `STRIPE_SECRET_KEY` と2つの料金IDが揃うまでは課金は無効で、全員がこれまでどおり制限なしで使える。
+- 申込は Stripe Checkout、解約・カード変更・領収書は Stripe のカスタマーポータル。契約の状態は Webhook（`/api/billing/webhook`）で
+  Supabase の `subscriptions` テーブルに書き写す。必要な SQL は `supabase/billing.sql`。
+- 規約類：`legal/terms.html`（利用規約）、`legal/privacy.html`（プライバシーポリシー）、`legal/tokushoho.html`（特定商取引法に基づく表記）。
+  【屋号】などの黄色い箇所は公開前に埋める。
+
+## 公開先：Azure Static Web Apps
+
+- 画面は `npm run build:azure` で `dist/` にまとめて公開する。サーバー処理は `azure-api/`（Azure Functions）から `api/` と `lib/` をそのまま使う
+  （`azure-api/adapter.js` が Vercel 形式の関数を Azure の形式につなぐ）。
+- GitHub の main に入ると `.github/workflows/azure-static-web-apps.yml` が自動で公開する。
+- ニュースは Supabase の `news_cache` テーブルに1時間保存して GNews の呼び出し回数を抑える（Azure は API の応答を CDN に保存しないため）。
+- Vercel でもこれまでどおり動く（移行が終わるまでの並行稼働用）。

@@ -5,6 +5,46 @@
 // 「カテゴリ数 × 1時間に1回」＋「検索語ごとに1時間に1回」程度に収まる。
 
 const GNEWS_BASE = 'https://gnews.io/api/v4';
+const CACHE_TTL_MS = 60 * 60 * 1000;
+
+// 取得したニュースを1時間保存し、GNews への呼び出し回数を抑える。
+// Vercel では CDN（s-maxage）が保存するが、Azure Static Web Apps は API の応答を保存しないため、
+// 関数のメモリと Supabase の news_cache テーブル（supabase/billing.sql）の2段で保存する。
+const memoryCache = new Map();
+function serviceKey() { return process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || ''; }
+function supabaseUrl() { return (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '').replace(/\/$/, ''); }
+function dbHeaders(key) {
+  return { apikey: key, ...(key.startsWith('eyJ') ? { Authorization: `Bearer ${key}` } : {}), 'Content-Type': 'application/json' };
+}
+async function readCache(key) {
+  const mem = memoryCache.get(key);
+  if (mem && Date.now() - mem.at < CACHE_TTL_MS) return { articles: mem.articles, fresh: true };
+  const sk = serviceKey();
+  if (!sk || !supabaseUrl()) return mem ? { articles: mem.articles, fresh: false } : null;
+  try {
+    const r = await fetch(`${supabaseUrl()}/rest/v1/news_cache?key=eq.${encodeURIComponent(key)}&select=articles,fetched_at`, { headers: dbHeaders(sk) });
+    if (!r.ok) return mem ? { articles: mem.articles, fresh: false } : null;
+    const row = (await r.json())[0];
+    if (!row) return mem ? { articles: mem.articles, fresh: false } : null;
+    const at = Date.parse(row.fetched_at);
+    memoryCache.set(key, { at, articles: row.articles });
+    return { articles: row.articles, fresh: Date.now() - at < CACHE_TTL_MS };
+  } catch (e) {
+    return mem ? { articles: mem.articles, fresh: false } : null;
+  }
+}
+async function writeCache(key, articles) {
+  memoryCache.set(key, { at: Date.now(), articles });
+  const sk = serviceKey();
+  if (!sk || !supabaseUrl()) return;
+  try {
+    await fetch(`${supabaseUrl()}/rest/v1/news_cache?on_conflict=key`, {
+      method: 'POST',
+      headers: { ...dbHeaders(sk), Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify({ key, articles, fetched_at: new Date().toISOString() }),
+    });
+  } catch (e) { /* 保存に失敗しても表示には影響しない */ }
+}
 const MAX_ARTICLES = 10;
 const CACHE_OK = 'public, s-maxage=3600, stale-while-revalidate=86400';
 
@@ -154,8 +194,22 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'bad_request', message: 'cat か q を指定してください' });
   }
 
+  const cacheParams = new URLSearchParams(params);
+  cacheParams.delete('apikey');
+  const cacheKey = `${endpoint}?${cacheParams.toString()}|${resultCat}`;
+  const cached = await readCache(cacheKey);
+  if (cached && cached.fresh) {
+    res.setHeader('Cache-Control', CACHE_OK);
+    return res.status(200).json({ articles: cached.articles, cached: true });
+  }
+
   try {
     const upstream = await fetch(`${GNEWS_BASE}/${endpoint}?${params.toString()}`);
+    if (!upstream.ok && cached) {
+      // GNews が使えないとき（上限到達など）は、少し古い保存分を返す
+      res.setHeader('Cache-Control', 'public, s-maxage=300');
+      return res.status(200).json({ articles: cached.articles, cached: true, stale: true });
+    }
     if (!upstream.ok) {
       // GNewsのエラーメッセージを原因調査用に返す（APIキーが含まれていれば伏せる）
       let detail = '';
@@ -174,9 +228,11 @@ module.exports = async function handler(req, res) {
     const articles = (data.articles || [])
       .filter(a => a && a.title && a.url)
       .map(a => normalize(a, resultCat));
+    await writeCache(cacheKey, articles);
     res.setHeader('Cache-Control', CACHE_OK);
     return res.status(200).json({ articles });
   } catch (err) {
+    if (cached) return res.status(200).json({ articles: cached.articles, cached: true, stale: true });
     res.setHeader('Cache-Control', 'no-store');
     return res.status(502).json({ error: 'upstream_unreachable' });
   }

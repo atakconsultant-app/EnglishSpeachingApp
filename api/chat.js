@@ -9,6 +9,8 @@
 //            （翻訳は指示文をサーバー側で組み立てるため、任意の指示を送る用途には使えない）
 // レスポンス: { text, remaining }   remaining は今日の残り回数（上限未設定なら null）
 
+const billing = require('../lib/billing');
+
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
 
@@ -137,15 +139,32 @@ module.exports = async function handler(req, res) {
   try { userId = await getUserId(req); } catch (e) { userId = null; }
   if (!userId) return send(res, 401, { error: 'unauthorized', message: 'ログインが必要です' });
 
-  let remaining = null;
-  try {
-    remaining = await consumeQuota(userId);
-  } catch (e) {
-    console.error('consume_ai_quota failed', e);
+  // プランごとの上限。無料は「1日1往復の会話」とその翻訳だけ（採点は Pro のみ）。Pro は1日の合計回数（AI_DAILY_LIMIT）
+  let plan;
+  try { plan = await billing.getPlan(userId); } catch (e) {
+    console.error('plan check failed', e);
     return send(res, 503, { error: 'quota_check_failed' });
   }
-  if (remaining !== null && remaining < 0) {
-    return send(res, 429, { error: 'daily_limit', message: '本日のAI利用回数の上限に達しました' });
+  let remaining = null;
+  if (plan === 'free') {
+    if (!billing.FREE_LIMITS[body.purpose]) return send(res, 403, { error: 'pro_only', plan });
+    try {
+      remaining = await billing.consumeFreeQuota(userId, body.purpose);
+    } catch (e) {
+      console.error('consume_ai_quota_kind failed', e);
+      return send(res, 503, { error: 'quota_check_failed' });
+    }
+    if (remaining < 0) return send(res, 429, { error: 'free_limit', plan });
+  } else {
+    try {
+      remaining = await consumeQuota(userId);
+    } catch (e) {
+      console.error('consume_ai_quota failed', e);
+      return send(res, 503, { error: 'quota_check_failed' });
+    }
+    if (remaining !== null && remaining < 0) {
+      return send(res, 429, { error: 'daily_limit', message: '本日のAI利用回数の上限に達しました' });
+    }
   }
 
   const p = PURPOSES[body.purpose];
@@ -183,7 +202,7 @@ module.exports = async function handler(req, res) {
     }
     if (data.stop_reason === 'max_tokens') console.warn('Claude response hit max_tokens', body.purpose, model);
     const text = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
-    return send(res, 200, { text, remaining, stop_reason: data.stop_reason || null });
+    return send(res, 200, { text, remaining, plan, stop_reason: data.stop_reason || null });
   } catch (e) {
     console.error('Anthropic API unreachable', e);
     return send(res, 502, { error: 'upstream_unreachable' });

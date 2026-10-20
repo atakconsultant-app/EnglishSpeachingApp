@@ -9,11 +9,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from strings_ui import ROWS as UI
 from strings_pages import ROWS as PAGES
+from strings_billing import ROWS as BILLING
 
 LANGS = ['ko', 'zh-TW', 'fr', 'es']
 ALLOW_EMPTY = {'回', '語'}  # 単位を表示しない言語がある
 
-rows = UI + PAGES
+rows = UI + PAGES + BILLING
 errors = []
 seen = {}
 for r in rows:

@@ -1,0 +1,14 @@
+{
+  "name": "newspeak-azure-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Azure Static Web Apps 用のサーバー処理。中身は ../api と ../lib をそのまま使い、adapter.js で Azure Functions の形式につなぐ。",
+  "main": "index.js",
+  "scripts": {
+    "build": "node copy-handlers.js"
+  },
+  "dependencies": {
+    "@azure/functions": "4.16.5",
+    "stripe": "22.6.2"
+  }
+}

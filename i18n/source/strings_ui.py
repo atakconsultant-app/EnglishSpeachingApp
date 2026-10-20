@@ -20,7 +20,7 @@ ROWS = [
 ("ホームに戻る", "홈으로 돌아가기", "回到首頁", "Retour à l'accueil", "Volver al inicio"),
 ("ホーム", "홈", "首頁", "Accueil", "Inicio"),
 ("このアプリの使い方", "앱 사용법", "App 使用方式", "Comment utiliser l'appli", "Cómo usar la app"),
-("使い方", "사용법", "使用方式", "Mode d'emploi", "Guía"),
+("使い方", "사용법", "使用方式", "Guide", "Guía"),
 ("学習履歴", "학습 기록", "學習紀錄", "Historique", "Historial"),
 ("履歴", "기록", "紀錄", "Historique", "Historial"),
 ("復習ポイント一覧", "복습 포인트 목록", "複習重點列表", "Points à réviser", "Puntos de repaso"),
