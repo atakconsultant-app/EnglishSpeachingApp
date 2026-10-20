@@ -1917,6 +1917,8 @@ async function callAI(messages, purpose, onText){
       : res.status === 429 ? t('本日のAI利用回数の上限に達しました。明日また練習しましょう。')
       : null;
     err.upgrade = data.error === 'free_limit' || data.error === 'pro_only';
+    // 原因を調べやすいよう、想定外のエラーにはコードを添える（例：502 upstream_error）
+    if(!err.userMessage) err.code = res.status + ' ' + (data.error || '') + (data.status ? ' ' + data.status : '');
     throw err;
   }
   const text = data.text || '';
@@ -2395,7 +2397,7 @@ async function aiOpen(){
     showSuggestions();
   }catch(e){
     removeTyping();
-    addMsg('ai', e.userMessage || t('セッションを開始できませんでした。もう一度お試しください。'));
+    addMsg('ai', e.userMessage || (t('セッションを開始できませんでした。もう一度お試しください。') + (e.code ? `（${e.code}）` : '')));
     if(e.upgrade) addUpgradeCard();
   }
 }
@@ -2476,7 +2478,7 @@ async function send(txt){
   }catch(e){
     removeTyping();
     state.history.pop(); // 失敗した発言は履歴から外し、同じ内容をもう一度送れるようにする
-    addMsg('ai', e.userMessage || t('AIに接続できませんでした。もう一度送信してください。'));
+    addMsg('ai', e.userMessage || (t('AIに接続できませんでした。もう一度送信してください。') + (e.code ? `（${e.code}）` : '')));
     if(e.upgrade) addUpgradeCard();
   }
   state.busy=false;
