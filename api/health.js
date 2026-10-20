@@ -13,6 +13,7 @@ module.exports = async function handler(req, res) {
   const secret = env('SUPABASE_SECRET_KEY', 'SUPABASE_SERVICE_ROLE_KEY');
   const result = {
     runtime: `node ${process.version}`,
+    region: process.env.REGION_NAME || process.env.VERCEL_REGION || null,
     env: {
       ANTHROPIC_API_KEY: has('ANTHROPIC_API_KEY'),
       GNEWS_API_KEY: has('GNEWS_API_KEY'),
@@ -43,7 +44,9 @@ module.exports = async function handler(req, res) {
     const r = await fetch('https://api.anthropic.com/v1/models?limit=1', {
       headers: { 'x-api-key': env('ANTHROPIC_API_KEY'), 'anthropic-version': '2023-06-01' },
     });
-    return r.status;
+    if (r.ok) return r.status;
+    const body = await r.text().catch(() => '');
+    return `${r.status} ${body.slice(0, 200)}`;
   });
   res.setHeader('Cache-Control', 'no-store');
   return res.status(200).json(result);
