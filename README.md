@@ -12,6 +12,9 @@ Using for English
 | `SUPABASE_SECRET_KEY` | AIの1日あたり利用回数を数えるためのサーバー専用キー（Supabaseの Secret key `sb_secret_…`。旧名 `SUPABASE_SERVICE_ROLE_KEY` も可） | ✕ 絶対にブラウザ側に出さない |
 | `AI_DAILY_LIMIT`（任意） | 1人1日あたりのAI呼び出し回数の上限。未設定なら60 | ○ |
 | `AI_CHAT_MODEL` / `AI_SCORE_MODEL` / `AI_TRANSLATE_MODEL`（任意） | 会話・採点・翻訳に使うモデル。未設定なら `claude-haiku-5-5` / `claude-sonnet-5-5` / `claude-haiku-5-5` | ○ |
+| `AZURE_SPEECH_KEY` | Azure AI Speech のキー。`api/tts.js` だけが使う | ✕ 絶対にブラウザ側に出さない |
+| `AZURE_SPEECH_REGION` | Azure AI Speech のリージョン（例: `japaneast`） | ○ |
+| `TTS_DAILY_CHAR_LIMIT`（任意） | 1人1日あたりの Azure 読み上げ文字数の上限。未設定なら20000 | ○ |
 
 ## AI（会話・フィードバック・採点）の仕組み
 
@@ -42,3 +45,11 @@ Using for English
 - 文言を追加・変更したときは、この表にも同じ原文で行を追加する。表にない文言は日本語のまま表示される。
 - AI のヒント（💬 の行）・フィードバック・採点コメント・翻訳ボタンの訳先は、利用者の言語になる。
 - 「国内」カテゴリは利用者の国のニュース（韓国語→韓国、繁体字→台湾、フランス語→フランス、スペイン語→スペイン）。
+
+## 読み上げ（Azure のニューラル音声）
+
+- ログイン中は `/api/tts` 経由で Azure AI Speech のニューラル音声を使う。スピーカー設定の地域（アメリカ・イギリス・インド・オーストラリア）・性別・年齢・速さ・音量が反映される。
+- Azure には年齢の設定がないため、年齢は「話者の選び分け（若い声／落ち着いた声）」と「声の高さ・速さ」で表現する。話者の候補は `api/tts.js` の `VOICE_PREFS`。
+- `AZURE_SPEECH_KEY` が未設定、1日の上限に達した、通信に失敗した、のいずれかのときは、自動でブラウザの音声に切り替わる。
+- 1日の文字数の上限には `supabase/tts_usage.sql` を SQL Editor で一度だけ実行する（未実行なら上限なし）。
+- 同じ文章をもう一度読むとき（Shadowing の繰り返しなど）は、取得済みの音声を使うので文字数は増えない。

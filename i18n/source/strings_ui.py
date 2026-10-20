@@ -287,6 +287,9 @@ ROWS = [
 ("読み上げ音声: {name}（{lang}）", "읽기 음성: {name}({lang})", "朗讀語音：{name}（{lang}）", "Voix : {name} ({lang})", "Voz: {name} ({lang})"),
 ("この端末に{accent}英語の音声がないため、近い音声で代用しています。", "이 기기에 {accent} 영어 음성이 없어서 비슷한 음성으로 대신하고 있어요.", "這台裝置沒有{accent}英文的語音，因此改用相近的語音。", "Pas de voix à l'accent {accent} sur cet appareil : une voix proche est utilisée.", "Este dispositivo no tiene voz con acento {accent}, así que se usa una parecida."),
 ("選んだ性別の音声が見つからないため、近い音声で代用しています。", "선택한 성별의 음성을 찾을 수 없어서 비슷한 음성으로 대신하고 있어요.", "找不到所選性別的語音，因此改用相近的語音。", "Aucune voix du genre choisi : une voix proche est utilisée.", "No hay voz del género elegido, así que se usa una parecida."),
+("読み上げ音声: {name}（Azure ニューラル音声）", "읽기 음성: {name}(Azure 뉴럴 음성)", "朗讀語音：{name}（Azure 神經語音）", "Voix : {name} (voix neuronale Azure)", "Voz: {name} (voz neuronal de Azure)"),
+("高品質な Azure のニューラル音声で読み上げます。「試聴する」で実際の声を確認できます。", "고품질 Azure 뉴럴 음성으로 읽어 줘요. ‘미리 듣기’로 실제 목소리를 확인할 수 있어요.", "使用高品質的 Azure 神經語音朗讀。按「試聽」即可確認實際的聲音。", "La lecture utilise les voix neuronales haute qualité d'Azure. Appuyez sur « Écouter » pour entendre la voix.", "La lectura usa voces neuronales de alta calidad de Azure. Pulsa «Escuchar» para oír la voz."),
+("本日の高品質音声の上限に達したため、ブラウザの音声で読み上げます。", "오늘의 고품질 음성 한도에 도달해서 브라우저 음성으로 읽어 줘요.", "已達今天的高品質語音上限，改用瀏覽器的語音朗讀。", "Limite quotidienne des voix haute qualité atteinte : la voix du navigateur est utilisée.", "Has alcanzado el límite diario de voz de alta calidad; se usará la voz del navegador."),
 
 # ── アカウント設定 ──
 ("ログイン情報の確認とパスワードの変更ができます。", "로그인 정보를 확인하고 비밀번호를 변경할 수 있어요.", "可以確認登入資訊並變更密碼。", "Consultez vos informations de connexion et changez votre mot de passe.", "Consulta tus datos de acceso y cambia tu contraseña."),
