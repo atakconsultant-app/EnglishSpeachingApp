@@ -72,6 +72,7 @@ Using for English
 
 - 画面は `npm run build:azure` で `dist/` にまとめて公開する。サーバー処理は `azure-api/`（Azure Functions）から `api/` と `lib/` をそのまま使う
   （`azure-api/adapter.js` が Vercel 形式の関数を Azure の形式につなぐ）。
-- GitHub の main に入ると `.github/workflows/azure-static-web-apps.yml` が自動で公開する。
+- GitHub の main に入ると `.github/workflows/azure-static-web-apps-wonderful-meadow-05c33a900.yml`（Azure が作成）が自動で公開する。
+  ビルド時に GitHub の Variables `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` を使う。
 - ニュースは Supabase の `news_cache` テーブルに1時間保存して GNews の呼び出し回数を抑える（Azure は API の応答を CDN に保存しないため）。
 - Vercel でもこれまでどおり動く（移行が終わるまでの並行稼働用）。
