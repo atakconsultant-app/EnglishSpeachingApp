@@ -35,7 +35,7 @@
     '.last-title', '#nav-email', '#acc-email', '.lang-switch',
   ].join(',');
   var ATTRS = ['placeholder', 'title', 'aria-label', 'alt'];
-  var INLINE_TAGS = { STRONG: 1, EM: 1, B: 1, I: 1, BR: 1, SMALL: 1 };
+  var INLINE_TAGS = { STRONG: 1, EM: 1, B: 1, I: 1, BR: 1, SMALL: 1, A: 1 };
 
   function matchLang(code) {
     if (!code) return null;

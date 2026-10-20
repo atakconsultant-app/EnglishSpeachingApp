@@ -356,3 +356,52 @@
 @media (max-width: 480px) {
   .theme-switch { display: none; }
 }
+
+/* ── プラン（無料 / Pro） ── */
+.plan-badge {
+  margin-left: auto; flex-shrink: 0; font-size: 10px; font-weight: 800; letter-spacing: .5px;
+  padding: 3px 8px; border-radius: 999px; background: var(--accent); color: #fff;
+}
+.plan-current-row { display: flex; align-items: flex-start; gap: 12px; }
+.plan-current-row p { font-size: 14px; line-height: 1.7; color: var(--text); }
+.plan-current .btn-row { margin-top: 14px; }
+.plan-chip {
+  flex-shrink: 0; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px;
+  background: var(--surface3); color: var(--text-sub);
+}
+.plan-chip.pro { background: var(--accent); color: #fff; }
+.plan-table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.6; }
+.plan-table th, .plan-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+.plan-table thead th { font-size: 12px; color: var(--text-sub); font-weight: 700; }
+.plan-table tbody th { font-weight: 600; color: var(--text); width: 34%; }
+.plan-table td { color: var(--text-sub); }
+.plan-table .pro-col { color: var(--text); font-weight: 600; }
+.plan-table thead .pro-col { color: var(--accent); }
+.plan-interval { align-self: flex-start; }
+.plan-save { margin-left: 6px; font-size: 10px; font-weight: 800; color: var(--accent); }
+.plan-price { display: flex; align-items: baseline; gap: 4px; }
+.plan-price b { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -.5px; }
+.plan-price span { font-size: 13px; color: var(--text-sub); }
+.plan-confirm { border: 1px solid var(--border2); border-radius: 12px; padding: 16px; background: var(--surface2); }
+.plan-confirm h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+.plan-confirm dl > div { display: grid; grid-template-columns: 8.5em 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 13px; line-height: 1.6; }
+.plan-confirm dt { font-weight: 700; color: var(--text); }
+.plan-confirm dd { color: var(--text-sub); }
+.plan-legal { margin-top: 12px; font-size: 12px; color: var(--text-sub); }
+.plan-legal a, .legal-links a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.plan-agree { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; color: var(--text); cursor: pointer; }
+.plan-agree input { width: 18px; height: 18px; accent-color: var(--accent); }
+.legal-links { display: flex; gap: 14px; flex-wrap: wrap; }
+.upgrade-card {
+  margin: 10px 0 10px 44px; padding: 14px 16px; border-radius: 14px;
+  border: 1px solid var(--accent); background: var(--accent-dim);
+  display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+}
+.upgrade-card p { font-size: 13px; line-height: 1.6; color: var(--text); }
+.improve-list .upgrade-card, #improve-list .upgrade-card { margin-left: 0; }
+@media (max-width: 600px) {
+  .plan-confirm dl > div { grid-template-columns: 1fr; gap: 2px; }
+  .upgrade-card { margin-left: 0; }
+}
+.auth-consent { font-size: 12px; line-height: 1.6; color: var(--text-sub); }
+.auth-consent a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }

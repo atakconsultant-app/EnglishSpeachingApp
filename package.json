@@ -6,9 +6,13 @@
     "config": "node --env-file-if-exists=.env.development.local scripts/gen-config.mjs",
     "dev": "npm run config && serve -l 3000 .",
     "build": "node scripts/gen-config.mjs",
-    "start": "serve -l 3000 ."
+    "start": "serve -l 3000 .",
+    "build:azure": "node scripts/build-static.mjs"
   },
   "devDependencies": {
     "serve": "^14.2.4"
+  },
+  "dependencies": {
+    "stripe": "22.6.2"
   }
 }
