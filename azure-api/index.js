@@ -3,6 +3,7 @@ const { app } = require('@azure/functions');
 const { wrap } = require('./adapter');
 
 const routes = [
+  ['health', 'health', ['GET']],
   ['news', 'news', ['GET']],
   ['chat', 'chat', ['POST']],
   ['tts', 'tts', ['POST']],
