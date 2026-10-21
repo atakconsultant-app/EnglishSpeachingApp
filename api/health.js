@@ -23,6 +23,7 @@ module.exports = async function handler(req, res) {
       SUPABASE_ANON_KEY: !!anon,
       SUPABASE_SECRET_KEY: !!secret,
       STRIPE: has('STRIPE_SECRET_KEY') && has('STRIPE_PRICE_MONTHLY') && has('STRIPE_PRICE_YEARLY'),
+      BILLING_ENABLED: env('BILLING_ENABLED').toLowerCase() === 'true',
       APP_URL: env('APP_URL') || false,
     },
     checks: {},

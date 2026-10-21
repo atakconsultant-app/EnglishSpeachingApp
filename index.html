@@ -873,6 +873,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 <!-- ─── Header ─── -->
 <header>
   <button type="button" class="wordmark" onclick="goTop()" aria-label="NewSpeak ホームに戻る">New<span>Speak</span></button>
+  <span class="beta-badge" title="β版（無料で公開中）">β</span>
   <div class="spacer"></div>
   <label class="lang-switch" title="言語 / Language">
     <svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>
@@ -1142,11 +1143,17 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="topic-chip" data-topic="医療・健康" onclick="filterTopic(this)"><svg class="ic" aria-hidden="true"><use href="#i-pulse"/></svg>医療・健康</div>
   </div>
 
+  <!-- β版のお知らせ -->
+  <div class="beta-note" id="beta-note">
+    <p><b>β版</b>として無料で公開中です。使ってみた感想や不具合を、ぜひお聞かせください。</p>
+    <button type="button" class="ns-btn ghost sm" onclick="openFeedback()">感想を送る</button>
+  </div>
+
   <!-- Quick start: ワンタップで開始（デフォルト効果 / 選択過多の解消） -->
   <div class="quick-start" id="quick-start" role="button" tabindex="0" onclick="quickStart()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickStart();}">
     <div class="qs-play"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg></div>
     <div style="flex:1;min-width:0;">
-      <div class="qs-title">今日の10分を始める</div>
+      <div class="qs-title">今日の練習を始める</div>
       <div class="qs-sub" id="qs-sub">おすすめ記事を自動で選んですぐ開始</div>
     </div>
   </div>
@@ -1852,6 +1859,26 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       </div>
       <p class="form-msg" id="reset-msg" role="status"></p>
       <div class="btn-row"><button type="button" class="ns-btn danger" onclick="resetLearningData()"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg>学習データを削除する</button></div>
+    </div>
+    <form class="page-card settings-stack" id="feedback-form" novalidate>
+      <div>
+        <h2 class="page-card-title">感想・不具合の報告</h2>
+        <p class="page-card-desc">使ってみた感想、ほしい機能、不具合などをお送りください。いただいた内容は今後の改善に使わせていただきます。</p>
+      </div>
+      <div class="field">
+        <label for="fb-message">内容</label>
+        <textarea id="fb-message" class="page-input" maxlength="2000" rows="5" required></textarea>
+      </div>
+      <p class="form-msg" id="fb-msg" role="status"></p>
+      <div class="btn-row"><button type="submit" class="ns-btn primary" id="fb-submit">送信する</button></div>
+    </form>
+    <div class="page-card settings-stack danger-card">
+      <div>
+        <h2 class="page-card-title">退会（アカウントの削除）</h2>
+        <p class="page-card-desc">アカウントと、保存されている学習履歴・単語帳・設定をすべて削除します。Pro の契約がある場合は解約されます（残りの期間の返金はありません）。この操作は取り消せません。</p>
+      </div>
+      <p class="form-msg" id="delete-msg" role="status"></p>
+      <div class="btn-row"><button type="button" class="ns-btn danger" id="delete-btn" onclick="deleteAccount()"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg>退会する</button></div>
     </div>
   </div>
 </section>
@@ -3965,6 +3992,62 @@ function renderAccount(){
   document.getElementById('pw-form').reset();
   showFormMsg('pw-msg','','');
   showFormMsg('reset-msg','','');
+  showFormMsg('fb-msg','','');
+  showFormMsg('delete-msg','','');
+}
+// ══ β版の感想（お問い合わせと同じ表に保存） ══
+function openFeedback(){
+  openPage('account');
+  setTimeout(() => {
+    const f = document.getElementById('feedback-form');
+    if(f){ f.scrollIntoView({ behavior:'smooth', block:'start' }); document.getElementById('fb-message').focus(); }
+  }, 100);
+}
+document.getElementById('feedback-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const message = document.getElementById('fb-message').value.trim();
+  if(!message) return showFormMsg('fb-msg','error',t('内容を入力してください。'));
+  if(!sb) return showFormMsg('fb-msg','error','送信できませんでした。時間をおいて再度お試しください。');
+  const btn = document.getElementById('fb-submit');
+  btn.disabled = true;
+  try{
+    const email = currentUser && currentUser.email ? currentUser.email : '';
+    const { error } = await sb.from('contact_messages').insert({
+      name: ('[β感想] ' + (email || 'user')).slice(0, 100),
+      email: email.slice(0, 254),
+      message: ('[' + I18N.lang + '] ' + message).slice(0, 2000)
+    });
+    if(error) throw error;
+    e.target.reset();
+    showFormMsg('fb-msg','success',t('送信しました。ご協力ありがとうございます。'));
+  }catch(err){
+    showFormMsg('fb-msg','error','送信できませんでした。時間をおいて再度お試しください。');
+  }finally{
+    btn.disabled = false;
+  }
+});
+// ══ 退会（アカウントの削除） ══
+async function deleteAccount(){
+  if(!confirm(t('アカウントと学習データをすべて削除します。この操作は取り消せません。本当に退会しますか？'))) return;
+  const btn = document.getElementById('delete-btn');
+  btn.disabled = true;
+  showFormMsg('delete-msg','',t('削除しています…'));
+  try{
+    const res = await fetch('/api/account/delete', { method:'POST', headers:{ 'Content-Type':'application/json', ...authHeaders(await authToken()) } });
+    if(!res.ok) throw new Error(res.status);
+    clearTimeout(cloudSaveTimer);
+    cloudDirty = false;
+    clearLocalLearningData();
+    try{ localStorage.removeItem('ns_my_topics'); localStorage.removeItem('ns_prefs'); }catch(e){}
+    if(sb) await sb.auth.signOut().catch(() => {});
+    billing = { enabled:false, plan:'pro' };
+    renderBillingUI();
+    applySession(null);
+    alert(t('退会の手続きが完了しました。ご利用ありがとうございました。'));
+  }catch(e){
+    showFormMsg('delete-msg','error',t('退会の手続きができませんでした。時間をおいてもう一度お試しいただくか、お問い合わせください。'));
+    btn.disabled = false;
+  }
 }
 document.getElementById('pw-form').addEventListener('submit', async e=>{
   e.preventDefault();

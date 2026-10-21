@@ -18,6 +18,7 @@ Using for English
 | `STRIPE_SECRET_KEY` | Stripe の秘密キー（`sk_test_…` / `sk_live_…`）。`lib/billing.js` だけが使う | ✕ 絶対にブラウザ側に出さない |
 | `STRIPE_WEBHOOK_SECRET` | Stripe の Webhook の署名シークレット（`whsec_…`） | ✕ 絶対にブラウザ側に出さない |
 | `STRIPE_PRICE_MONTHLY` / `STRIPE_PRICE_YEARLY` | Pro の料金ID（`price_…`）。月額990円・年額9,900円 | ○ |
+| `BILLING_ENABLED` | `true` のときだけ課金（無料プランの制限と Pro の申込み）を有効にする。β公開中は設定しない | ○ |
 | `APP_URL`（任意） | サイトのURL（例: `https://xxx.azurestaticapps.net`）。決済後に戻る先に使う | ○ |
 
 ## AI（会話・フィードバック・採点）の仕組み
@@ -62,7 +63,9 @@ Using for English
 
 - 無料：1日1往復の会話（AIの最初の質問＋返答）とその翻訳だけ。採点と Azure の読み上げは Pro のみ。
 - Pro：月990円／年9,900円。初回のみ3日間の無料お試し（カード入力あり）。上限は `AI_DAILY_LIMIT` と `TTS_DAILY_CHAR_LIMIT`。
-- `STRIPE_SECRET_KEY` と2つの料金IDが揃うまでは課金は無効で、全員がこれまでどおり制限なしで使える。
+- `BILLING_ENABLED=true` と Stripe の設定（秘密キー・2つの料金ID）が揃うまでは課金は無効で、全員が Pro と同じ扱いになる（β公開中はこの状態）。
+- 退会：アカウント設定の「退会する」（`/api/account/delete`）。Pro の契約の解約・学習データ・アカウントを削除する。
+- β版の感想は、お問い合わせと同じ `contact_messages` テーブルに `[β感想]` 付きで保存される。
 - 申込は Stripe Checkout、解約・カード変更・領収書は Stripe のカスタマーポータル。契約の状態は Webhook（`/api/billing/webhook`）で
   Supabase の `subscriptions` テーブルに書き写す。必要な SQL は `supabase/billing.sql`。
 - 規約類：`legal/terms.html`（利用規約）、`legal/privacy.html`（プライバシーポリシー）、`legal/tokushoho.html`（特定商取引法に基づく表記）。
