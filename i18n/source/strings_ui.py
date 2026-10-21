@@ -1,12 +1,12 @@
-# NewSpeak 翻訳表（画面・メッセージ）
+# Speakwire 翻訳表（画面・メッセージ）
 # 各行: (日本語の原文, 韓国語, 繁体字中国語（台湾）, フランス語, スペイン語)
 # {n} などの波かっこは数値などが入る場所。<br> <em> <strong> <small> は原文と同じ位置に置く。
 # 編集したら `python3 i18n/source/build.py` で i18n/*.js を作り直す。
 
 ROWS = [
 # ── 共通・ヘッダー・メニュー ──
-("NewSpeak — 英語力を鍛える国際ニュースアプリ", "NewSpeak — 국제 뉴스로 영어 실력을 키우는 앱", "NewSpeak — 用國際新聞鍛鍊英文能力的 App", "NewSpeak — Progressez en anglais avec l'actualité internationale", "NewSpeak — Mejora tu inglés con noticias internacionales"),
-("NewSpeak ホームに戻る", "NewSpeak 홈으로 돌아가기", "回到 NewSpeak 首頁", "Revenir à l'accueil de NewSpeak", "Volver al inicio de NewSpeak"),
+("Speakwire — 英語力を鍛える国際ニュースアプリ", "Speakwire — 국제 뉴스로 영어 실력을 키우는 앱", "Speakwire — 用國際新聞鍛鍊英文能力的 App", "Speakwire — Progressez en anglais avec l'actualité internationale", "Speakwire — Mejora tu inglés con noticias internacionales"),
+("Speakwire ホームに戻る", "Speakwire 홈으로 돌아가기", "回到 Speakwire 首頁", "Revenir à l'accueil de Speakwire", "Volver al inicio de Speakwire"),
 ("デザイン案の切り替え", "디자인 시안 전환", "切換設計方案", "Changer de design", "Cambiar de diseño"),
 ("スタジオ", "스튜디오", "工作室", "Studio", "Estudio"),
 ("プレイフル", "플레이풀", "活潑", "Ludique", "Divertido"),
@@ -70,7 +70,7 @@ ROWS = [
 ("通信エラーが発生しました。接続を確認してください。", "통신 오류가 발생했어요. 연결 상태를 확인해 주세요.", "發生連線錯誤，請確認網路連線。", "Erreur de connexion. Vérifiez votre connexion internet.", "Error de conexión. Comprueba tu conexión."),
 
 # ── 認証の確認ページ（auth/callback） ──
-("認証中… — NewSpeak", "인증 중… — NewSpeak", "驗證中… — NewSpeak", "Vérification… — NewSpeak", "Verificando… — NewSpeak"),
+("認証中… — Speakwire", "인증 중… — Speakwire", "驗證中… — Speakwire", "Vérification… — Speakwire", "Verificando… — Speakwire"),
 ("認証を確認しています…", "인증을 확인하고 있어요…", "正在確認驗證…", "Vérification en cours…", "Verificando…"),
 ("少々お待ちください。", "잠시만 기다려 주세요.", "請稍候。", "Veuillez patienter.", "Espera un momento."),
 ("アプリを開く", "앱 열기", "開啟 App", "Ouvrir l'appli", "Abrir la app"),

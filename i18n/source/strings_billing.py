@@ -1,4 +1,4 @@
-# NewSpeak 翻訳表（プラン・お支払い・規約まわり）
+# Speakwire 翻訳表（プラン・お支払い・規約まわり）
 # 各行: (日本語の原文, 韓国語, 繁体字中国語（台湾）, フランス語, スペイン語)
 
 ROWS = [
@@ -38,7 +38,7 @@ ROWS = [
 ("／年（税込）", "/년(세금 포함)", "／年（含稅）", "/ an (TTC)", "/ año (impuestos incluidos)"),
 ("お申し込み内容の確認", "신청 내용 확인", "確認申請內容", "Récapitulatif avant souscription", "Resumen antes de contratar"),
 ("利用規約とプライバシーポリシーに同意します", "이용약관과 개인정보 처리방침에 동의합니다", "我同意使用條款與隱私權政策", "J'accepte les conditions d'utilisation et la politique de confidentialité", "Acepto los términos de uso y la política de privacidad"),
-("お支払いは Stripe の画面で行います。カード情報は NewSpeak には保存されません。", "결제는 Stripe 화면에서 진행돼요. 카드 정보는 NewSpeak에 저장되지 않아요.", "付款會在 Stripe 的頁面進行，卡片資訊不會儲存在 NewSpeak。", "Le paiement s'effectue sur une page Stripe. NewSpeak ne conserve pas vos données de carte.", "El pago se hace en una página de Stripe. NewSpeak no guarda los datos de tu tarjeta."),
+("お支払いは Stripe の画面で行います。カード情報は Speakwire には保存されません。", "결제는 Stripe 화면에서 진행돼요. 카드 정보는 Speakwire에 저장되지 않아요.", "付款會在 Stripe 的頁面進行，卡片資訊不會儲存在 Speakwire。", "Le paiement s'effectue sur une page Stripe. Speakwire ne conserve pas vos données de carte.", "El pago se hace en una página de Stripe. Speakwire no guarda los datos de tu tarjeta."),
 ("料金", "요금", "費用", "Prix", "Precio"),
 ("{price}（税込）。1か月ごとに自動で更新されます。", "{price}(세금 포함). 1개월마다 자동으로 갱신돼요.", "{price}（含稅），每個月自動續訂。", "{price} TTC, renouvelé automatiquement chaque mois.", "{price} (impuestos incluidos), se renueva automáticamente cada mes."),
 ("{price}（税込）。1年ごとに自動で更新されます。", "{price}(세금 포함). 1년마다 자동으로 갱신돼요.", "{price}（含稅），每年自動續訂。", "{price} TTC, renouvelé automatiquement chaque année.", "{price} (impuestos incluidos), se renueva automáticamente cada año."),
@@ -80,9 +80,9 @@ ROWS = [
 ("Pro プランでは、高品質な Azure のニューラル音声で読み上げます。", "Pro 요금제에서는 고품질 Azure 뉴럴 음성으로 읽어 줘요.", "Pro 方案會使用高品質的 Azure 神經語音朗讀。", "Avec Pro, la lecture utilise les voix neuronales haute qualité d'Azure.", "Con Pro, la lectura usa voces neuronales de alta calidad de Azure."),
 
 # ── 規約ページ ──
-("利用規約 — NewSpeak", "이용약관 — NewSpeak", "使用條款 — NewSpeak", "Conditions d'utilisation — NewSpeak", "Términos de uso — NewSpeak"),
-("プライバシーポリシー — NewSpeak", "개인정보 처리방침 — NewSpeak", "隱私權政策 — NewSpeak", "Politique de confidentialité — NewSpeak", "Política de privacidad — NewSpeak"),
-("特定商取引法に基づく表記 — NewSpeak", "특정상거래법에 따른 표기 — NewSpeak", "特定商業交易法標示 — NewSpeak", "Mentions légales — NewSpeak", "Aviso legal — NewSpeak"),
+("利用規約 — Speakwire", "이용약관 — Speakwire", "使用條款 — Speakwire", "Conditions d'utilisation — Speakwire", "Términos de uso — Speakwire"),
+("プライバシーポリシー — Speakwire", "개인정보 처리방침 — Speakwire", "隱私權政策 — Speakwire", "Politique de confidentialité — Speakwire", "Política de privacidad — Speakwire"),
+("特定商取引法に基づく表記 — Speakwire", "특정상거래법에 따른 표기 — Speakwire", "特定商業交易法標示 — Speakwire", "Mentions légales — Speakwire", "Aviso legal — Speakwire"),
 ("この文書は日本語版が正式なものです。", "이 문서는 일본어판이 정식 문서예요.", "本文件以日文版為準。", "Seule la version japonaise de ce document fait foi.", "La versión en japonés de este documento es la oficial."),
-("NewSpeak に戻る", "NewSpeak로 돌아가기", "回到 NewSpeak", "Revenir à NewSpeak", "Volver a NewSpeak"),
+("Speakwire に戻る", "Speakwire로 돌아가기", "回到 Speakwire", "Revenir à Speakwire", "Volver a Speakwire"),
 ]

@@ -1,14 +1,14 @@
-# NewSpeak 翻訳表（紹介ページ・使い方ページ）
+# Speakwire 翻訳表（紹介ページ・使い方ページ）
 # 各行: (日本語の原文, 韓国語, 繁体字中国語（台湾）, フランス語, スペイン語)
 
 ROWS = [
 # ── 紹介ページ ──
-("NewSpeak の紹介", "NewSpeak 소개", "NewSpeak 介紹", "Présentation de NewSpeak", "Presentación de NewSpeak"),
+("Speakwire の紹介", "Speakwire 소개", "Speakwire 介紹", "Présentation de Speakwire", "Presentación de Speakwire"),
 ("AI × 最新ニュースで英会話", "AI × 최신 뉴스로 영어 회화", "AI × 最新新聞練英文會話", "IA × actualité : parlez anglais", "IA × noticias: practica inglés oral"),
 ("ニュースで話す、<br><em>本物の英語力。</em>", "뉴스로 말하는<br><em>진짜 영어 실력.</em>", "用新聞開口說，<br><em>練出真正的英文力。</em>", "Parlez de l'actualité,<br><em>progressez pour de vrai.</em>", "Habla de la actualidad,<br><em>mejora tu inglés de verdad.</em>"),
 ("毎日の英字ニュースを題材に、AIとディスカッション。読むだけで終わらない、「話せる」英語学習をはじめましょう。", "매일의 영어 뉴스를 주제로 AI와 토론해요. 읽기로 끝나지 않는, ‘말할 수 있는’ 영어 학습을 시작해 보세요.", "以每天的英文新聞為題材，和 AI 一起討論。開始不只是閱讀、而是「能開口說」的英文學習吧。", "Discutez avec l'IA à partir de l'actualité en anglais du jour. Ne vous contentez plus de lire : apprenez à parler.", "Debate con la IA sobre las noticias del día en inglés. No te quedes en la lectura: aprende a hablar."),
 ("メールアドレスだけで登録できます。クレジットカード不要。", "이메일 주소만으로 가입할 수 있어요. 신용카드는 필요 없어요.", "只要電子郵件就能註冊，不需要信用卡。", "Une adresse e-mail suffit. Aucune carte bancaire requise.", "Solo necesitas un correo. Sin tarjeta de crédito."),
-("NewSpeak の特長を数字で", "숫자로 보는 NewSpeak의 특징", "用數字看 NewSpeak 的特色", "NewSpeak en chiffres", "NewSpeak en cifras"),
+("Speakwire の特長を数字で", "숫자로 보는 Speakwire의 특징", "用數字看 Speakwire 的特色", "Speakwire en chiffres", "Speakwire en cifras"),
 ("ニュースカテゴリー", "뉴스 카테고리", "新聞類別", "rubriques d'actualité", "categorías de noticias"),
 ("練習モード", "연습 모드", "練習模式", "modes d'entraînement", "modos de práctica"),
 ("いつでも練習", "언제든 연습", "隨時練習", "pratique à toute heure", "practica cuando quieras"),
@@ -51,7 +51,7 @@ ROWS = [
 ("登録は30秒。すぐに最初のセッションを始められます。", "가입은 30초. 바로 첫 세션을 시작할 수 있어요.", "註冊只要 30 秒，馬上就能開始第一次練習。", "Inscription en 30 secondes, et votre première séance commence tout de suite.", "El registro dura 30 segundos y puedes empezar tu primera sesión al momento."),
 
 # ── このアプリの使い方 ──
-("NewSpeakは、世界のニュースを題材にAIと英語で話しながら、「話す・聞く・語彙」をまとめて鍛えるアプリです。効果を最大にするための使い方を紹介します。", "NewSpeak은 세계 뉴스를 주제로 AI와 영어로 대화하면서 ‘말하기·듣기·어휘’를 한꺼번에 단련하는 앱이에요. 효과를 최대로 끌어올리는 사용법을 소개할게요.", "NewSpeak 讓你以全球新聞為題材、用英文和 AI 對話，一次鍛鍊「說、聽、單字」。以下介紹發揮最大效果的使用方式。", "NewSpeak vous fait parler anglais avec une IA à partir de l'actualité mondiale, pour travailler à la fois l'oral, l'écoute et le vocabulaire. Voici comment en tirer le meilleur parti.", "NewSpeak te hace hablar en inglés con una IA a partir de noticias de todo el mundo, para entrenar a la vez la expresión oral, la comprensión y el vocabulario. Así le sacarás el máximo partido."),
+("Speakwireは、世界のニュースを題材にAIと英語で話しながら、「話す・聞く・語彙」をまとめて鍛えるアプリです。効果を最大にするための使い方を紹介します。", "Speakwire는 세계 뉴스를 주제로 AI와 영어로 대화하면서 ‘말하기·듣기·어휘’를 한꺼번에 단련하는 앱이에요. 효과를 최대로 끌어올리는 사용법을 소개할게요.", "Speakwire 讓你以全球新聞為題材、用英文和 AI 對話，一次鍛鍊「說、聽、單字」。以下介紹發揮最大效果的使用方式。", "Speakwire vous fait parler anglais avec une IA à partir de l'actualité mondiale, pour travailler à la fois l'oral, l'écoute et le vocabulaire. Voici comment en tirer le meilleur parti.", "Speakwire te hace hablar en inglés con una IA a partir de noticias de todo el mundo, para entrenar a la vez la expresión oral, la comprensión y el vocabulario. Así le sacarás el máximo partido."),
 ("このアプリで鍛えられる力", "이 앱으로 키울 수 있는 능력", "這個 App 能鍛鍊的能力", "Ce que vous allez travailler", "Lo que vas a entrenar"),
 ("意見を英語で組み立てる力", "영어로 의견을 구성하는 힘", "用英文組織意見的能力", "Construire un avis en anglais", "Construir una opinión en inglés"),
 ("時事ニュースについて「意見→理由→具体例」の順で話す練習を重ね、考えを筋道立てて伝えられるようになります。", "시사 뉴스에 대해 ‘의견 → 이유 → 구체적인 예’ 순서로 말하는 연습을 거듭하면서 생각을 조리 있게 전달할 수 있게 돼요.", "反覆練習以「意見→理由→具體例子」的順序談論時事，就能有條理地表達想法。", "En vous entraînant à parler de l'actualité dans l'ordre « avis → raison → exemple », vous apprenez à exposer vos idées de façon structurée.", "Practicando a hablar de la actualidad en el orden «opinión → motivo → ejemplo», aprendes a expresar tus ideas con orden."),
