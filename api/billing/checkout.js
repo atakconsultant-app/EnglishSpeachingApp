@@ -1,5 +1,5 @@
 // POST /api/billing/checkout { interval: 'month' | 'year', lang } — Pro の申込画面（Stripe Checkout）の URL を返す。
-// 初めての申込なら7日間の無料お試しを付ける（カードの入力は必須。お試し中に解約すれば請求なし）。
+// 初めての申込なら3日間の無料お試しを付ける（カードの入力は必須。お試し中に解約すれば請求なし）。
 const b = require('../../lib/billing');
 
 module.exports = async function handler(req, res) {

@@ -4043,6 +4043,7 @@ function renderPlan(){
   // 今のプラン
   let status = '';
   if(!pro) status = t('いまは無料プランです。AIとの会話は1日1往復まで使えます。');
+  else if(billing.cancelAtPeriodEnd && billing.status === 'trialing') status = t('解約済みです。{date}に無料お試しが終わり、料金はかかりません。', {date: formatDate(billing.currentPeriodEnd || billing.trialEnd)});
   else if(billing.cancelAtPeriodEnd && billing.currentPeriodEnd) status = t('{date}で Pro が終了します（自動更新は止まっています）。', {date: formatDate(billing.currentPeriodEnd)});
   else if(billing.status === 'trialing') status = t('Pro の無料お試し中です。{date}に最初のお支払い（{price}）が行われます。', {date: formatDate(billing.trialEnd || billing.currentPeriodEnd), price: formatYen(planPrice(billing.interval === 'year' ? 'year' : 'month'))});
   else if(billing.status === 'past_due') status = t('お支払いを確認できていません。「お支払い・解約の管理」からカード情報を更新してください。');
@@ -4056,7 +4057,7 @@ function renderPlan(){
   const price = planPrice(planInterval);
   document.getElementById('plan-price').innerHTML = `<b>${escHtml(formatYen(price))}</b><span>${escHtml(planInterval === 'year' ? t('／年（税込）') : t('／月（税込）'))}</span>`;
   const trial = billing.trialAvailable !== false;
-  const days = billing.trialDays || 7;
+  const days = billing.trialDays || 3;
   const rows = [
     [t('料金'), planInterval === 'year' ? t('{price}（税込）。1年ごとに自動で更新されます。', {price: formatYen(price)}) : t('{price}（税込）。1か月ごとに自動で更新されます。', {price: formatYen(price)})],
     [t('無料お試し'), trial ? t('初回のみ {n}日間無料。お試しが終わる日に最初のお支払いが行われ、以後は自動で更新されます。お試し中に解約すれば料金はかかりません。', {n: days}) : t('お試し期間は利用済みのため、お申し込み時に最初のお支払いが行われます。')],
@@ -4072,7 +4073,7 @@ function renderPlanButton(){
   const btn = document.getElementById('plan-buy');
   if(!btn) return;
   const trial = billing.trialAvailable !== false;
-  btn.textContent = trial ? t('{n}日間無料で試す', {n: billing.trialDays || 7}) : t('Pro に申し込む');
+  btn.textContent = trial ? t('{n}日間無料で試す', {n: billing.trialDays || 3}) : t('Pro に申し込む');
   btn.disabled = !document.getElementById('plan-agree').checked;
 }
 async function startCheckout(){
@@ -4125,6 +4126,14 @@ async function handleBillingReturn(){
     showFormMsg('plan-msg', billing.plan === 'pro' ? 'success' : 'error', billing.plan === 'pro'
       ? t('Pro が有効になりました。さっそく練習を始めましょう。')
       : t('お申し込みは完了しています。反映まで少し時間がかかっているので、しばらくしてからページを開き直してください。'));
+  } else if(kind === 'portal'){
+    // 解約・プラン変更の知らせ（Webhook）が届くまで数秒かかることがあるので、変化するまで何度か確かめる
+    const before = JSON.stringify([billing.status, billing.cancelAtPeriodEnd, billing.interval, billing.currentPeriodEnd]);
+    for(let i = 0; i < 5; i++){
+      await new Promise(r => setTimeout(r, 2000));
+      await loadBilling();
+      if(JSON.stringify([billing.status, billing.cancelAtPeriodEnd, billing.interval, billing.currentPeriodEnd]) !== before) break;
+    }
   } else if(kind === 'cancel'){
     showFormMsg('plan-msg', '', '');
   }
@@ -4137,7 +4146,7 @@ function addUpgradeCard(container){
   const card = document.createElement('div');
   card.className = 'upgrade-card';
   const trial = billing.trialAvailable !== false;
-  card.innerHTML = `<p>${escHtml(trial ? t('Pro なら会話・採点・高品質な音声を回数を気にせず使えます。最初の {n}日間は無料です。', {n: billing.trialDays || 7}) : t('Pro なら会話・採点・高品質な音声を回数を気にせず使えます。'))}</p>` +
+  card.innerHTML = `<p>${escHtml(trial ? t('Pro なら会話・採点・高品質な音声を回数を気にせず使えます。最初の {n}日間は無料です。', {n: billing.trialDays || 3}) : t('Pro なら会話・採点・高品質な音声を回数を気にせず使えます。'))}</p>` +
     `<button type="button" class="ns-btn primary sm">${escHtml(t('Pro について見る'))}</button>`;
   card.querySelector('button').addEventListener('click', () => openPage('plan'));
   box.appendChild(card);

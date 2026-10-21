@@ -419,6 +419,7 @@ I18N.add('fr', {
  "いまは無料プランです。AIとの会話は1日1往復まで使えます。": "Vous êtes sur l'offre gratuite : 1 échange avec l'IA par jour.",
  "Pro の無料お試し中です。{date}に最初のお支払い（{price}）が行われます。": "Essai gratuit de Pro en cours. Premier paiement ({price}) le {date}.",
  "Pro プランをご利用中です。次回のお支払いは{date}です。": "Vous êtes abonné à Pro. Prochain paiement le {date}.",
+ "解約済みです。{date}に無料お試しが終わり、料金はかかりません。": "Résiliation enregistrée. L'essai gratuit se termine le {date}, sans frais.",
  "{date}で Pro が終了します（自動更新は止まっています）。": "Pro prendra fin le {date} (renouvellement automatique désactivé).",
  "お支払いを確認できていません。「お支払い・解約の管理」からカード情報を更新してください。": "Le paiement n'a pas abouti. Mettez à jour votre carte depuis « Gérer le paiement et la résiliation ».",
  "お申し込みありがとうございます。Pro を有効にしています…": "Merci pour votre souscription ! Activation de Pro…",
