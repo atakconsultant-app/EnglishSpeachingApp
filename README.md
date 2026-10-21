@@ -61,7 +61,7 @@ Using for English
 ## 有料プラン（Stripe）
 
 - 無料：1日1往復の会話（AIの最初の質問＋返答）とその翻訳だけ。採点と Azure の読み上げは Pro のみ。
-- Pro：月990円／年9,900円。初回のみ7日間の無料お試し（カード入力あり）。上限は `AI_DAILY_LIMIT` と `TTS_DAILY_CHAR_LIMIT`。
+- Pro：月990円／年9,900円。初回のみ3日間の無料お試し（カード入力あり）。上限は `AI_DAILY_LIMIT` と `TTS_DAILY_CHAR_LIMIT`。
 - `STRIPE_SECRET_KEY` と2つの料金IDが揃うまでは課金は無効で、全員がこれまでどおり制限なしで使える。
 - 申込は Stripe Checkout、解約・カード変更・領収書は Stripe のカスタマーポータル。契約の状態は Webhook（`/api/billing/webhook`）で
   Supabase の `subscriptions` テーブルに書き写す。必要な SQL は `supabase/billing.sql`。

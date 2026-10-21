@@ -419,6 +419,7 @@ I18N.add('es', {
  "いまは無料プランです。AIとの会話は1日1往復まで使えます。": "Estás en el plan gratis: 1 intercambio con la IA al día.",
  "Pro の無料お試し中です。{date}に最初のお支払い（{price}）が行われます。": "Estás en la prueba gratis de Pro. El primer pago ({price}) será el {date}.",
  "Pro プランをご利用中です。次回のお支払いは{date}です。": "Tienes el plan Pro. El próximo pago será el {date}.",
+ "解約済みです。{date}に無料お試しが終わり、料金はかかりません。": "Has cancelado. La prueba gratis termina el {date} y no se te cobrará nada.",
  "{date}で Pro が終了します（自動更新は止まっています）。": "Pro terminará el {date} (la renovación automática está desactivada).",
  "お支払いを確認できていません。「お支払い・解約の管理」からカード情報を更新してください。": "No se ha podido cobrar. Actualiza tu tarjeta en «Gestionar pago y cancelación».",
  "お申し込みありがとうございます。Pro を有効にしています…": "¡Gracias por contratar! Activando Pro…",

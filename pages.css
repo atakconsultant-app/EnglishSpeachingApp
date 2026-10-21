@@ -405,3 +405,6 @@
 }
 .auth-consent { font-size: 12px; line-height: 1.6; color: var(--text-sub); }
 .auth-consent a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+/* hidden 属性の要素は、display を指定したクラスが付いていても必ず隠す（例：Pro 利用中の申込欄） */
+[hidden] { display: none !important; }
