@@ -11,6 +11,7 @@ const routes = [
   ['billing-checkout', 'billing/checkout', ['POST']],
   ['billing-portal', 'billing/portal', ['POST']],
   ['billing-webhook', 'billing/webhook', ['POST']],
+  ['account-delete', 'account/delete', ['POST']],
 ];
 
 for (const [name, route, methods] of routes) {

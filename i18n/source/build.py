@@ -10,11 +10,12 @@ sys.path.insert(0, HERE)
 from strings_ui import ROWS as UI
 from strings_pages import ROWS as PAGES
 from strings_billing import ROWS as BILLING
+from strings_beta import ROWS as BETA
 
 LANGS = ['ko', 'zh-TW', 'fr', 'es']
 ALLOW_EMPTY = {'回', '語'}  # 単位を表示しない言語がある
 
-rows = UI + PAGES + BILLING
+rows = UI + PAGES + BILLING + BETA
 errors = []
 seen = {}
 for r in rows:

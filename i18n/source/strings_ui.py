@@ -93,7 +93,7 @@ ROWS = [
 ("スポーツ・文化", "스포츠·문화", "運動與文化", "Sport & culture", "Deporte y cultura"),
 ("ビジネス", "비즈니스", "商業", "Business", "Negocios"),
 ("医療・健康", "의료·건강", "醫療與健康", "Santé", "Salud"),
-("今日の10分を始める", "오늘의 10분 시작하기", "開始今天的 10 分鐘", "Commencer mes 10 minutes", "Empezar mis 10 minutos"),
+("今日の練習を始める", "오늘의 연습 시작하기", "開始今天的練習", "Commencer la séance du jour", "Empezar la práctica de hoy"),
 ("おすすめ記事を自動で選んですぐ開始", "추천 기사를 자동으로 골라 바로 시작", "自動選擇推薦文章，立即開始", "Un article recommandé est choisi pour vous", "Elegimos un artículo recomendado y empiezas ya"),
 ("{mode}・{level} ／ {cat}カテゴリのおすすめ記事を自動選択", "{mode} · {level} / {cat} 카테고리의 추천 기사를 자동 선택", "{mode} · {level}／自動選擇「{cat}」類別的推薦文章", "{mode} · {level} / article recommandé de la rubrique {cat}", "{mode} · {level} / artículo recomendado de {cat}"),
 ("連続学習", "연속 학습", "連續學習", "Série en cours", "Racha"),
