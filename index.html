@@ -59,6 +59,7 @@ header{
 }
 .wordmark:hover{opacity:.75;}
 .wordmark:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}
+.wordmark .wm-s{color:var(--accent);}
 .wordmark .wm-p{background:var(--brand-grad,linear-gradient(135deg,#c8a96e,#f5d38a));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-style:normal;}
 @media (forced-colors:active){.wordmark .wm-p{background:none;-webkit-text-fill-color:currentColor;color:inherit;}}
 header .spacer{flex:1;}
@@ -873,7 +874,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 
 <!-- ─── Header ─── -->
 <header>
-  <button type="button" class="wordmark" onclick="goTop()" aria-label="ScooPitch ホームに戻る">Scoo<span class="wm-p">P</span>itch</button>
+  <button type="button" class="wordmark" onclick="goTop()" aria-label="ScooPitch ホームに戻る"><span class="wm-s">Scoo</span><span class="wm-p">P</span>itch</button>
   <span class="beta-badge" title="β版（無料で公開中）">β</span>
   <div class="spacer"></div>
   <label class="lang-switch" title="言語 / Language">
