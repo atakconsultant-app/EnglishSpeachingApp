@@ -8,7 +8,7 @@ if(!window.I18N){window.I18N={lang:'ja',locale:'ja-JP',aiLanguage:'Japanese',hom
 t:function(k,p){k=String(k).replace(/@[\w-]+$/,'');return p?k.replace(/\{(\w+)\}/g,function(m,n){return n in p?p[n]:m;}):k;},
 has:function(){return false;},set:function(){},onChange:function(){},add:function(){},apply:function(){}};window.t=window.I18N.t;}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Speakwire — 英語力を鍛える国際ニュースアプリ</title>
+<title>ScooPitch — 英語力を鍛える国際ニュースアプリ</title>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -59,7 +59,8 @@ header{
 }
 .wordmark:hover{opacity:.75;}
 .wordmark:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}
-.wordmark span{color:var(--text-sub);font-weight:400;font-style:italic;}
+.wordmark .wm-p{background:var(--brand-grad,linear-gradient(135deg,#c8a96e,#f5d38a));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-style:normal;}
+@media (forced-colors:active){.wordmark .wm-p{background:none;-webkit-text-fill-color:currentColor;color:inherit;}}
 header .spacer{flex:1;}
 .back-btn{
   display:none;align-items:center;gap:6px;
@@ -872,7 +873,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 
 <!-- ─── Header ─── -->
 <header>
-  <button type="button" class="wordmark" onclick="goTop()" aria-label="Speakwire ホームに戻る">Speak<span>wire</span></button>
+  <button type="button" class="wordmark" onclick="goTop()" aria-label="ScooPitch ホームに戻る">Scoo<span class="wm-p">P</span>itch</button>
   <span class="beta-badge" title="β版（無料で公開中）">β</span>
   <div class="spacer"></div>
   <label class="lang-switch" title="言語 / Language">
@@ -923,7 +924,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 <div class="app-main">
 
 <!-- ════ SCREEN 0 — アプリ紹介 ════ -->
-<main class="screen" id="s-intro" aria-label="Speakwire の紹介">
+<main class="screen" id="s-intro" aria-label="ScooPitch の紹介">
   <section class="intro-section hero">
     <div class="hero-copy">
       <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>AI × 最新ニュースで英会話</span>
@@ -953,7 +954,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   </section>
 
   <section class="intro-section" aria-labelledby="stats-h" style="padding-top:0;border-top:none;">
-    <h2 id="stats-h" class="sr-only">Speakwire の特長を数字で</h2>
+    <h2 id="stats-h" class="sr-only">ScooPitch の特長を数字で</h2>
     <div class="stats-row">
       <div class="stat-pill"><strong>9</strong><span>ニュースカテゴリー</span></div>
       <div class="stat-pill"><strong>3</strong><span>練習モード</span></div>
@@ -1060,7 +1061,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める</button>
   </section>
   <footer class="intro-footer">
-    <span>&copy; 2026 Speakwire</span>
+    <span>&copy; 2026 ScooPitch</span>
     <nav class="legal-links" aria-label="規約など">
       <a href="/legal/terms.html">利用規約</a>
       <a href="/legal/privacy.html">プライバシーポリシー</a>
@@ -1576,7 +1577,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="page-head">
       <p class="page-eyebrow">HOW TO USE</p>
       <h1 class="page-title" id="howto-h">このアプリの使い方</h1>
-      <p class="page-sub">Speakwireは、世界のニュースを題材にAIと英語で話しながら、「話す・聞く・語彙」をまとめて鍛えるアプリです。効果を最大にするための使い方を紹介します。</p>
+      <p class="page-sub">ScooPitchは、世界のニュースを題材にAIと英語で話しながら、「話す・聞く・語彙」をまとめて鍛えるアプリです。効果を最大にするための使い方を紹介します。</p>
     </div>
 
     <div class="page-card">
@@ -1819,7 +1820,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <label class="plan-agree"><input type="checkbox" id="plan-agree" onchange="renderPlanButton()"> <span>利用規約とプライバシーポリシーに同意します</span></label>
       </div>
       <div class="btn-row"><button type="button" class="ns-btn primary" id="plan-buy" onclick="startCheckout()" disabled></button></div>
-      <p class="field-hint">お支払いは Stripe の画面で行います。カード情報は Speakwire には保存されません。</p>
+      <p class="field-hint">お支払いは Stripe の画面で行います。カード情報は ScooPitch には保存されません。</p>
     </div>
   </div>
 </section>
