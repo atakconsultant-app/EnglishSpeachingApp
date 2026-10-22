@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
 
 :root {
+  --brand-grad: linear-gradient(120deg, #f97316 10%, #ef4444 55%, #db2777 95%);
   --bg: #f2f1ef;
   --surface: #ffffff;
   --surface2: #f7f6f4;
@@ -27,7 +28,6 @@
 
 header { background: var(--bg); border-bottom: none; padding: 18px 24px 10px; }
 .wordmark { color: var(--text); font-weight: 800; font-size: 22px; letter-spacing: -1px; }
-.wordmark span { color: var(--text-dim); font-style: normal; font-weight: 500; }
 .dot { background: var(--border2); }
 .dot.on { background: var(--text); }
 .dot.done { background: var(--text-dim); }

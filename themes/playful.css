@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap');
 
 :root {
+  --brand-grad: linear-gradient(120deg, #22c55e 10%, #06b6d4 55%, #3b82f6 95%);
   --bg: #ffffff;
   --surface: #ffffff;
   --surface2: #f7f7f7;
@@ -26,8 +27,7 @@
 }
 
 header { border-bottom: 2px solid var(--border); padding: 14px 24px; }
-.wordmark { color: var(--accent); font-weight: 900; font-size: 24px; letter-spacing: -.5px; }
-.wordmark span { color: var(--text); font-style: normal; font-weight: 800; }
+.wordmark { color: var(--accent2); font-weight: 900; font-size: 24px; letter-spacing: -.5px; }
 .dot { width: 22px; height: 10px; border-radius: 999px; background: var(--surface3); }
 .dot.on { background: #ffc800; }
 .dot.done { background: var(--accent); }

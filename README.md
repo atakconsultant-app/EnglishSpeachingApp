@@ -1,4 +1,4 @@
-# Speakwire（EnglishSpeachingApp）
+# ScooPitch（EnglishSpeachingApp）
 世界のニュースを題材に、AIと英語で話して練習するアプリ。
 
 ## 環境変数（Vercel → Project Settings → Environment Variables）

@@ -198,7 +198,7 @@ module.exports = async function handler(req, res) {
         'Ocp-Apim-Subscription-Key': key,
         'Content-Type': 'application/ssml+xml',
         'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
-        'User-Agent': 'Speakwire',
+        'User-Agent': 'ScooPitch',
       },
       body: buildSsml(text, voice, locale, prosodyFor(age, rate)),
     });

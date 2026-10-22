@@ -1,5 +1,5 @@
 {
-  "name": "speakwire-azure-api",
+  "name": "scoopitch-azure-api",
   "version": "1.0.0",
   "private": true,
   "description": "Azure Static Web Apps 用のサーバー処理。中身は ../api と ../lib をそのまま使い、adapter.js で Azure Functions の形式につなぐ。",
