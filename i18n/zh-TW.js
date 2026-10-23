@@ -1,6 +1,6 @@
 // このファイルは i18n/source/build.py で自動生成しています。直接編集せず、i18n/source/strings_*.py を編集してください。
 I18N.add('zh-TW', {
- "ScooPitch — 英語力を鍛える国際ニュースアプリ": "ScooPitch — 用國際新聞鍛鍊英文能力的 App",
+ "ScooPitch（スクーピッチ）｜ニュースで話すAI英会話": "ScooPitch — 用新聞開口說的 AI 英語會話",
  "ScooPitch ホームに戻る": "回到 ScooPitch 首頁",
  "デザイン案の切り替え": "切換設計方案",
  "スタジオ": "工作室",
