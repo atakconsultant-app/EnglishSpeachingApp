@@ -5,7 +5,7 @@
 
 ROWS = [
 # ── 共通・ヘッダー・メニュー ──
-("ScooPitch — 英語力を鍛える国際ニュースアプリ", "ScooPitch — 국제 뉴스로 영어 실력을 키우는 앱", "ScooPitch — 用國際新聞鍛鍊英文能力的 App", "ScooPitch — Progressez en anglais avec l'actualité internationale", "ScooPitch — Mejora tu inglés con noticias internacionales"),
+("ScooPitch（スクーピッチ）｜ニュースで話すAI英会話", "ScooPitch — 뉴스로 말하는 AI 영어 회화", "ScooPitch — 用新聞開口說的 AI 英語會話", "ScooPitch — Parlez anglais avec l'IA sur l'actualité", "ScooPitch — Habla inglés con IA sobre las noticias"),
 ("ScooPitch ホームに戻る", "ScooPitch 홈으로 돌아가기", "回到 ScooPitch 首頁", "Revenir à l'accueil de ScooPitch", "Volver al inicio de ScooPitch"),
 ("デザイン案の切り替え", "디자인 시안 전환", "切換設計方案", "Changer de design", "Cambiar de diseño"),
 ("スタジオ", "스튜디오", "工作室", "Studio", "Estudio"),

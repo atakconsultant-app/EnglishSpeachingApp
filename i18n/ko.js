@@ -1,6 +1,6 @@
 // このファイルは i18n/source/build.py で自動生成しています。直接編集せず、i18n/source/strings_*.py を編集してください。
 I18N.add('ko', {
- "ScooPitch — 英語力を鍛える国際ニュースアプリ": "ScooPitch — 국제 뉴스로 영어 실력을 키우는 앱",
+ "ScooPitch（スクーピッチ）｜ニュースで話すAI英会話": "ScooPitch — 뉴스로 말하는 AI 영어 회화",
  "ScooPitch ホームに戻る": "ScooPitch 홈으로 돌아가기",
  "デザイン案の切り替え": "디자인 시안 전환",
  "スタジオ": "스튜디오",
