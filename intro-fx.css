@@ -1,5 +1,6 @@
 /* トップページ（ログイン前）のスクロール演出。
-   [data-fx] で「4つの仕組み」「利用手順」それぞれ A/B/C 案を切り替える。
+   「4つの仕組み」は A(スタック)+B(ポップ)+C(スポット) を統合した1案。
+   「利用手順」は [data-fx] で A〜F 案を切り替える。
    reveal の移動は translate / scale プロパティを使い、案ごとの transform と干渉させない。 */
 
 /* ── ヒーロー：大見出しの登場 ── */
@@ -26,64 +27,45 @@
 .fx-ready #s-intro [data-reveal].is-in { opacity: 1; translate: 0 0; }
 .fx-head[data-reveal] { --i: 0; }
 
-.feature-card { position: relative; }
-.feature-num { position: absolute; font-weight: 800; line-height: 1; letter-spacing: -.04em; pointer-events: none; }
-
-/* ═════ 4つの仕組み A：スタック（カードが積み重なる） ═════ */
-.fx-features[data-fx="a"] .feature-grid { display: flex; flex-direction: column; gap: 24px; padding-bottom: 6vh; }
-.fx-features[data-fx="a"] .feature-card {
-  position: sticky; top: calc(24px + var(--i) * 20px);
-  min-height: 240px; padding: 36px 36px 32px; border-radius: 24px;
-  display: flex; flex-direction: column; justify-content: flex-end;
+/* ═════ 4つの仕組み：スタック × ポップ × スポットライト ═════ */
+.fx-features .feature-grid { display: flex; flex-direction: column; gap: 28px; padding-bottom: 8vh; margin-top: 36px; }
+.fx-features .feature-card {
+  position: sticky; top: calc(24px + var(--i) * 22px);
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  min-height: 300px; padding: 0; border-radius: 26px; overflow: hidden;
   transform-origin: top center;
   transform: scale(calc(1 - var(--shrink, 0) * .06));
-  filter: brightness(calc(1 - var(--shrink, 0) * .05));
+  filter: brightness(calc(1 - var(--shrink, 0) * .06));
 }
-.fx-features[data-fx="a"] .feature-num { top: 24px; right: 32px; font-size: clamp(64px, 9vw, 112px); color: var(--accent); opacity: .14; }
-.fx-features[data-fx="a"] .feature-icon { width: 56px; height: 56px; border-radius: 16px; }
-.fx-features[data-fx="a"] .feature-icon .ic { width: 26px; height: 26px; }
-.fx-features[data-fx="a"] .feature-title { font-size: clamp(20px, 2.4vw, 26px); margin-top: 20px; }
-.fx-features[data-fx="a"] .feature-text { font-size: 15px; max-width: 560px; }
+.fx-ready .fx-features .feature-card[data-reveal] { transition-delay: 0s; transition-timing-function: cubic-bezier(.34,1.4,.64,1); }
+.fx-ready .fx-features .feature-card:nth-child(odd)[data-reveal] { translate: -72px 0; }
+.fx-ready .fx-features .feature-card:nth-child(even)[data-reveal] { translate: 72px 0; }
+.fx-ready .fx-features .feature-card[data-reveal].is-in { translate: 0 0; }
+.fx-features .feature-card.is-focus { border-color: var(--accent); box-shadow: 0 6px 0 var(--accent); }
 
-/* ═════ 4つの仕組み B：ポップ（時間差で弾むように出現） ═════ */
-.fx-features[data-fx="b"] .feature-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
-.fx-features[data-fx="b"] .feature-card { padding: 28px; border-radius: 22px; overflow: hidden; }
-.fx-ready .fx-features[data-fx="b"] .feature-card[data-reveal] {
-  translate: 0 48px; scale: .92;
-  transition-timing-function: cubic-bezier(.34,1.56,.64,1);
+.feature-media { position: relative; overflow: hidden; background: var(--surface3); }
+.feature-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; scale: 1.18; transition: scale 1.6s cubic-bezier(.2,.7,.2,1); }
+.feature-card.is-in .feature-media img { scale: 1; }
+.feature-card.is-focus .feature-media img { animation: fxDrift 9s ease-in-out infinite alternate; }
+@keyframes fxDrift { from { translate: 0 0; } to { translate: 0 -3%; scale: 1.06; } }
+
+.feature-body { position: relative; padding: 40px 40px 36px; display: flex; flex-direction: column; justify-content: flex-end; }
+.feature-num {
+  position: absolute; top: 22px; right: 28px; pointer-events: none;
+  font-weight: 800; line-height: 1; letter-spacing: -.04em; font-size: clamp(56px, 7vw, 96px);
+  color: transparent; -webkit-text-stroke: 1.5px var(--border2); transition: color .4s ease, -webkit-text-stroke-color .4s ease;
 }
-.fx-ready .fx-features[data-fx="b"] .feature-card[data-reveal].is-in { translate: 0 0; scale: 1; }
-.fx-ready .fx-features[data-fx="b"] .feature-card.is-in:hover { translate: 0 -4px; box-shadow: 0 8px 0 var(--border2); transition-delay: 0s; }
-.fx-features[data-fx="b"] .feature-card.is-in .feature-icon { animation: fxPop .7s calc(var(--i) * 130ms + 300ms) cubic-bezier(.34,1.56,.64,1) both; }
-.fx-features[data-fx="b"] .feature-num {
-  top: 18px; right: 22px; font-size: 56px;
-  color: transparent; -webkit-text-stroke: 1.5px var(--border2);
-}
-.fx-features[data-fx="b"] .feature-title { font-size: 18px; }
+.feature-card.is-focus .feature-num { color: var(--accent-dim); -webkit-text-stroke-color: var(--accent); }
+.fx-features .feature-icon { width: 56px; height: 56px; border-radius: 16px; }
+.fx-features .feature-icon .ic { width: 26px; height: 26px; }
+.fx-features .feature-card.is-in .feature-icon { animation: fxPop .7s .35s cubic-bezier(.34,1.56,.64,1) both; }
+.fx-features .feature-title { font-size: clamp(20px, 2.2vw, 26px); margin-top: 20px; }
+.fx-features .feature-text { font-size: 15px; max-width: 460px; }
 @keyframes fxPop { 0% { scale: 0; rotate: -20deg; } 70% { scale: 1.15; rotate: 6deg; } 100% { scale: 1; rotate: 0deg; } }
 
-/* ═════ 4つの仕組み C：スポットライト（左右から登場、中央の1枚を強調） ═════ */
-.fx-features[data-fx="c"] .feature-grid { display: flex; flex-direction: column; gap: 22px; margin-top: 36px; }
-.fx-features[data-fx="c"] .feature-card {
-  width: min(88%, 640px); padding: 28px 28px 28px 120px; border-radius: 24px; min-height: 150px;
-  display: flex; flex-direction: column; justify-content: center;
-}
-.fx-features[data-fx="c"] .feature-card:nth-child(odd) { margin-right: auto; }
-.fx-features[data-fx="c"] .feature-card:nth-child(even) { margin-left: auto; }
-.fx-ready .fx-features[data-fx="c"] .feature-card:nth-child(odd)[data-reveal] { translate: -64px 0; }
-.fx-ready .fx-features[data-fx="c"] .feature-card:nth-child(even)[data-reveal] { translate: 64px 0; }
-.fx-ready .fx-features[data-fx="c"] .feature-card[data-reveal].is-in { translate: 0 0; transition-delay: 0s; }
-.fx-features[data-fx="c"] .feature-icon { position: absolute; left: 28px; top: 50%; translate: 0 -50%; width: 68px; height: 68px; border-radius: 20px; }
-.fx-features[data-fx="c"] .feature-icon .ic { width: 30px; height: 30px; }
-.fx-features[data-fx="c"] .feature-title { margin-top: 0; font-size: 19px; }
-.fx-features[data-fx="c"] .feature-num { top: 16px; right: 22px; font-size: 15px; color: var(--text-dim); letter-spacing: .08em; }
-.fx-ready .fx-features[data-fx="c"].has-focus .feature-card.is-in { opacity: .38; scale: .97; }
-.fx-ready .fx-features[data-fx="c"].has-focus .feature-card.is-in.is-focus {
-  opacity: 1; scale: 1.03; border-color: var(--accent); box-shadow: 0 6px 0 var(--accent);
-}
-.fx-features[data-fx="c"] .feature-card.is-focus .feature-num { color: var(--accent); }
-
 /* ═════ 利用手順：共通 ═════ */
+.steps-stage { display: contents; }
+.steps-ring, .steps-chat-head { display: none; }
 .steps-list { list-style: none; margin: 36px 0 0; padding: 0; position: relative; }
 .step-item { position: relative; }
 .step-item .step-num {
@@ -171,6 +153,106 @@
 }
 .fx-steps[data-fx="c"] .step-item.is-in:not(:last-child)::after { scale: 1 1; }
 
+/* ═════ 利用手順 D：横スクロール（縦スクロールで画面を固定し、カードが横に流れる） ═════ */
+.fx-steps[data-fx="d"] { overflow-x: clip; }
+.fx-steps[data-fx="d"] .steps-stage { display: block; position: relative; height: calc(var(--stage-h, 100svh) * 2.6); margin-top: 24px; }
+.fx-steps[data-fx="d"] .steps-list {
+  position: sticky; top: 0; height: var(--stage-h, 100svh); margin: 0;
+  display: flex; align-items: center; gap: 28px; width: max-content;
+  translate: calc(var(--hx, 0) * -1px) 0;
+}
+.fx-steps[data-fx="d"] .step-item {
+  width: min(72vw, 540px); min-height: min(60svh, 420px); padding: 40px 36px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--surface); border: 1px solid var(--border2); border-radius: 28px; box-shadow: 0 6px 0 var(--border2);
+  opacity: .45; scale: .94;
+  transition: opacity .4s ease, scale .5s cubic-bezier(.34,1.56,.64,1), border-color .3s ease, box-shadow .3s ease, background-color .3s ease;
+}
+.fx-ready .fx-steps[data-fx="d"] .step-item[data-reveal] { translate: 0 0; transition-delay: 0s; }
+.fx-ready .fx-steps[data-fx="d"] .step-item[data-reveal].is-in { opacity: .45; }
+.fx-ready .fx-steps[data-fx="d"] .step-item[data-reveal].is-focus,
+.fx-steps[data-fx="d"] .step-item.is-focus { opacity: 1; scale: 1; border-color: #111118; box-shadow: 0 8px 0 var(--accent); }
+.fx-steps[data-fx="d"] .step-num {
+  width: auto; height: auto; background: none; border-radius: 0; justify-content: flex-start;
+  font-size: clamp(96px, 14vw, 180px); line-height: .85; letter-spacing: -.06em; color: var(--accent);
+}
+.fx-steps[data-fx="d"] .step-title { font-size: clamp(24px, 3vw, 34px); letter-spacing: -.6px; }
+.fx-steps[data-fx="d"] .step-desc { font-size: 16px; margin-top: 8px; }
+
+/* ═════ 利用手順 E：チャット（入力中→吹き出しで体験を疑似体験させる） ═════ */
+.fx-steps[data-fx="e"] .steps-stage {
+  display: block; max-width: 620px; margin: 36px auto 0; border-radius: 28px; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border2); box-shadow: 0 6px 0 var(--border2);
+}
+.fx-steps[data-fx="e"] .steps-chat-head {
+  display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.steps-chat-avatar {
+  width: 38px; height: 38px; border-radius: 999px; display: flex; align-items: center; justify-content: center;
+  background: var(--accent); color: #fff; font-size: 13px; font-weight: 800;
+}
+.steps-chat-head b { display: block; font-size: 14px; color: var(--text); }
+.steps-chat-head small { font-size: 12px; color: #0f9f7a; }
+.fx-steps[data-fx="e"] .steps-list {
+  margin: 0; padding: 24px 20px 28px; display: flex; flex-direction: column; gap: 16px;
+  background: var(--surface2);
+}
+.fx-steps[data-fx="e"] .step-item { display: flex; align-items: flex-end; gap: 10px; max-width: 86%; }
+.fx-steps[data-fx="e"] .step-item:nth-child(even) { align-self: flex-end; flex-direction: row-reverse; }
+.fx-ready .fx-steps[data-fx="e"] .step-item[data-reveal] { translate: 0 20px; scale: .96; transition-delay: calc(var(--i) * 900ms); }
+.fx-ready .fx-steps[data-fx="e"] .step-item[data-reveal].is-in { translate: 0 0; scale: 1; }
+.fx-steps[data-fx="e"] .step-num { width: 32px; height: 32px; font-size: 13px; }
+.fx-steps[data-fx="e"] .step-item:nth-child(even) .step-num { background: var(--accent); }
+.fx-steps[data-fx="e"] .step-body {
+  position: relative; background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 20px 20px 20px 6px; padding: 14px 18px;
+}
+.fx-steps[data-fx="e"] .step-item:nth-child(even) .step-body { background: #111118; border-color: #111118; border-radius: 20px 20px 6px 20px; }
+.fx-steps[data-fx="e"] .step-item:nth-child(even) .step-title { color: #fff; }
+.fx-steps[data-fx="e"] .step-item:nth-child(even) .step-desc { color: rgba(255,255,255,.7); }
+.fx-steps[data-fx="e"] .step-title { font-size: 16px; }
+.fx-steps[data-fx="e"] .step-desc { font-size: 13px; }
+.fx-steps[data-fx="e"] .step-body > * { opacity: 0; transition: opacity .3s ease; transition-delay: calc(var(--i) * 900ms + 700ms); }
+.fx-steps[data-fx="e"] .step-item.is-in .step-body > * { opacity: 1; }
+.fx-steps[data-fx="e"] .step-body::after {
+  content: "\2022\2022\2022"; position: absolute; left: 18px; top: 50%; translate: 0 -50%;
+  font-size: 22px; letter-spacing: 3px; color: var(--text-dim); animation: fxTyping 1s steps(3) infinite;
+  transition: opacity .2s ease; transition-delay: calc(var(--i) * 900ms + 650ms);
+}
+.fx-steps[data-fx="e"] .step-item:nth-child(even) .step-body::after { left: auto; right: 18px; color: rgba(255,255,255,.6); }
+.fx-steps[data-fx="e"] .step-item.is-in .step-body::after { opacity: 0; }
+@keyframes fxTyping { 0% { clip-path: inset(0 66% 0 0); } 100% { clip-path: inset(0 0 0 0); } }
+.fx-steps[data-fx="e"] .steps-done { display: flex; width: fit-content; margin: 24px auto 0; }
+
+/* ═════ 利用手順 F：リング（固定した円グラフが手順ごとに満ちる＝目標勾配） ═════ */
+.fx-steps[data-fx="f"] .steps-stage { display: flex; gap: 56px; align-items: flex-start; margin-top: 36px; }
+.fx-steps[data-fx="f"] .steps-ring {
+  display: block; position: sticky; top: calc(50% - 130px); flex: 0 0 260px; width: 260px; height: 260px;
+}
+.steps-ring svg { width: 100%; height: 100%; rotate: -90deg; }
+.steps-ring circle { fill: none; stroke-width: 10; }
+.steps-ring .ring-bg { stroke: var(--surface3); }
+.steps-ring .ring-fg {
+  stroke: var(--accent); stroke-linecap: round; stroke-dasharray: 100;
+  stroke-dashoffset: calc(100 - var(--p, 0) * 100); transition: stroke-dashoffset .5s cubic-bezier(.2,.7,.2,1);
+}
+.steps-ring-label { position: absolute; inset: 0; display: flex; align-items: baseline; justify-content: center; padding-top: 88px; gap: 6px; }
+.steps-ring-num { font-size: 76px; font-weight: 800; letter-spacing: -.05em; line-height: 1; color: var(--text); }
+.steps-ring-label span { font-size: 22px; font-weight: 700; color: var(--text-dim); }
+.fx-steps[data-fx="f"] .steps-list { flex: 1; margin: 0; display: flex; flex-direction: column; gap: 0; }
+.fx-steps[data-fx="f"] .step-item {
+  min-height: 46svh; display: flex; align-items: center; gap: 22px; padding: 24px 0;
+  opacity: .3; transition: opacity .4s ease;
+}
+.fx-ready .fx-steps[data-fx="f"] .step-item[data-reveal] { translate: 0 0; transition-delay: 0s; }
+.fx-ready .fx-steps[data-fx="f"] .step-item[data-reveal].is-in { opacity: .3; }
+.fx-ready .fx-steps[data-fx="f"] .step-item[data-reveal].is-focus,
+.fx-steps[data-fx="f"] .step-item.is-focus { opacity: 1; }
+.fx-steps[data-fx="f"] .step-num { width: 52px; height: 52px; font-size: 20px; transition: background-color .3s ease, scale .4s cubic-bezier(.34,1.56,.64,1); }
+.fx-steps[data-fx="f"] .step-item.is-focus .step-num { background: var(--accent); scale: 1.12; }
+.fx-steps[data-fx="f"] .step-title { font-size: clamp(22px, 2.8vw, 32px); letter-spacing: -.5px; }
+.fx-steps[data-fx="f"] .step-desc { font-size: 16px; }
+
 /* ── デザイン案切り替え（本番ドメインでは非表示） ── */
 .fx-switcher {
   position: fixed; right: 16px; bottom: 16px; z-index: 60; max-width: calc(100vw - 32px);
@@ -182,7 +264,7 @@
 body.is-authed .fx-switcher { display: none; }
 .fx-switcher-title { font-weight: 700; color: var(--text-dim); letter-spacing: .02em; }
 .fx-switcher-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.fx-switcher-row > span { width: 44px; font-weight: 700; color: var(--text); }
+.fx-switcher-row > span { width: 32px; font-weight: 700; color: var(--text); }
 .fx-switcher button {
   font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; padding: 6px 10px; border-radius: 999px;
   border: 1px solid var(--border2); background: var(--surface); color: var(--text-sub);
@@ -194,21 +276,34 @@ body.is-authed .fx-switcher { display: none; }
   .fx-steps[data-fx="b"] .steps-list,
   .fx-steps[data-fx="c"] .steps-list { grid-template-columns: repeat(2, 1fr); }
   .fx-steps[data-fx="c"] .step-item::after { display: none; }
+  .fx-steps[data-fx="f"] .steps-stage { gap: 28px; }
+  .fx-steps[data-fx="f"] .steps-ring { flex-basis: 180px; width: 180px; height: 180px; top: calc(50% - 90px); }
+  .steps-ring-label { padding-top: 58px; }
+  .steps-ring-num { font-size: 52px; }
 }
 @media (max-width: 640px) {
-  .fx-features[data-fx="b"] .feature-grid { grid-template-columns: 1fr; }
-  .fx-features[data-fx="a"] .feature-card { padding: 28px 22px 24px; min-height: 220px; }
-  .fx-features[data-fx="c"] .feature-card { width: 100%; padding: 92px 22px 24px; }
-  .fx-features[data-fx="c"] .feature-icon { top: 22px; translate: none; width: 56px; height: 56px; }
+  .fx-features .feature-card { position: relative; top: auto; grid-template-columns: 1fr; min-height: 0; transform: none; filter: none; }
+  .fx-features .feature-media { height: 200px; }
+  .fx-features .feature-body { padding: 26px 22px 24px; }
+  .fx-features .feature-num { top: auto; bottom: calc(100% + 16px); right: 18px; -webkit-text-stroke-color: rgba(255,255,255,.9); }
   .fx-steps[data-fx="b"] .steps-list,
   .fx-steps[data-fx="c"] .steps-list { grid-template-columns: 1fr; }
   .fx-steps[data-fx="c"] .step-item { min-height: 0; }
+  .fx-steps[data-fx="d"] .step-item { width: 80vw; padding: 28px 24px; }
+  .fx-steps[data-fx="e"] .step-item { max-width: 94%; }
+  .fx-steps[data-fx="f"] .steps-stage { flex-direction: column; gap: 0; }
+  .fx-steps[data-fx="f"] .steps-ring { top: 12px; z-index: 2; flex-basis: auto; width: 120px; height: 120px; margin: 0 auto; background: var(--bg, #fff); border-radius: 999px; }
+  .steps-ring-label { padding-top: 38px; }
+  .steps-ring-num { font-size: 36px; }
+  .steps-ring-label span { font-size: 14px; }
+  .fx-steps[data-fx="f"] .step-item { min-height: 36svh; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-title, .hero-sub, .hero-ctas, .hero-note, .hero-visual, .hero-title em,
-  .fx-features .feature-icon { animation: none !important; }
+  .fx-features .feature-icon, .feature-media img, .fx-steps .step-body::after { animation: none !important; }
   .hero-title em { background-size: 100% 28%; }
+  .feature-media img { scale: 1 !important; transition: none !important; }
   .fx-ready #s-intro [data-reveal] { opacity: 1 !important; translate: none !important; scale: none !important; transform: none !important; transition: none !important; }
-  .fx-steps .step-item::after, .fx-steps .steps-progress-bar, .fx-steps .step-num { transition: none !important; }
+  .fx-steps .step-item::after, .fx-steps .steps-progress-bar, .fx-steps .step-num, .fx-steps .step-body > *, .steps-ring .ring-fg { transition: none !important; }
 }

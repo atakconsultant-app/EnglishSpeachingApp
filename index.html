@@ -312,7 +312,7 @@ header .spacer{flex:1;}
   .cat-video,.cat-card.has-video:hover .cat-video{transition:none;transform:none;}
 }
 
-/* ═══════════════════���════════════════
+/* ═══════════════════�����════════════════
    SCREEN 2 — Mode + Level
 ════════════════════════════════════ */
 #s-mode{overflow-y:auto;gap:0;}
@@ -973,7 +973,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     </div>
   </section>
 
-  <section class="intro-section fx-features" id="fx-features" data-fx="a" aria-labelledby="features-h">
+  <section class="intro-section fx-features" id="fx-features" aria-labelledby="features-h">
     <div class="fx-head" data-reveal>
       <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg>FEATURES</span>
       <h2 class="intro-h2" id="features-h">話す力が伸びる、4つの仕組み</h2>
@@ -981,28 +981,40 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     </div>
     <div class="feature-grid">
       <article class="feature-card" data-reveal style="--i:0">
+        <div class="feature-media" aria-hidden="true"><img src="images/feature-news.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <div class="feature-body">
         <span class="feature-num" aria-hidden="true">01</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
         <h3 class="feature-title">毎日届く最新ニュース</h3>
         <p class="feature-text">世界の英字ニュースの最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
+        </div>
       </article>
       <article class="feature-card" data-reveal style="--i:1">
+        <div class="feature-media" aria-hidden="true"><img src="images/feature-discussion.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <div class="feature-body">
         <span class="feature-num" aria-hidden="true">02</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <h3 class="feature-title">AIとディスカッション</h3>
         <p class="feature-text">ディスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
+        </div>
       </article>
       <article class="feature-card" data-reveal style="--i:2">
+        <div class="feature-media" aria-hidden="true"><img src="images/feature-voice.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <div class="feature-body">
         <span class="feature-num" aria-hidden="true">03</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
         <h3 class="feature-title">音声入力とシャドーイング</h3>
         <p class="feature-text">マイクで話して、そのまま回答。シャドーイングで発音とリズムも鍛えられます。</p>
+        </div>
       </article>
       <article class="feature-card" data-reveal style="--i:3">
+        <div class="feature-media" aria-hidden="true"><img src="images/feature-progress.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <div class="feature-body">
         <span class="feature-num" aria-hidden="true">04</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg></div>
         <h3 class="feature-title">スコアと単語帳で成長を記録</h3>
         <p class="feature-text">セッションごとのスコア、連続学習日数、保存した単語をいつでも振り返れます。</p>
+        </div>
       </article>
     </div>
   </section>
@@ -1014,6 +1026,12 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <p class="intro-lead">登録したらすぐに、今日のニュースで話しはじめられます。</p>
     </div>
     <div class="steps-progress" aria-hidden="true"><span class="steps-progress-bar"></span></div>
+    <div class="steps-stage">
+    <div class="steps-ring" aria-hidden="true">
+      <svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring-fg" cx="60" cy="60" r="52" pathLength="100"/></svg>
+      <div class="steps-ring-label"><strong class="steps-ring-num">1</strong><span>/ 4</span></div>
+    </div>
+    <div class="steps-chat-head" aria-hidden="true"><span class="steps-chat-avatar">AI</span><span><b>ScooPitch Coach</b><small>online</small></span></div>
     <ol class="steps-list">
       <li class="step-item" data-reveal style="--i:0">
         <span class="step-num" aria-hidden="true">1</span>
@@ -1032,6 +1050,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="step-body"><h3 class="step-title">採点を元に振り返る</h3><p class="step-desc">スコアと改善ポイントで次につなげる</p></div>
       </li>
     </ol>
+    </div>
     <div class="steps-done" data-reveal style="--i:4">
       <svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>これで「話せる」準備は完了です
     </div>
@@ -1039,17 +1058,17 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 
   <div class="fx-switcher" id="fx-switcher" hidden>
     <p class="fx-switcher-title">デザイン案プレビュー</p>
-    <div class="fx-switcher-row" role="group" aria-label="4つの仕組みのデザイン案">
-      <span>仕組み</span>
-      <button type="button" data-target="fx-features" data-value="a" aria-pressed="true">A スタック</button>
-      <button type="button" data-target="fx-features" data-value="b" aria-pressed="false">B ポップ</button>
-      <button type="button" data-target="fx-features" data-value="c" aria-pressed="false">C スポット</button>
-    </div>
     <div class="fx-switcher-row" role="group" aria-label="利用手順のデザイン案">
       <span>手順</span>
       <button type="button" data-target="fx-steps" data-value="a" aria-pressed="true">A タイムライン</button>
       <button type="button" data-target="fx-steps" data-value="b" aria-pressed="false">B 進捗バー</button>
       <button type="button" data-target="fx-steps" data-value="c" aria-pressed="false">C フリップ</button>
+    </div>
+    <div class="fx-switcher-row" role="group" aria-label="利用手順の追加デザイン案">
+      <span>新案</span>
+      <button type="button" data-target="fx-steps" data-value="d" aria-pressed="false">D 横スクロール</button>
+      <button type="button" data-target="fx-steps" data-value="e" aria-pressed="false">E チャット</button>
+      <button type="button" data-target="fx-steps" data-value="f" aria-pressed="false">F リング</button>
     </div>
   </div>
 
@@ -1123,7 +1142,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <nav class="legal-links" aria-label="規約など">
       <a href="/legal/terms.html">利用規約</a>
       <a href="/legal/privacy.html">プライバシーポリシー</a>
-      <a href="/legal/tokushoho.html">特定商取引法に基づく表記</a>
+      <a href="/legal/tokushoho.html">特定商取引法��基づく表記</a>
     </nav>
     <span>News data provided by GNews</span>
   </footer>
@@ -2003,7 +2022,7 @@ async function callAI(messages, purpose, onText){
       : res.status === 429 ? t('本日のAI利用回数の上限に達しました。明日また練習しましょう。')
       : null;
     err.upgrade = data.error === 'free_limit' || data.error === 'pro_only';
-    // 原因を調べやすいよう、想定外のエラーにはコードを添える（例：502 upstream_error）
+    // 原因を調べやすいよう、想定外のエ��ーにはコードを添える（例：502 upstream_error）
     if(!err.userMessage) err.code = res.status + ' ' + (data.error || '') + (data.status ? ' ' + data.status : '');
     throw err;
   }
@@ -3214,7 +3233,7 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
     loading(null);
     updateStreak();
     showSummaryScreen(null, [
-      e.userMessage || t('AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しください。')
+      e.userMessage || t('AI評価を取得できませんでした。通信状況を確認して、次回もう一度お試しくだ��い。')
     ], null, null, prevHistory, false);
     if(e.upgrade) addUpgradeCard(document.getElementById('improve-list'));
   }
