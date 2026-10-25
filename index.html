@@ -312,7 +312,7 @@ header .spacer{flex:1;}
   .cat-video,.cat-card.has-video:hover .cat-video{transition:none;transform:none;}
 }
 
-/* ═══════════════════�����════════════════
+/* ═══════════════════�������════════════════
    SCREEN 2 — Mode + Level
 ════════════════════════════════════ */
 #s-mode{overflow-y:auto;gap:0;}
@@ -999,7 +999,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         </div>
       </article>
       <article class="feature-card" data-reveal style="--i:2">
-        <div class="feature-media" aria-hidden="true"><img src="images/feature-voice.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <div class="feature-media" aria-hidden="true"><img id="voice-img" src="images/feature-voice.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
         <div class="feature-body">
         <span class="feature-num" aria-hidden="true">03</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
@@ -1019,7 +1019,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     </div>
   </section>
 
-  <section class="intro-section fx-steps" id="fx-steps" data-fx="a" aria-labelledby="steps-h">
+  <section class="intro-section fx-steps" id="fx-steps" data-fx="e" aria-labelledby="steps-h">
     <div class="fx-head" data-reveal>
       <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>HOW IT WORKS</span>
       <h2 class="intro-h2" id="steps-h">はじめ方は、かんたん4ステップ</h2>
@@ -1035,19 +1035,19 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <ol class="steps-list">
       <li class="step-item" data-reveal style="--i:0">
         <span class="step-num" aria-hidden="true">1</span>
-        <div class="step-body"><h3 class="step-title">カテゴリーを選ぶ</h3><p class="step-desc">興味のあるニュースから</p></div>
+        <div class="step-body"><img class="step-img" src="images/step-1.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"><h3 class="step-title">カテゴリーを選ぶ</h3><p class="step-desc">興味のあるニュースから</p></div>
       </li>
       <li class="step-item" data-reveal style="--i:1">
         <span class="step-num" aria-hidden="true">2</span>
-        <div class="step-body"><h3 class="step-title">モードとレベルを選ぶ</h3><p class="step-desc">初級〜上級まで対応</p></div>
+        <div class="step-body"><img class="step-img" src="images/step-2.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"><h3 class="step-title">モードとレベルを選ぶ</h3><p class="step-desc">初級〜上級まで対応</p></div>
       </li>
       <li class="step-item" data-reveal style="--i:2">
         <span class="step-num" aria-hidden="true">3</span>
-        <div class="step-body"><h3 class="step-title">AIと英語で話す</h3><p class="step-desc">あなたの意見にAIが問いかけます</p></div>
+        <div class="step-body"><img class="step-img" src="images/step-3.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"><h3 class="step-title">AIと英語で話す</h3><p class="step-desc">あなたの意見にAIが問いかけます</p></div>
       </li>
       <li class="step-item" data-reveal style="--i:3">
         <span class="step-num" aria-hidden="true">4</span>
-        <div class="step-body"><h3 class="step-title">採点を元に振り返る</h3><p class="step-desc">スコアと改善ポイントで次につなげる</p></div>
+        <div class="step-body"><img class="step-img" src="images/step-4.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"><h3 class="step-title">採点を元に振り返る</h3><p class="step-desc">スコアと改善ポイントで次につなげる</p></div>
       </li>
     </ol>
     </div>
@@ -1060,15 +1060,23 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <p class="fx-switcher-title">デザイン案プレビュー</p>
     <div class="fx-switcher-row" role="group" aria-label="利用手順のデザイン案">
       <span>手順</span>
-      <button type="button" data-target="fx-steps" data-value="a" aria-pressed="true">A タイムライン</button>
+      <button type="button" data-target="fx-steps" data-value="a" aria-pressed="false">A タイムライン</button>
       <button type="button" data-target="fx-steps" data-value="b" aria-pressed="false">B 進捗バー</button>
       <button type="button" data-target="fx-steps" data-value="c" aria-pressed="false">C フリップ</button>
     </div>
     <div class="fx-switcher-row" role="group" aria-label="利用手順の追加デザイン案">
       <span>新案</span>
       <button type="button" data-target="fx-steps" data-value="d" aria-pressed="false">D 横スクロール</button>
-      <button type="button" data-target="fx-steps" data-value="e" aria-pressed="false">E チャット</button>
+      <button type="button" data-target="fx-steps" data-value="e" aria-pressed="true">E チャット</button>
       <button type="button" data-target="fx-steps" data-value="f" aria-pressed="false">F リング</button>
+    </div>
+    <div class="fx-switcher-row" role="group" aria-label="仕組み03のイラスト候補">
+      <span>03</span>
+      <button type="button" data-target="voice-img" data-value="feature-voice" aria-pressed="true">A 現行</button>
+      <button type="button" data-target="voice-img" data-value="feature-voice-b" aria-pressed="false">B ヘッドホン</button>
+      <button type="button" data-target="voice-img" data-value="feature-voice-c" aria-pressed="false">C スマホ録音</button>
+      <button type="button" data-target="voice-img" data-value="feature-voice-d" aria-pressed="false">D 重なる声</button>
+      <button type="button" data-target="voice-img" data-value="feature-voice-e" aria-pressed="false">E 発音リズム</button>
     </div>
   </div>
 
@@ -1133,7 +1141,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   </section>
 
   <section class="final-cta" aria-labelledby="final-h">
-    <h2 id="final-h">今日のニュースで、英語を話してみよう。</h2>
+    <h2 id="final-h">今日のニュースで、英語を話して��よう。</h2>
     <p>登録は30秒。すぐに最初のセッションを始められます。</p>
     <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める</button>
   </section>
@@ -1381,7 +1389,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 <!-- ════ SCREEN 2 — Mode + Level ════ -->
 <div class="screen" id="s-mode">
   <div class="section-pad">
-    <div class="section-title">練習モードを選ぶ</div>
+    <div class="section-title">練習���ードを選ぶ</div>
     <div class="mode-cards">
       <div class="mode-card" data-mode="discussion" onclick="selectMode(this)">
         <div class="mode-icon disc"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
@@ -1976,7 +1984,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 let state = { cat: null, mode: null, level: null, article: null, history: [], busy: false };
 let sample = null;
 let expandOpen = false;
-let liveNews = false; // サーバー（/api/news）から最新ニュースを取得できたか
+let liveNews = false; // サ��バー（/api/news）から最新ニュースを取得できたか
 const LIVE_CATS = ['主要','国内','国際','経済','エンタメ','スポーツ','IT','科学','ライフ'];
 const DEFAULT_POINTS = ['記事の背景と文脈','主な論点と影響','あなたの意見は？'];
 const ICON = n => `<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
@@ -2017,7 +2025,7 @@ async function callAI(messages, purpose, onText){
   if(!res.ok){
     const err = new Error(data.error || ('http ' + res.status));
     err.userMessage = res.status === 401 ? t('ログインの有効期限が切れました。もう一度ログインしてください。')
-      : data.error === 'free_limit' ? t('今日の無料分の会話は終わりました。続きは明日、または Pro でいつでも練習できます。')
+      : data.error === 'free_limit' ? t('��日の無料分の会話は終わりました。続きは明日、または Pro でいつでも練習できます。')
       : data.error === 'pro_only' ? (purpose === 'score' ? t('採点は Pro プランの機能です。') : t('この機能は Pro プランで使えます。'))
       : res.status === 429 ? t('本日のAI利用回数の上限に達しました。明日また練習しましょう。')
       : null;
@@ -2117,7 +2125,7 @@ const ARTICLES = {
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
-    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。���係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
   ],
   経済:[
     {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
@@ -2141,7 +2149,7 @@ const ARTICLES = {
   ],
   ライフ:[
     {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
-    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
+    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及��た時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
   ]
 };
 

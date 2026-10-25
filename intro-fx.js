@@ -118,7 +118,20 @@
     requestUpdate();
   }
 
-  setStepVariant(new URLSearchParams(location.search).get('steps'));
+  var VOICE_IMAGES = ['feature-voice', 'feature-voice-b', 'feature-voice-c', 'feature-voice-d', 'feature-voice-e'];
+  var voiceImg = document.getElementById('voice-img');
+
+  function setVoiceImage(value) {
+    if (!voiceImg || VOICE_IMAGES.indexOf(value) === -1) return;
+    voiceImg.src = 'images/' + value + '.png';
+    document.querySelectorAll('.fx-switcher button[data-target="voice-img"]').forEach(function (btn) {
+      btn.setAttribute('aria-pressed', String(btn.dataset.value === value));
+    });
+  }
+
+  var params = new URLSearchParams(location.search);
+  setStepVariant(params.get('steps'));
+  if (params.get('voice')) setVoiceImage('feature-voice' + (params.get('voice') === 'a' ? '' : '-' + params.get('voice')));
 
   var switcher = document.getElementById('fx-switcher');
   var isProduction = /(^|\.)scoopitch\.com$/.test(location.hostname);
@@ -127,8 +140,14 @@
     switcher.addEventListener('click', function (e) {
       var btn = e.target.closest('button[data-target]');
       if (!btn) return;
+      var behavior = reduceMotion ? 'auto' : 'smooth';
+      if (btn.dataset.target === 'voice-img') {
+        setVoiceImage(btn.dataset.value);
+        voiceImg.closest('.feature-card').scrollIntoView({ behavior: behavior, block: 'center' });
+        return;
+      }
       setStepVariant(btn.dataset.value);
-      steps.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      steps.scrollIntoView({ behavior: behavior, block: 'start' });
     });
   }
 

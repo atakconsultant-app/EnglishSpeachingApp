@@ -223,6 +223,14 @@
 .fx-steps[data-fx="e"] .step-item.is-in .step-body::after { opacity: 0; }
 @keyframes fxTyping { 0% { clip-path: inset(0 66% 0 0); } 100% { clip-path: inset(0 0 0 0); } }
 .fx-steps[data-fx="e"] .steps-done { display: flex; width: fit-content; margin: 24px auto 0; }
+.step-img { display: none; }
+.fx-steps[data-fx="e"] .step-body { width: min(360px, 100%); padding: 8px 8px 14px; }
+.fx-steps[data-fx="e"] .step-body > :not(.step-img) { padding: 0 10px; }
+.fx-steps[data-fx="e"] .step-img {
+  display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  border-radius: 14px; margin-bottom: 12px; background: var(--surface3);
+}
+.fx-steps[data-fx="e"] .step-item:nth-child(even) .step-img { border: 1px solid rgba(255,255,255,.12); }
 
 /* ═════ 利用手順 F：リング（固定した円グラフが手順ごとに満ちる＝目標勾配） ═════ */
 .fx-steps[data-fx="f"] .steps-stage { display: flex; gap: 56px; align-items: flex-start; margin-top: 36px; }
@@ -282,10 +290,13 @@ body.is-authed .fx-switcher { display: none; }
   .steps-ring-num { font-size: 52px; }
 }
 @media (max-width: 640px) {
-  .fx-features .feature-card { position: relative; top: auto; grid-template-columns: 1fr; min-height: 0; transform: none; filter: none; }
-  .fx-features .feature-media { height: 200px; }
-  .fx-features .feature-body { padding: 26px 22px 24px; }
-  .fx-features .feature-num { top: auto; bottom: calc(100% + 16px); right: 18px; -webkit-text-stroke-color: rgba(255,255,255,.9); }
+  .fx-features .feature-card { position: relative; top: auto; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); min-height: 220px; transform: none; filter: none; }
+  .fx-features .feature-body { padding: 22px 18px 20px; }
+  .fx-features .feature-num { top: 14px; right: 16px; font-size: 44px; }
+  .fx-features .feature-icon { width: 44px; height: 44px; border-radius: 12px; }
+  .fx-features .feature-icon .ic { width: 20px; height: 20px; }
+  .fx-features .feature-title { font-size: 17px; margin-top: 14px; }
+  .fx-features .feature-text { font-size: 13px; }
   .fx-steps[data-fx="b"] .steps-list,
   .fx-steps[data-fx="c"] .steps-list { grid-template-columns: 1fr; }
   .fx-steps[data-fx="c"] .step-item { min-height: 0; }
