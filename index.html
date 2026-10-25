@@ -312,7 +312,7 @@ header .spacer{flex:1;}
   .cat-video,.cat-card.has-video:hover .cat-video{transition:none;transform:none;}
 }
 
-/* ════════════════════════════════════
+/* ═══════════════════���════════════════
    SCREEN 2 — Mode + Level
 ════════════════════════════════════ */
 #s-mode{overflow-y:auto;gap:0;}
@@ -833,6 +833,8 @@ button,input,textarea{font-family:inherit;}
 </style>
 <link id="theme-css" rel="stylesheet" href="themes/studio.css">
 <link rel="stylesheet" href="intro.css">
+<link rel="stylesheet" href="intro-fx.css">
+<script src="intro-fx.js" defer></script>
 <link rel="stylesheet" href="pages.css">
 <script>
 const THEMES=['studio','playful','gallery'];
@@ -971,47 +973,85 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     </div>
   </section>
 
-  <section class="intro-section" aria-labelledby="stats-h" style="padding-top:0;border-top:none;">
-    <h2 id="stats-h" class="sr-only">ScooPitch の特長を数字で</h2>
-    <div class="stats-row">
-      <div class="stat-pill"><strong>9</strong><span>ニュースカテゴリー</span></div>
-      <div class="stat-pill"><strong>3</strong><span>練習モード</span></div>
-      <div class="stat-pill"><strong>24h</strong><span>いつでも練習</span></div>
+  <section class="intro-section fx-features" id="fx-features" data-fx="a" aria-labelledby="features-h">
+    <div class="fx-head" data-reveal>
+      <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg>FEATURES</span>
+      <h2 class="intro-h2" id="features-h">話す力が伸びる、4つの仕組み</h2>
+      <p class="intro-lead">インプットからアウトプットまで、ひとつのアプリで完結します。</p>
     </div>
-  </section>
-
-  <section class="intro-section" aria-labelledby="features-h">
-    <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg>FEATURES</span>
-    <h2 class="intro-h2" id="features-h">話す力が伸びる、4つの仕組み</h2>
-    <p class="intro-lead">インプットからアウトプットまで、ひとつのアプリで完結します。</p>
     <div class="feature-grid">
-      <article class="feature-card">
+      <article class="feature-card" data-reveal style="--i:0">
+        <span class="feature-num" aria-hidden="true">01</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
         <h3 class="feature-title">毎日届く最新ニュース</h3>
         <p class="feature-text">世界の英字ニュースの最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
       </article>
-      <article class="feature-card">
+      <article class="feature-card" data-reveal style="--i:1">
+        <span class="feature-num" aria-hidden="true">02</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <h3 class="feature-title">AIとディスカッション</h3>
         <p class="feature-text">ディスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
       </article>
-      <article class="feature-card">
+      <article class="feature-card" data-reveal style="--i:2">
+        <span class="feature-num" aria-hidden="true">03</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
         <h3 class="feature-title">音声入力とシャドーイング</h3>
         <p class="feature-text">マイクで話して、そのまま回答。シャドーイングで発音とリズムも鍛えられます。</p>
       </article>
-      <article class="feature-card">
+      <article class="feature-card" data-reveal style="--i:3">
+        <span class="feature-num" aria-hidden="true">04</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg></div>
         <h3 class="feature-title">スコアと単語帳で成長を記録</h3>
         <p class="feature-text">セッションごとのスコア、連続学習日数、保存した単語をいつでも振り返れます。</p>
       </article>
     </div>
-    <div class="steps" aria-label="学習の流れ">
-      <div class="step"><div class="step-num">1</div><div class="step-text">カテゴリーを選ぶ<small>興味のあるニュースから</small></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-text">モードとレベルを選ぶ<small>初級〜上級まで対応</small></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-text">AIと英語で話す<small>終了後にフィードバック</small></div></div>
+  </section>
+
+  <section class="intro-section fx-steps" id="fx-steps" data-fx="a" aria-labelledby="steps-h">
+    <div class="fx-head" data-reveal>
+      <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>HOW IT WORKS</span>
+      <h2 class="intro-h2" id="steps-h">はじめ方は、かんたん4ステップ</h2>
+      <p class="intro-lead">登録したらすぐに、今日のニュースで話しはじめられます。</p>
+    </div>
+    <div class="steps-progress" aria-hidden="true"><span class="steps-progress-bar"></span></div>
+    <ol class="steps-list">
+      <li class="step-item" data-reveal style="--i:0">
+        <span class="step-num" aria-hidden="true">1</span>
+        <div class="step-body"><h3 class="step-title">カテゴリーを選ぶ</h3><p class="step-desc">興味のあるニュースから</p></div>
+      </li>
+      <li class="step-item" data-reveal style="--i:1">
+        <span class="step-num" aria-hidden="true">2</span>
+        <div class="step-body"><h3 class="step-title">モードとレベルを選ぶ</h3><p class="step-desc">初級〜上級まで対応</p></div>
+      </li>
+      <li class="step-item" data-reveal style="--i:2">
+        <span class="step-num" aria-hidden="true">3</span>
+        <div class="step-body"><h3 class="step-title">AIと英語で話す</h3><p class="step-desc">あなたの意見にAIが問いかけます</p></div>
+      </li>
+      <li class="step-item" data-reveal style="--i:3">
+        <span class="step-num" aria-hidden="true">4</span>
+        <div class="step-body"><h3 class="step-title">採点を元に振り返る</h3><p class="step-desc">スコアと改善ポイントで次につなげる</p></div>
+      </li>
+    </ol>
+    <div class="steps-done" data-reveal style="--i:4">
+      <svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>これで「話せる」準備は完了です
     </div>
   </section>
+
+  <div class="fx-switcher" id="fx-switcher" hidden>
+    <p class="fx-switcher-title">デザイン案プレビュー</p>
+    <div class="fx-switcher-row" role="group" aria-label="4つの仕組みのデザイン案">
+      <span>仕組み</span>
+      <button type="button" data-target="fx-features" data-value="a" aria-pressed="true">A スタック</button>
+      <button type="button" data-target="fx-features" data-value="b" aria-pressed="false">B ポップ</button>
+      <button type="button" data-target="fx-features" data-value="c" aria-pressed="false">C スポット</button>
+    </div>
+    <div class="fx-switcher-row" role="group" aria-label="利用手順のデザイン案">
+      <span>手順</span>
+      <button type="button" data-target="fx-steps" data-value="a" aria-pressed="true">A タイムライン</button>
+      <button type="button" data-target="fx-steps" data-value="b" aria-pressed="false">B 進捗バー</button>
+      <button type="button" data-target="fx-steps" data-value="c" aria-pressed="false">C フリップ</button>
+    </div>
+  </div>
 
   <section class="intro-section" aria-labelledby="gallery-h">
     <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg>CATEGORIES</span>
@@ -1336,7 +1376,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="mode-icon faci"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ファシリテーション</div>
-          <div class="mode-desc">AIが参加者役になり、あなたが議題を進行する。会議・プレゼンのスピーキング力を鍛える。</div>
+          <div class="mode-desc">AIが参加者役になり、あなたが議題を進行する。会議・プレゼ���のスピーキング力を鍛える。</div>
           <div class="mode-tag">Facilitation</div>
         </div>
       </div>
@@ -1605,7 +1645,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></span><div><h3>その場で返す瞬発力</h3><p>AIの問いかけにすぐ答えることで、頭の中で日本語に訳さず、英語のまま反応する力がつきます。</p></div></li>
         <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg></span><div><h3>リスニングと発音</h3><p>シャドーイングで、リスニングの「音声知覚（音が聞き取れる力）」を鍛えられます。</p></div></li>
         <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></span><div><h3>時事・ビジネスの語彙</h3><p>実際のニュースに出てくる表現を、単語帳と復習の仕組みで「知っている」から「使える」語彙に変えていきます。</p></div></li>
-        <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></span><div><h3>多様なアクセントへの対応力</h3><p>アメリカ・イギリス・オーストラリア・インドなど、さまざまな話者の英語に慣れ、実際の会議や旅行で聞き取れる耳を作ります。</p></div></li>
+        <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></span><div><h3>多様なアクセントへの対応力</h3><p>アメリカ・イギリス・オーストラリア・��ンドなど、さまざまな話者の英語に慣れ、実際の会議や旅行で聞き取れる耳を作ります。</p></div></li>
         <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-briefcase"/></svg></span><div><h3>会議・面接で使える実践力</h3><p>ファシリテーションと面接スピーチのモードで、司会進行や受け答えの型と定番表現を身につけます。</p></div></li>
       </ul>
     </div>
@@ -2746,7 +2786,7 @@ function addMsg(role,text){
   const d=document.createElement('div');
   d.className=`msg ${role}`;
   const av=role==='ai'?ICON('sparkle'):ICON('user');
-  // 本文はHTMLとして解釈させない（AIの文中の < や " で表示・ボタンが壊れないように）
+  // 本文はHTMLとして解釈させない（AIの文中の < や " で表示・ボタ��が壊れないように）
   const bubbleHtml=escHtml(text).replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
   if(role==='ai'){
     d.innerHTML=`<div class="av">${av}</div><div class="msg-col"><div class="bubble">${bubbleHtml}</div><div class="msg-actions"><button class="action-btn hide-btn" title="テキストを隠す" onclick="toggleHide(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="action-btn tts-btn" title="読み上げる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button><button class="action-btn shadow-btn" title="シャドーイング：再生中に文字を隠す" style="font-size:10px;width:auto;padding:0 7px;letter-spacing:.3px;font-weight:700;font-family:'DM Sans',sans-serif;">Shadowing</button><button class="action-btn translate-btn" title="母国語に翻訳して表示" style="font-size:10px;width:auto;padding:0 8px;font-weight:700;">翻訳</button><button class="action-btn vocab-add-btn" title="選択した語句を単語帳に追加（文中をドラッグで選択してから押す）" style="font-size:10px;width:auto;padding:0 8px;font-weight:700;">＋単語帳</button></div></div>`;
@@ -3105,7 +3145,7 @@ function renderGoal(){
   document.getElementById('goal-count').textContent = `${done} / ${GOAL_STEPS} · ${state.words||0} words`;
   const left = {n: GOAL_STEPS-done};
   document.getElementById('goal-label').textContent = reached
-    ? t('ゴール達成！「終了」でスコアを確認しよう')
+    ? t('ゴール達成！「終了」でスコアを確認し���う')
     : done === 1
       ? ((state.article && state.article.custom) ? t('題材を確認した ✓ ― ゴールまであと {n}回 発話', left) : t('記事を開いた ✓ ― ゴールまであと {n}回 発話', left))
       : t('ゴールまであと {n}回 発話', left);

@@ -49,10 +49,10 @@ body.is-guest .authed-only { display: none !important; }
 .intro-h2 { font-size: 28px; font-weight: 800; letter-spacing: -1px; line-height: 1.25; color: var(--text); margin-top: 14px; text-wrap: balance; }
 .intro-lead { font-size: 15px; color: var(--text-sub); line-height: 1.8; margin-top: 10px; max-width: 560px; text-wrap: pretty; }
 
-.hero { display: flex; flex-direction: column; gap: 36px; padding-top: 48px; }
-.hero-title { font-size: 44px; font-weight: 800; letter-spacing: -1.8px; line-height: 1.12; color: var(--text); margin-top: 18px; text-wrap: balance; }
+.hero { display: flex; flex-direction: column; justify-content: center; gap: 40px; padding-top: 56px; min-height: calc(100svh - 64px); }
+.hero-title { font-size: clamp(40px, 10.5vw, 140px); font-weight: 800; letter-spacing: -0.045em; line-height: 1.04; color: var(--text); margin-top: 22px; }
 .hero-title em { font-style: normal; color: var(--accent); }
-.hero-sub { font-size: 16px; color: var(--text-sub); line-height: 1.8; margin-top: 16px; max-width: 540px; text-wrap: pretty; }
+.hero-sub { font-size: clamp(16px, 1.6vw, 19px); color: var(--text-sub); line-height: 1.8; margin-top: 22px; max-width: 600px; text-wrap: pretty; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .hero-note { font-size: 12px; color: var(--text-dim); margin-top: 14px; }
 
@@ -182,19 +182,15 @@ body.is-guest .authed-only { display: none !important; }
 .auth-perks .ic { width: 16px; height: 16px; color: var(--accent); flex-shrink: 0; }
 
 @media (min-width: 720px) {
-  .hero { flex-direction: row; align-items: center; }
-  .hero-copy { flex: 1.05; }
-  .hero-visual { flex: 1; height: 380px; }
+  .hero-visual { grid-template-columns: 1.6fr 1fr 1fr; grid-template-rows: 1fr; height: 280px; }
+  .hv-tile:first-child { grid-row: auto; }
 }
 @media (max-width: 640px) {
   .intro-section { padding: 40px 16px; }
-  .hero-title { font-size: 34px; letter-spacing: -1.2px; }
+  .hero { min-height: auto; gap: 28px; }
   .intro-h2 { font-size: 23px; }
   .hero-visual { height: 260px; }
   .feature-grid, .steps, .contact-wrap { grid-template-columns: 1fr; }
-  .stats-row { gap: 8px; }
-  .stat-pill { padding: 12px; }
-  .stat-pill strong { font-size: 19px; }
   .final-cta { margin: 0 16px 32px; padding: 32px 20px; }
   .intro-footer { padding: 0 16px 28px; }
   .hdr-btn { padding: 8px 12px; }
