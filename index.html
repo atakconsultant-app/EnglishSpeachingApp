@@ -312,7 +312,7 @@ header .spacer{flex:1;}
   .cat-video,.cat-card.has-video:hover .cat-video{transition:none;transform:none;}
 }
 
-/* ═══════════════════�������════════════════
+/* ═══════════════════���������════════════════
    SCREEN 2 — Mode + Level
 ════════════════════════════════════ */
 #s-mode{overflow-y:auto;gap:0;}
@@ -999,7 +999,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         </div>
       </article>
       <article class="feature-card" data-reveal style="--i:2">
-        <div class="feature-media" aria-hidden="true"><img id="voice-img" src="images/feature-voice.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <div class="feature-media" aria-hidden="true"><img id="voice-img" src="images/feature-voice-d.png" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
         <div class="feature-body">
         <span class="feature-num" aria-hidden="true">03</span>
         <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
@@ -1070,14 +1070,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <button type="button" data-target="fx-steps" data-value="e" aria-pressed="true">E チャット</button>
       <button type="button" data-target="fx-steps" data-value="f" aria-pressed="false">F リング</button>
     </div>
-    <div class="fx-switcher-row" role="group" aria-label="仕組み03のイラスト候補">
-      <span>03</span>
-      <button type="button" data-target="voice-img" data-value="feature-voice" aria-pressed="true">A 現行</button>
-      <button type="button" data-target="voice-img" data-value="feature-voice-b" aria-pressed="false">B ヘッドホン</button>
-      <button type="button" data-target="voice-img" data-value="feature-voice-c" aria-pressed="false">C スマホ録音</button>
-      <button type="button" data-target="voice-img" data-value="feature-voice-d" aria-pressed="false">D 重なる声</button>
-      <button type="button" data-target="voice-img" data-value="feature-voice-e" aria-pressed="false">E 発音リズム</button>
-    </div>
   </div>
 
   <section class="intro-section" aria-labelledby="gallery-h">
@@ -1100,7 +1092,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <p>レベルを初級・中級・上級から選べます。初級ではAIがやさしい表現でゆっくり問いかけるので、安心して始められます。</p>
       </details>
       <details class="faq-item">
-        <summary>どんなニュースで練習できますか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <summary>どんなニュース���練習できますか？<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></summary>
         <p>主要・国内・国際・経済・エンタメ・スポーツ・IT・科学・ライフの9カテゴリーに加え、キーワード検索で好きなトピックの記事を選べます。</p>
       </details>
       <details class="faq-item">
@@ -1672,7 +1664,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></span><div><h3>その場で返す瞬発力</h3><p>AIの問いかけにすぐ答えることで、頭の中で日本語に訳さず、英語のまま反応する力がつきます。</p></div></li>
         <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-volume"/></svg></span><div><h3>リスニングと発音</h3><p>シャドーイングで、リスニングの「音声知覚（音が聞き取れる力）」を鍛えられます。</p></div></li>
         <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg></span><div><h3>時事・ビジネスの語彙</h3><p>実際のニュースに出てくる表現を、単語帳と復習の仕組みで「知っている」から「使える」語彙に変えていきます。</p></div></li>
-        <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></span><div><h3>多様なアクセントへの対応力</h3><p>アメリカ・イギリス・オーストラリア・��ンドなど、さまざまな話者の英語に慣れ、実際の会議や旅行で聞き取れる耳を作ります。</p></div></li>
+        <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></span><div><h3>多様なアクセントへの対応力</h3><p>アメリ��・イギリス・オーストラリア・��ンドなど、さまざまな話者の英語に慣れ、実際の会議や旅行で聞き取れる耳を作ります。</p></div></li>
         <li><span class="howto-skill-ic"><svg class="ic" aria-hidden="true"><use href="#i-briefcase"/></svg></span><div><h3>会議・面接で使える実践力</h3><p>ファシリテーションと面接スピーチのモードで、司会進行や受け答えの型と定番表現を身につけます。</p></div></li>
       </ul>
     </div>
@@ -1998,7 +1990,7 @@ const CAT_EMOJIS = {'主要':'📰','国内':'🗾','国際':'🌏','経済':'�
 })();
 
 // ══ サーバーへのログイン情報の渡し方 ══
-// Azure Static Web Apps は Authorization ヘッダーを自分の認証用に書き換えるため、
+// Azure Static Web Apps は Authorization ヘッダーを自分の認証用に書き���えるため、
 // 同じトークンを X-NS-Auth ヘッダーにも載せる（サーバーはこちらを優先して読む）
 function authHeaders(token){
   return token ? { Authorization: 'Bearer ' + token, 'X-NS-Auth': 'Bearer ' + token } : {};
@@ -2121,7 +2113,7 @@ const ARTICLES = {
   ],
   国内:[
     {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
-    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
+    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。��アルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
   ],
   国際:[
     {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
@@ -2145,10 +2137,10 @@ const ARTICLES = {
   ],
   科学:[
     {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
-    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
+    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙���関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
   ],
   ライフ:[
-    {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
+    {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が���結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市���生活の質','環境負荷の低減','日本の都市計画への示唆']},
     {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及��た時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
   ]
 };
@@ -2696,7 +2688,7 @@ let lastAzureVoice = '';
 let ttsLimitNoted = false;
 let speechToken = 0;
 let speechDone = null;
-const ttsCache = new Map(); // 同じ文章をもう一度読むときは、取得済みの音声を使う（Shadowing の繰り返しなど）
+const ttsCache = new Map(); // 同じ文章をもう一度読むときは���取得済みの音声を使う（Shadowing の繰り返しなど）
 // スマホ（特に iPhone）は、操作の直後でないと音声を再生できないため、最初の操作で再生を許可しておく
 document.addEventListener('pointerdown', function unlockAudio(){
   document.removeEventListener('pointerdown', unlockAudio, true);
@@ -4329,7 +4321,7 @@ function addUpgradeCard(container){
   sel.innerHTML = I18N.order.map(l => `<option value="${l}" lang="${l}">${I18N.langs[l].name}</option>`).join('');
   sel.value = I18N.lang;
   sel.addEventListener('change', () => I18N.set(sel.value));
-  // 数値を含む文言などは、言語を切り替えたあとに描き直す
+  // 数値を含む文言などは、言語を切り替えたあとに描き���す
   I18N.onChange(l => {
     sel.value = l;
     Object.values(ARTICLES).forEach(arr => arr.forEach(localizeArticle));

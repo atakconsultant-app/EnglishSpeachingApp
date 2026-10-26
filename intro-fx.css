@@ -31,7 +31,7 @@
 .fx-features .feature-grid { display: flex; flex-direction: column; gap: 28px; padding-bottom: 8vh; margin-top: 36px; }
 .fx-features .feature-card {
   position: sticky; top: calc(24px + var(--i) * 22px);
-  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   min-height: 300px; padding: 0; border-radius: 26px; overflow: hidden;
   transform-origin: top center;
   transform: scale(calc(1 - var(--shrink, 0) * .06));
@@ -43,7 +43,7 @@
 .fx-ready .fx-features .feature-card[data-reveal].is-in { translate: 0 0; }
 .fx-features .feature-card.is-focus { border-color: var(--accent); box-shadow: 0 6px 0 var(--accent); }
 
-.feature-media { position: relative; overflow: hidden; background: var(--surface3); }
+.feature-media { position: relative; overflow: hidden; background: var(--surface3); order: 2; }
 .feature-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; scale: 1.18; transition: scale 1.6s cubic-bezier(.2,.7,.2,1); }
 .feature-card.is-in .feature-media img { scale: 1; }
 .feature-card.is-focus .feature-media img { animation: fxDrift 9s ease-in-out infinite alternate; }
@@ -227,7 +227,7 @@
 .fx-steps[data-fx="e"] .step-body { width: min(360px, 100%); padding: 8px 8px 14px; }
 .fx-steps[data-fx="e"] .step-body > :not(.step-img) { padding: 0 10px; }
 .fx-steps[data-fx="e"] .step-img {
-  display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover;
   border-radius: 14px; margin-bottom: 12px; background: var(--surface3);
 }
 .fx-steps[data-fx="e"] .step-item:nth-child(even) .step-img { border: 1px solid rgba(255,255,255,.12); }
@@ -290,7 +290,7 @@ body.is-authed .fx-switcher { display: none; }
   .steps-ring-num { font-size: 52px; }
 }
 @media (max-width: 640px) {
-  .fx-features .feature-card { position: relative; top: auto; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); min-height: 220px; transform: none; filter: none; }
+  .fx-features .feature-card { position: relative; top: auto; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); min-height: 220px; transform: none; filter: none; }
   .fx-features .feature-body { padding: 22px 18px 20px; }
   .fx-features .feature-num { top: 14px; right: 16px; font-size: 44px; }
   .fx-features .feature-icon { width: 44px; height: 44px; border-radius: 12px; }
