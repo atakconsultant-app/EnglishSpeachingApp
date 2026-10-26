@@ -31,7 +31,7 @@
 .fx-features .feature-grid { display: flex; flex-direction: column; gap: 28px; padding-bottom: 8vh; margin-top: 36px; }
 .fx-features .feature-card {
   position: sticky; top: calc(24px + var(--i) * 22px);
-  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   min-height: 300px; padding: 0; border-radius: 26px; overflow: hidden;
   transform-origin: top center;
   transform: scale(calc(1 - var(--shrink, 0) * .06));
@@ -290,7 +290,7 @@ body.is-authed .fx-switcher { display: none; }
   .steps-ring-num { font-size: 52px; }
 }
 @media (max-width: 640px) {
-  .fx-features .feature-card { position: relative; top: auto; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); min-height: 220px; transform: none; filter: none; }
+  .fx-features .feature-card { position: relative; top: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); min-height: 220px; transform: none; filter: none; }
   .fx-features .feature-body { padding: 22px 18px 20px; }
   .fx-features .feature-num { top: 14px; right: 16px; font-size: 44px; }
   .fx-features .feature-icon { width: 44px; height: 44px; border-radius: 12px; }
