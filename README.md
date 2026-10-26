@@ -78,7 +78,7 @@
 - GitHub の main に入ると `.github/workflows/azure-static-web-apps-brave-river-05d4a2f1e.yml`（Azure が作成）が自動で公開する。
   ビルド時に GitHub の Variables `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` を使う。
 - サーバー処理のリージョンは米国（West US 2 など）にする。Claude の API は香港（East Asia）からの利用を受け付けないため。
-- ニュースは Supabase の `news_cache` テーブルに1時間保存して GNews の呼び出し回数を抑える（Azure は API の応答を CDN に保存しないため）。
+- ニュースは Supabase の `news_cache` テーブルに3時間保存して GNews の呼び出し回数を抑える（Azure は API の応答を CDN に保存しないため）。
 - Vercel でもこれまでどおり動く（移行が終わるまでの並行稼働用）。
 
 ## v0 などでデザインを編集するときの注意

@@ -1,13 +1,14 @@
 // Vercel Serverless Function: GET /api/news?cat=<カテゴリ>[&home=<言語>] | ?q=<キーワード>
 // home は「国内」カテゴリのときだけ使う。利用者の言語に合わせ、その国の英語ニュースを返す（ko→韓国 など）。
 // GNews APIをサーバー側で呼び出す。APIキーは環境変数 GNEWS_API_KEY にだけ置き、ブラウザには出さない。
-// 同じURLへの応答はVercelのCDNに1時間キャッシュされるため、GNewsへの呼び出しは
-// 「カテゴリ数 × 1時間に1回」＋「検索語ごとに1時間に1回」程度に収まる。
+// 同じURLへの応答はキャッシュされるため、GNewsへの呼び出しは
+// 「カテゴリ数 × 3時間に1回」＋「検索語ごとに3時間に1回」程度に収まる。
 
 const GNEWS_BASE = 'https://gnews.io/api/v4';
-const CACHE_TTL_MS = 60 * 60 * 1000;
+// GNews の無料プラン（1日100回）に収まるよう、ニュースは3時間ごとに取り直す
+const CACHE_TTL_MS = 3 * 60 * 60 * 1000;
 
-// 取得したニュースを1時間保存し、GNews への呼び出し回数を抑える。
+// 取得したニュースを3時間保存し、GNews への呼び出し回数を抑える。
 // Vercel では CDN（s-maxage）が保存するが、Azure Static Web Apps は API の応答を保存しないため、
 // 関数のメモリと Supabase の news_cache テーブル（supabase/billing.sql）の2段で保存する。
 const memoryCache = new Map();
@@ -46,7 +47,7 @@ async function writeCache(key, articles) {
   } catch (e) { /* 保存に失敗しても表示には影響しない */ }
 }
 const MAX_ARTICLES = 10;
-const CACHE_OK = 'public, s-maxage=3600, stale-while-revalidate=86400';
+const CACHE_OK = 'public, s-maxage=10800, stale-while-revalidate=86400';
 
 // アプリのカテゴリ → GNewsのtop-headlinesカテゴリ（国内だけは「日本」の英語記事を検索）
 const CATEGORY_MAP = {
