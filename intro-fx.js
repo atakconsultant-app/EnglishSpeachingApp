@@ -21,7 +21,7 @@
 
   function replay(section) {
     var items = section.querySelectorAll('[data-reveal]');
-    items.forEach(function (el) { el.classList.remove('is-in', 'is-focus', 'is-reached'); });
+    items.forEach(function (el) { el.classList.remove('is-in', 'is-focus', 'was-focus', 'is-reached'); });
     void section.offsetWidth;
     items.forEach(function (el) { observer.observe(el); });
   }
@@ -43,6 +43,7 @@
       if (r.top < focusLine && r.bottom > view.top) focus = cards[i];
     }
     cards.forEach(function (card) { card.classList.toggle('is-focus', card === focus); });
+    if (focus) focus.classList.add('was-focus');
   }
 
   function reachedLine(view) { return view.top + view.height * 0.6; }
