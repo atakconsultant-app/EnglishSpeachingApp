@@ -5,6 +5,9 @@ body.auth-loading .screen.active { visibility: hidden; }
 body.is-guest .progress-dots,
 body.is-authed .guest-only,
 body.is-guest .authed-only { display: none !important; }
+/* ログイン中に紹介ページを見ているとき（ホームで「戻る」）：ログイン前と同じ全幅の見た目にする */
+body.on-intro .side-nav,
+body.on-intro .progress-dots { display: none !important; }
 
 .hdr-actions { display: flex; align-items: center; gap: 8px; }
 .hdr-btn {

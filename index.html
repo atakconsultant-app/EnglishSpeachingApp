@@ -951,10 +951,11 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <h1 class="hero-title">ニュースで話す、<br><em>本物の英語力。</em></h1>
       <p class="hero-sub">毎日の英字ニュースを題材に、AIとディスカッション。読むだけで終わらない、「話せる」英語学習をはじめましょう。</p>
       <div class="hero-ctas">
-        <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></button>
-        <button type="button" class="ns-btn ghost" onclick="openAuth('login')">ログイン</button>
+        <button type="button" class="ns-btn primary guest-only" onclick="openAuth('signup')">無料で始める<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></button>
+        <button type="button" class="ns-btn ghost guest-only" onclick="openAuth('login')">ログイン</button>
+        <button type="button" class="ns-btn primary authed-only" onclick="goTop()">練習を始める<svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg></button>
       </div>
-      <p class="hero-note">メールアドレスだけで登録できます。クレジットカード不要。</p>
+      <p class="hero-note guest-only">メールアドレスだけで登録できます。クレジットカード不要。</p>
     </div>
     <div class="hero-visual" aria-hidden="true">
       <div class="hv-tile">
@@ -1135,8 +1136,9 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
 
   <section class="final-cta" aria-labelledby="final-h">
     <h2 id="final-h">今日のニュースで、英語を話してみよう。</h2>
-    <p>登録は30秒。すぐに最初のセッションを始められます。</p>
-    <button type="button" class="ns-btn primary" onclick="openAuth('signup')">無料で始める</button>
+    <p class="guest-only">登録は30秒。すぐに最初のセッションを始められます。</p>
+    <button type="button" class="ns-btn primary guest-only" onclick="openAuth('signup')">無料で始める</button>
+    <button type="button" class="ns-btn primary authed-only" onclick="goTop()">練習を始める</button>
   </section>
   <footer class="intro-footer">
     <span>&copy; 2026 ScooPitch</span>
@@ -3336,6 +3338,7 @@ function goBack(){
 function goTop(){
   if(document.body.classList.contains('is-guest')){ openIntro(); return; }
   if(!confirmLeaveSession('home')) return;
+  document.body.classList.remove('on-intro');
   if(isListening && recognition) recognition.stop();
   document.getElementById('vocab-fab').classList.remove('show');
   document.getElementById('vocab-panel').classList.remove('show');
@@ -3536,6 +3539,7 @@ function activateScreen(id){
   const el = document.getElementById(id);
   el.classList.add('active');
   el.scrollTop = 0;
+  document.body.classList.toggle('on-intro', id === 's-intro');   // 紹介ページはログイン中もメニューを出さない
   document.getElementById('back-btn').classList.remove('show');
   updateNavActive();
 }
@@ -3550,6 +3554,7 @@ function openIntro(){
   setIntroVideos(true);
 }
 function openAuth(mode){
+  if(document.body.classList.contains('is-authed')){ goTop(); return; }
   setIntroVideos(false);
   activateScreen('s-auth');
   setAuthMode(mode || 'login');
@@ -3817,35 +3822,44 @@ function routeAfterLogin(){
   goTop();
 }
 
+// 履歴の段（depth）：紹介ページ＝0、ログイン画面・ホーム＝1、その先＝2以上
 function recordRoute(route){
   const st = histState();
-  // このページで最初の記録、またはログイン直後（ログイン前の画面からアプリの画面へ）
-  if(!st || (GUEST_ROUTES.includes(st.route) && !GUEST_ROUTES.includes(route))){
-    if(PAGE_ROUTES.includes(route)){
-      history.replaceState({route:'home', depth:0}, '', routeUrl('home'));
-      history.pushState({route, depth:1}, '', routeUrl(route));
-    }else{
-      history.replaceState({route, depth:0}, '', routeUrl(route));
-    }
+  const push = (r, d)=>history.pushState({route:r, depth:d}, '', routeUrl(r));
+  const replace = (r, d)=>history.replaceState({route:r, depth:d}, '', routeUrl(r));
+  if(!st){   // このページで最初の記録：紹介ページを一番下に置く
+    replace('', 0);
+    if(route === '') return;
+    if(route === 'auth'){ push('auth', 1); return; }
+    push('home', 1);
+    if(route !== 'home') push(route, 2);
     return;
   }
   const from = st.route, depth = st.depth;
   if(route === from){ history.replaceState(st, '', routeUrl(route)); return; }
-  if(route === 'home' || route === ''){
-    // 同じ側（ログイン前どうし／ログイン後どうし）の底まで戻れるなら、積んだ分をさかのぼる
-    if(depth > 0 && GUEST_ROUTES.includes(from) === GUEST_ROUTES.includes(route) && depth < history.length){
-      pendingPops++;
-      history.go(-depth);
-    }else{
-      history.replaceState({route, depth:0}, '', routeUrl(route));
-    }
+  const back = n=>{ pendingPops++; history.go(-n); };
+  if(route === ''){                       // 紹介ページ（ログアウトなど）
+    if(depth > 0) back(depth); else replace('', 0);
+    return;
+  }
+  if(route === 'auth'){ if(depth === 0) push('auth', 1); else replace('auth', 1); return; }
+  if(route === 'home'){
+    if(depth > 1) back(depth - 1);        // 積んだ画面をさかのぼってホームへ
+    else if(depth === 1) replace('home', 1);   // ログイン画面 → ホーム
+    else push('home', 1);                 // 紹介ページ → ホーム
+    return;
+  }
+  // ここから先はホームより上の画面
+  if(GUEST_ROUTES.includes(from)){        // ログイン直後・紹介ページから直接開いたとき：下にホームを挟む
+    if(depth === 0) push('home', 1); else replace('home', 1);
+    push(route, 2);
     return;
   }
   if(route === 'summary' || (route === 'session' && ['mode','summary','session'].includes(from))){
     history.replaceState({route, depth}, '', routeUrl(route));
     return;
   }
-  history.pushState({route, depth: depth + 1}, '', routeUrl(route));
+  push(route, depth + 1);
 }
 
 function renderRoute(route){
@@ -3865,8 +3879,8 @@ function renderRoute(route){
       if(route !== 'home'){
         // 終わった会話などの履歴に「進む」で来たとき：ホームの記録までさかのぼる（ホームを二重にしない）
         const st = histState();
-        if(st && st.depth > 0){ pendingPops++; history.go(-st.depth); }
-        else history.replaceState({route:'home', depth:0}, '', routeUrl('home'));
+        if(st && st.depth > 1){ pendingPops++; history.go(-(st.depth - 1)); }
+        else history.replaceState({route:'home', depth:1}, '', routeUrl('home'));
       }
     }
   }finally{
@@ -3879,8 +3893,9 @@ window.addEventListener('popstate', e=>{
   if(pendingPops > 0){ pendingPops--; return; }
   const st = (e.state && typeof e.state.depth === 'number') ? e.state : { route: routeFromHash(), depth: 0 };
   const isGuest = document.body.classList.contains('is-guest');
-  // ログイン状態と合わない画面の履歴（ログイン後の紹介ページなど）は飛ばす
-  if(isGuest !== GUEST_ROUTES.includes(st.route)){ history.back(); return; }
+  // ログイン状態と合わない画面の履歴は飛ばす（ログイン後のログイン画面、ログアウト後のアプリ画面）
+  // 紹介ページはログイン中でも表示する（ホームで「戻る」→ 紹介ページ）
+  if(isGuest ? !GUEST_ROUTES.includes(st.route) : st.route === 'auth'){ history.back(); return; }
   if(curRoute === 'session' && st.route !== 'session'){
     if(sessionInProgress() && !confirm(t('会話を終了してホームに戻りますか？（この会話は採点されません）'))){
       history.pushState({route:'session', depth: st.depth + 1}, '', routeUrl('session'));
