@@ -566,6 +566,7 @@ textarea{
 textarea:focus{border-color:var(--accent);}
 textarea::placeholder{color:var(--text-dim);}
 textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
+#inp{overflow-y:hidden;}
 
 /* 録音中ステータスバー */
 .voice-status{
@@ -2948,7 +2949,22 @@ function showSuggestions(){
     picks.push(pool[i].replace('{home}', I18N.homeShort));
   }
   suggIdx=(suggIdx+3)%pool.length;
-  row.innerHTML=picks.map(s=>`<button class="sugg" onclick="send('${s.replace(/'/g,"\\'")}')"> ${s}</button>`).join('');
+  row.innerHTML=picks.map((s,i)=>`<button type="button" class="sugg" data-i="${i}">${escHtml(s)}</button>`).join('');
+  row.querySelectorAll('.sugg').forEach(b=>b.addEventListener('click',()=>useSuggestion(picks[+b.dataset.i])));
+}
+// 候補ボタン：送信せずに入力欄へ入れて、続きを書けるようにする（「I think...」→「I think 」）
+function useSuggestion(text){
+  const inp = document.getElementById('inp');
+  const phrase = String(text).replace(/(\.\.\.|…)\s*$/, '').replace(/\s+$/, '') + ' ';
+  const start = typeof inp.selectionStart === 'number' ? inp.selectionStart : inp.value.length;
+  const end = typeof inp.selectionEnd === 'number' ? inp.selectionEnd : start;
+  const before = inp.value.slice(0, start), after = inp.value.slice(end);
+  const lead = before && !/\s$/.test(before) ? ' ' : '';
+  inp.value = before + lead + phrase + after.replace(/^\s+/, '');
+  const pos = (before + lead + phrase).length;
+  inp.focus();
+  try{ inp.setSelectionRange(pos, pos); }catch(e){}
+  resize(inp);
 }
 
 // ══ Navigation ══
@@ -3367,7 +3383,11 @@ function loading(msg){
   else l.classList.remove('show');
 }
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
-function resize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px';}
+function resize(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,110)+'px';
+  el.style.overflowY = el.scrollHeight > 110 ? 'auto' : 'hidden';   // 短いうちはスクロールバーを出さない
+}
 
 // ══ Voice Input (Web Speech API) ══
 let recognition = null;
