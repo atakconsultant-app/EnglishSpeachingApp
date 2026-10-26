@@ -469,5 +469,7 @@ I18N.add('fr', {
  "ScooPitch Coach": "ScooPitch Coach",
  "オンライン": "En ligne",
  "既読": "Lu",
- "メッセージを入力…": "Écrivez un message…"
+ "メッセージを入力…": "Écrivez un message…",
+ "会話を終了してホームに戻りますか？（この会話は採点されません）": "Terminer la conversation et revenir à l'accueil ? (Cette conversation ne sera pas notée.)",
+ "会話を終了して移動しますか？（この会話は採点されません）": "Terminer la conversation et quitter cette page ? (Cette conversation ne sera pas notée.)"
 });

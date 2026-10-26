@@ -12,11 +12,12 @@ from strings_pages import ROWS as PAGES
 from strings_billing import ROWS as BILLING
 from strings_beta import ROWS as BETA
 from strings_landing import ROWS as LANDING
+from strings_nav import ROWS as NAV
 
 LANGS = ['ko', 'zh-TW', 'fr', 'es']
 ALLOW_EMPTY = {'回', '語'}  # 単位を表示しない言語がある
 
-rows = UI + PAGES + BILLING + BETA + LANDING
+rows = UI + PAGES + BILLING + BETA + LANDING + NAV
 errors = []
 seen = {}
 for r in rows:
