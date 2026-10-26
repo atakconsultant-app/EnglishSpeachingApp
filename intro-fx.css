@@ -281,7 +281,7 @@
 .steps-chat-send .ic { width: 18px; height: 18px; }
 .fx-steps[data-fx="e"] .steps-done { display: flex; width: fit-content; margin: 24px auto 0; }
 
-/* ═════ 利用手順 F：リング（固定した円グラフが手順ご���に満ちる＝目標勾配） ═════ */
+/* ═════ 利用手順 F：リング（固定した円グラフが手順ごとに満ちる＝目標勾配） ═════ */
 .fx-steps[data-fx="f"] .steps-stage { display: flex; gap: 56px; align-items: flex-start; margin-top: 36px; }
 .fx-steps[data-fx="f"] .steps-ring {
   display: block; position: sticky; top: calc(50% - 130px); flex: 0 0 260px; width: 260px; height: 260px;
