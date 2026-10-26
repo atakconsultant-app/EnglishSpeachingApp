@@ -2426,6 +2426,7 @@ async function startSession(){
     state.article = pickArticle(ARTICLES[state.cat] || ARTICLES['主要']);
   }
   state.history = [];
+  state.sessionLive = true;   // 会話中（「戻る」で離れるときに確認を出す）
   document.getElementById('chat').innerHTML = '';
   document.getElementById('sugg-row').innerHTML = '';
   state.userTurns = 0;
@@ -3242,6 +3243,8 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
 }
 
 function showSummaryScreen(score, improvements, bestPhrase, bestReason, prevHistory, scored){
+  state.sessionLive = false;
+  summaryShown = true;
   document.getElementById('summary-date').textContent =
     new Date().toLocaleDateString(I18N.locale,{year:'numeric',month:'long',day:'numeric',weekday:'short'});
 
@@ -3313,6 +3316,7 @@ function restartSession(){
 }
 
 function goBack(){
+  if(histDepth() > 0){ history.back(); return; }   // ブラウザの「戻る」と同じ動きにそろえる
   document.getElementById('vocab-fab').classList.remove('show');
   document.getElementById('vocab-panel').classList.remove('show');
   if(document.getElementById('s-summary').classList.contains('active')){
@@ -3331,6 +3335,7 @@ function goBack(){
 }
 function goTop(){
   if(document.body.classList.contains('is-guest')){ openIntro(); return; }
+  if(!confirmLeaveSession('home')) return;
   if(isListening && recognition) recognition.stop();
   document.getElementById('vocab-fab').classList.remove('show');
   document.getElementById('vocab-panel').classList.remove('show');
@@ -3660,7 +3665,7 @@ function applySession(session){
   if(!changed) return;
   if(userId){
     setIntroVideos(false);
-    goTop();
+    routeAfterLogin();
     pullCloudData(userId);
     loadBilling().then(handleBillingReturn);
   }else{
@@ -3765,10 +3770,138 @@ const PAGE_RENDERERS = { howto:()=>{}, history:()=>renderHistory(), review:()=>r
 function openPage(key){
   if(document.body.classList.contains('is-guest')){ openIntro(); return; }
   if(key === 'home'){ goTop(); return; }
+  if(!confirmLeaveSession('page')) return;
   activateScreen(NAV_SCREENS[key]);
   setStep(1);
   PAGE_RENDERERS[key]();
 }
+// ══ ブラウザの「戻る／進む」対応 ══
+// 画面ごとに URL の # を変えて履歴に記録する（#/home、#/session など）。
+//  - モード選択・各ページは履歴に積む → 「戻る」で直前の画面へ
+//  - 会話・結果はモード選択の記録を置き換える → 「戻る」でホームへ
+//  - ホームに戻るときは積んだ履歴をさかのぼる（「戻る」を押してもホームが続かないように）
+const ROUTE_OF = { 's-intro':'', 's-auth':'auth', 's-cat':'home', 's-mode':'mode', 's-session':'session', 's-summary':'summary',
+  's-howto':'howto', 's-history':'history', 's-review':'review', 's-speaker':'speaker', 's-plan':'plan', 's-account':'account' };
+const PAGE_ROUTES = ['howto','history','review','speaker','plan','account'];
+const DEEP_LINK_PAGES = ['howto','history','review','speaker','account'];
+const GUEST_ROUTES = ['', 'auth'];
+const initialRoute = routeFromHash();
+let initialRouteUsed = false;
+let curRoute = null;       // いま表示している画面
+let popRendering = false;  // 「戻る／進む」による表示中は履歴に記録しない
+let pendingPops = 0;       // こちらから history.go() したときの popstate は無視する
+let summaryShown = false;
+
+function routeFromHash(){ const m = location.hash.match(/^#\/([\w-]*)/); return m ? m[1] : ''; }
+function routeUrl(route){ return location.pathname + location.search + (route ? '#/' + route : ''); }
+function histState(){ return history.state && typeof history.state.depth === 'number' ? history.state : null; }
+function histDepth(){ const st = histState(); return st ? st.depth : 0; }
+function activeRoute(){ const el = document.querySelector('.screen.active'); return el && (el.id in ROUTE_OF) ? ROUTE_OF[el.id] : null; }
+function sessionInProgress(){ return !!state.sessionLive && (state.userTurns || 0) > 0; }
+function leaveSession(){
+  if(isListening && recognition) recognition.stop();
+  stopSpeech();
+  state.sessionLive = false;
+}
+// 会話の途中で離れるときは確認する（OK なら会話を終える）
+function confirmLeaveSession(dest){
+  if(!document.getElementById('s-session').classList.contains('active') || !sessionInProgress()) return true;
+  const msg = dest === 'home' ? t('会話を終了してホームに戻りますか？（この会話は採点されません）') : t('会話を終了して移動しますか？（この会話は採点されません）');
+  if(!confirm(msg)) return false;
+  leaveSession();
+  return true;
+}
+function routeAfterLogin(){
+  if(!initialRouteUsed && DEEP_LINK_PAGES.includes(initialRoute)){ initialRouteUsed = true; openPage(initialRoute); return; }
+  initialRouteUsed = true;
+  goTop();
+}
+
+function recordRoute(route){
+  const st = histState();
+  // このページで最初の記録、またはログイン直後（ログイン前の画面からアプリの画面へ）
+  if(!st || (GUEST_ROUTES.includes(st.route) && !GUEST_ROUTES.includes(route))){
+    if(PAGE_ROUTES.includes(route)){
+      history.replaceState({route:'home', depth:0}, '', routeUrl('home'));
+      history.pushState({route, depth:1}, '', routeUrl(route));
+    }else{
+      history.replaceState({route, depth:0}, '', routeUrl(route));
+    }
+    return;
+  }
+  const from = st.route, depth = st.depth;
+  if(route === from){ history.replaceState(st, '', routeUrl(route)); return; }
+  if(route === 'home' || route === ''){
+    // 同じ側（ログイン前どうし／ログイン後どうし）の底まで戻れるなら、積んだ分をさかのぼる
+    if(depth > 0 && GUEST_ROUTES.includes(from) === GUEST_ROUTES.includes(route) && depth < history.length){
+      pendingPops++;
+      history.go(-depth);
+    }else{
+      history.replaceState({route, depth:0}, '', routeUrl(route));
+    }
+    return;
+  }
+  if(route === 'summary' || (route === 'session' && ['mode','summary','session'].includes(from))){
+    history.replaceState({route, depth}, '', routeUrl(route));
+    return;
+  }
+  history.pushState({route, depth: depth + 1}, '', routeUrl(route));
+}
+
+function renderRoute(route){
+  popRendering = true;
+  try{
+    if(route === ''){ openIntro(); }
+    else if(route === 'auth'){ openAuth(authMode || 'login'); }
+    else if(route === 'mode' && state.cat){
+      activateScreen('s-mode'); setStep(2);
+      document.getElementById('back-btn').classList.add('show');
+    }
+    else if(route === 'summary' && summaryShown){ activateScreen('s-summary'); setStep(3); }
+    else if(PAGE_ROUTES.includes(route)){ openPage(route); }
+    else{
+      // 会話は再開できないのでホームを表示する
+      goTop();
+      if(route !== 'home'){
+        // 終わった会話などの履歴に「進む」で来たとき：ホームの記録までさかのぼる（ホームを二重にしない）
+        const st = histState();
+        if(st && st.depth > 0){ pendingPops++; history.go(-st.depth); }
+        else history.replaceState({route:'home', depth:0}, '', routeUrl('home'));
+      }
+    }
+  }finally{
+    curRoute = activeRoute();
+    popRendering = false;
+  }
+}
+
+window.addEventListener('popstate', e=>{
+  if(pendingPops > 0){ pendingPops--; return; }
+  const st = (e.state && typeof e.state.depth === 'number') ? e.state : { route: routeFromHash(), depth: 0 };
+  const isGuest = document.body.classList.contains('is-guest');
+  // ログイン状態と合わない画面の履歴（ログイン後の紹介ページなど）は飛ばす
+  if(isGuest !== GUEST_ROUTES.includes(st.route)){ history.back(); return; }
+  if(curRoute === 'session' && st.route !== 'session'){
+    if(sessionInProgress() && !confirm(t('会話を終了してホームに戻りますか？（この会話は採点されません）'))){
+      history.pushState({route:'session', depth: st.depth + 1}, '', routeUrl('session'));
+      return;
+    }
+    leaveSession();
+  }
+  renderRoute(st.route);
+});
+
+(function watchScreens(){
+  const obs = new MutationObserver(()=>{
+    const route = activeRoute();
+    if(route === null || route === curRoute) return;
+    curRoute = route;
+    if(popRendering) return;
+    recordRoute(route);
+  });
+  document.querySelectorAll('.screen').forEach(el=>obs.observe(el, { attributes:true, attributeFilter:['class'] }));
+})();
+
 function updateNavActive(){
   const active = document.querySelector('.screen.active');
   const id = active ? active.id : 's-cat';
@@ -4275,7 +4408,7 @@ async function openBillingPortal(){
 async function handleBillingReturn(){
   const kind = new URLSearchParams(location.search).get('billing');
   if(!kind) return;
-  history.replaceState(null, '', location.pathname);
+  history.replaceState(history.state, '', location.pathname + location.hash);
   if(!billing.enabled) return;
   openPage('plan');
   if(kind === 'success'){
