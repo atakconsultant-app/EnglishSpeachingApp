@@ -120,7 +120,7 @@ body.is-guest .authed-only { display: none !important; }
 .contact-wrap { display: grid; grid-template-columns: 1fr 1.3fr; gap: 28px; align-items: start; }
 .contact-form { background: var(--surface); border: 1px solid var(--border2); border-radius: 20px; box-shadow: 0 4px 0 var(--border2); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
 
-/* ── Form fields (contact + auth) ─�� */
+/* ── Form fields (contact + auth) ── */
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field label { font-size: 13px; font-weight: 600; color: var(--text); }
 .field input, .field textarea {

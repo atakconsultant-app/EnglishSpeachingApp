@@ -465,5 +465,9 @@ I18N.add('es', {
  "あなたの意見にAIが問いかけます": "La IA te pregunta sobre tus opiniones",
  "採点を元に振り返る": "Revisa tu puntuación",
  "スコアと改善ポイントで次につなげる": "Puntuación y mejoras para avanzar",
- "これで「話せる」準備は完了です": "¡Ya estás listo para hablar!"
+ "これで「話せる」準備は完了です": "¡Ya estás listo para hablar!",
+ "ScooPitch Coach": "ScooPitch Coach",
+ "オンライン": "En línea",
+ "既読": "Leído",
+ "メッセージを入力…": "Escribe un mensaje…"
 });

@@ -124,7 +124,7 @@
 
   function setVoiceImage(value) {
     if (!voiceImg || VOICE_IMAGES.indexOf(value) === -1) return;
-    voiceImg.src = 'images/' + value + '.png';
+    voiceImg.src = 'images/' + value + '.webp';
     document.querySelectorAll('.fx-switcher button[data-target="voice-img"]').forEach(function (btn) {
       btn.setAttribute('aria-pressed', String(btn.dataset.value === value));
     });
