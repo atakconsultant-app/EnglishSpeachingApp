@@ -44,7 +44,7 @@
 .fx-features .feature-card.is-focus { border-color: var(--accent); box-shadow: 0 6px 0 var(--accent); }
 
 .feature-media { position: relative; overflow: hidden; background: #f8f5e6; order: 2; }
-.feature-media img { position: absolute; inset: 7% 8%; width: 84%; height: 86%; object-fit: contain; scale: 1.1; filter: saturate(.62) contrast(.92) brightness(1.03) sepia(.08); -webkit-mask-image: radial-gradient(closest-side, #000 78%, transparent 100%); mask-image: radial-gradient(closest-side, #000 78%, transparent 100%); transition: scale 1.6s cubic-bezier(.2,.7,.2,1); }
+.feature-media img { position: absolute; inset: 3.5% 4%; width: 92%; height: 93%; object-fit: contain; scale: 1.1; -webkit-mask-image: radial-gradient(closest-side, #000 84%, transparent 100%); mask-image: radial-gradient(closest-side, #000 84%, transparent 100%); transition: scale 1.6s cubic-bezier(.2,.7,.2,1); }
 .feature-card.is-in .feature-media img { scale: 1; }
 .feature-card.is-focus .feature-media img { animation: fxDrift 9s ease-in-out infinite alternate; }
 @keyframes fxDrift { from { translate: 0 0; } to { translate: 0 -3%; scale: 1.06; } }
@@ -232,7 +232,7 @@
 }
 .fx-steps[data-fx="e"] .step-item:nth-child(even) .step-img { border: 1px solid rgba(255,255,255,.12); }
 
-/* ═════ 利用手順 F：リング（固定した円グラフが手順ごとに満ちる＝目標勾配） ═════ */
+/* ═════ 利用手順 F：リング（固定した円グラフが手順ご���に満ちる＝目標勾配） ═════ */
 .fx-steps[data-fx="f"] .steps-stage { display: flex; gap: 56px; align-items: flex-start; margin-top: 36px; }
 .fx-steps[data-fx="f"] .steps-ring {
   display: block; position: sticky; top: calc(50% - 130px); flex: 0 0 260px; width: 260px; height: 260px;
