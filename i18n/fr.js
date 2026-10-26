@@ -454,5 +454,16 @@ I18N.add('fr', {
  "アカウントと学習データをすべて削除します。この操作は取り消せません。本当に退会しますか？": "Votre compte et toutes vos données vont être supprimés. Cette action est irréversible. Confirmer ?",
  "削除しています…": "Suppression…",
  "退会の手続きが完了しました。ご利用ありがとうございました。": "Votre compte a été supprimé. Merci d'avoir utilisé ScooPitch.",
- "退会の手続きができませんでした。時間をおいてもう一度お試しいただくか、お問い合わせください。": "La suppression a échoué. Réessayez plus tard ou contactez-nous."
+ "退会の手続きができませんでした。時間をおいてもう一度お試しいただくか、お問い合わせください。": "La suppression a échoué. Réessayez plus tard ou contactez-nous.",
+ "はじめ方は、かんたん4ステップ": "Démarrez en 4 étapes simples",
+ "登録したらすぐに、今日のニュースで話しはじめられます。": "Dès l'inscription, parlez de l'actualité du jour.",
+ "カテゴリーを選ぶ": "Choisissez une rubrique",
+ "興味のあるニュースから": "selon vos centres d'intérêt",
+ "モードとレベルを選ぶ": "Choisissez le mode et le niveau",
+ "初級〜上級まで対応": "du débutant à l'avancé",
+ "AIと英語で話す": "Parlez anglais avec l'IA",
+ "あなたの意見にAIが問いかけます": "L'IA réagit à vos opinions",
+ "採点を元に振り返る": "Analysez votre score",
+ "スコアと改善ポイントで次につなげる": "Score et axes d'amélioration pour progresser",
+ "これで「話せる」準備は完了です": "Vous êtes prêt à parler !"
 });
