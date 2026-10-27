@@ -530,5 +530,14 @@ I18N.add('fr', {
  "読み上げ音声: {name}（ElevenLabs）": "Voix de lecture : {name} (ElevenLabs)",
  "高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。": "Lecture avec une voix IA de haute qualité (ElevenLabs ou Azure). Appuyez sur « Écouter » pour afficher le nom de la voix utilisée.",
  "記事の情報とゴールを表示": "Afficher l'article et l'objectif",
- "記事の情報とゴールをたたむ": "Masquer l'article et l'objectif"
+ "記事の情報とゴールをたたむ": "Masquer l'article et l'objectif",
+ "ScooPitch が月額{price}の有料プランになっても、使い続けたいですか？": "Si ScooPitch devenait payant à {price} par mois, continueriez-vous à l'utiliser ?",
+ "ScooPitch が月額990円の有料プランになっても、使い続けたいですか？": "Si ScooPitch devenait payant à 990 ¥ par mois, continueriez-vous à l'utiliser ?",
+ "使い続けたい": "Oui, je continuerais",
+ "今は使わない": "Pas pour l'instant",
+ "β期間中は無料のままです。正直なお答えが、今後の改善に一番役立ちます。": "L'application reste gratuite pendant la bêta. Une réponse sincère nous aide le plus à l'améliorer.",
+ "回答を記録しました。よろしければ、理由を下に一言お聞かせください。": "Réponse enregistrée. Si vous le souhaitez, dites-nous en un mot pourquoi ci-dessous.",
+ "使ってみた感想、ほしい機能、不具合など": "Vos impressions, les fonctions souhaitées, les bugs…",
+ "特によかった点や、あるともっと嬉しい機能を教えてください。": "Dites-nous ce qui vous a le plus plu, ou les fonctions qui vous feraient encore plus plaisir.",
+ "どうなれば有料でも使いたいと思えますか？（価格・機能・使い勝手など）": "Qu'est-ce qui vous donnerait envie de payer ? (prix, fonctions, ergonomie…)"
 });

@@ -470,3 +470,15 @@
   html[data-theme="playful"] .cat-grid .cat-glyph { top: 8px; width: 32px; height: 32px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
   html[data-theme="playful"] .cat-grid .cat-glyph .ic { width: 16px; height: 16px; }
 }
+
+/* ── 感想：有料になっても使いたいか（ワンタップ） ── */
+.wtp { border: 1px solid var(--border2); border-radius: 14px; padding: 14px 16px; background: var(--surface2); display: flex; flex-direction: column; gap: 10px; }
+.wtp-q { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--text); }
+.wtp-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.wtp-btn { flex: 1 1 0; min-width: 0; max-width: 220px; justify-content: center; text-align: center; line-height: 1.3; display: inline-flex; align-items: center; gap: 7px; padding: 9px 12px; border-radius: 999px; border: 1.5px solid var(--border2); background: var(--surface); color: var(--text-sub); font: 700 13px/1.3 var(--font-sans); cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
+.wtp-btn .ic { width: 18px; height: 18px; flex-shrink: 0; }
+.wtp-btn:hover { border-color: var(--accent); color: var(--accent); }
+.wtp-btn:disabled { opacity: .6; cursor: wait; }
+.wtp-btn[data-v="yes"][aria-pressed="true"] { border-color: #0f9f7a; color: #0f9f7a; background: #e9f7f1; }
+.wtp-btn[data-v="no"][aria-pressed="true"] { border-color: #c46a12; color: #c46a12; background: #fdf3e7; }
+.wtp-note { margin: 0; font-size: 12px; line-height: 1.6; color: var(--text-dim); }
