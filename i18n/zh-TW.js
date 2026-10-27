@@ -527,5 +527,6 @@ I18N.add('zh-TW', {
  "前回": "上次",
  "スコア": "分數",
  "アドバイスを活かしてもう一度練習": "運用建議再練習一次",
- "読み上げ音声: {name}（ElevenLabs）": "朗讀語音：{name}（ElevenLabs）"
+ "読み上げ音声: {name}（ElevenLabs）": "朗讀語音：{name}（ElevenLabs）",
+ "高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。": "以高品質的 AI 語音（ElevenLabs 或 Azure）朗讀。按下「試聽」即可顯示目前使用的語音名稱。"
 });

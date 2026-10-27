@@ -3181,6 +3181,8 @@ async function azureAudioUrl(text, p){
   lastAzureVoice = res.headers.get('X-Voice') || lastAzureVoice;
   const url = URL.createObjectURL(await res.blob());
   ttsCache.set(key, { url, voice: lastAzureVoice });
+  // スピーカー設定を開いているときは、実際に使った声の名前をすぐ表示する
+  if(document.getElementById('s-speaker').classList.contains('active')) renderVoiceStatus();
   if(ttsCache.size > 40){ const [k, v] = ttsCache.entries().next().value; ttsCache.delete(k); URL.revokeObjectURL(v.url); }
   return url;
 }
@@ -4758,7 +4760,7 @@ function renderVoiceStatus(){
     const hit = [...ttsCache.entries()].reverse().find(([k]) => k.startsWith([p.accent, p.gender, p.age, p.rate].join('|') + '|'));
     const v = hit ? String(hit[1].voice || '') : '';
     el.textContent = !hit
-      ? t('高品質な Azure のニューラル音声で読み上げます。「試聴する」で実際の声を確認できます。')
+      ? t('高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。')
       : v.startsWith('ElevenLabs:')
         ? t('読み上げ音声: {name}（ElevenLabs）', {name: v.slice(11)})
         : t('読み上げ音声: {name}（Azure ニューラル音声）', {name: v.replace(/^en-\w+-|Neural$/g, '') + ' · ' + v.slice(0, 5)});
