@@ -43,7 +43,8 @@ const VOICE_PREFS = {
 const CHILD_VOICES = ['en-US-AnaNeural', 'en-GB-MaisieNeural'];
 
 // ElevenLabs の既定の声（地域 → 性別 → [若い, 中くらい, 年配]）。ELEVENLABS_VOICES（JSON）で差し替えられる。
-// 例: {"us":{"female":["voiceId1","voiceId2","voiceId3"]}}。合う声がない組み合わせは Azure で読む。
+// 例: {"in":{"female":["voiceId1:Priya","voiceId2:Ananya","voiceId3:Meera"]}}（若い声・中くらい・年配の順。1つだけでも可）。
+// 合う声がない組み合わせは Azure で読む。
 const ELEVEN_VOICES = {
   us: {
     female: [['cgSgspJ2msm6clMCkdW9', 'Jessica'], ['EXAVITQu4vr4xnSDxMaL', 'Sarah'], ['XrExE9yKIg1WjnnlVkGX', 'Matilda']],
@@ -177,7 +178,11 @@ function elevenVoices() {
       out[acc] = out[acc] || {};
       Object.keys(custom[acc] || {}).forEach(g => {
         const list = [].concat(custom[acc][g] || []).filter(Boolean).slice(0, 3);
-        if (list.length) out[acc][g] = [0, 1, 2].map(i => { const id = String(list[Math.min(i, list.length - 1)]); return [id, id]; });
+        // "ID" または "ID:表示名"（スピーカー設定に表示する名前）
+        if (list.length) out[acc][g] = [0, 1, 2].map(i => {
+          const [id, name] = String(list[Math.min(i, list.length - 1)]).split(':');
+          return [id.trim(), (name || id).trim()];
+        });
       });
     });
     return out;
