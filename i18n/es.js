@@ -528,5 +528,14 @@ I18N.add('es', {
  "スコア": "Puntuación",
  "アドバイスを活かしてもう一度練習": "Practicar de nuevo con los consejos",
  "読み上げ音声: {name}（ElevenLabs）": "Voz de lectura: {name} (ElevenLabs)",
- "高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。": "Lectura con una voz de IA de alta calidad (ElevenLabs o Azure). Pulsa «Escuchar» para ver el nombre de la voz que se usa."
+ "高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。": "Lectura con una voz de IA de alta calidad (ElevenLabs o Azure). Pulsa «Escuchar» para ver el nombre de la voz que se usa.",
+ "ElevenLabs の鍵（ELEVENLABS_API_KEY）が設定されていないため、Azure の声で読み上げています。": "La clave de ElevenLabs (ELEVENLABS_API_KEY) no está configurada: se lee con una voz de Azure.",
+ "今日の ElevenLabs の読み上げ分を使い切ったため、Azure の声で読み上げています。": "Se agotó la cuota diaria de ElevenLabs: se lee con una voz de Azure.",
+ "この発音・性別に合う ElevenLabs の声がないため、Azure の声で読み上げています。": "No hay voz de ElevenLabs para este acento y género: se lee con una voz de Azure.",
+ "ElevenLabs でエラーが起きたため、Azure の声で読み上げています（{code}）。": "Error de ElevenLabs: se lee con una voz de Azure ({code}).",
+ "鍵に「Text to Speech」の権限があるか確認してください。": "Comprueba que la clave tenga el permiso «Text to Speech».",
+ "この声が ElevenLabs の「My Voices」に追加されているか確認してください。": "Comprueba que esta voz esté añadida a «My Voices» en ElevenLabs.",
+ "ElevenLabs の残りの文字数（クレジット）を確認してください。": "Comprueba los créditos restantes en ElevenLabs.",
+ "この声を使うには ElevenLabs の有料プランが必要です。": "Esta voz requiere un plan de pago de ElevenLabs.",
+ "鍵が正しく登録されているか確認してください。": "Comprueba que la clave esté bien registrada."
 });

@@ -285,6 +285,12 @@ module.exports = async function handler(req, res) {
   const limit = parseInt(process.env.TTS_DAILY_CHAR_LIMIT, 10) || DEFAULT_DAILY_CHARS;
   const usedToday = remaining === null ? null : limit - remaining;
   const eleven = useEleven(text, usedToday) ? pickElevenVoice(accent, gender, age) : null;
+  // Azure で読んだ理由（スピーカー設定に表示して、ElevenLabs が使えないときの原因を分かるようにする）
+  let ttsNote = '';
+  if (!env('ELEVENLABS_API_KEY')) ttsNote = 'not_configured';
+  else if (text.length < (parseInt(process.env.ELEVENLABS_MIN_CHARS, 10) || ELEVEN_DEFAULT_MIN_CHARS)) ttsNote = 'short_text';
+  else if (!useEleven(text, usedToday)) ttsNote = 'daily_share_used';
+  else if (!eleven) ttsNote = 'no_voice';
   if (eleven) {
     try {
       const audio = await elevenAudio(text, eleven[0], rate);
@@ -296,6 +302,9 @@ module.exports = async function handler(req, res) {
     } catch (e) {
       // 401 鍵の誤り / 402・429 文字数切れ・混雑 / 404 声が見つからない など → Azure で読む
       console.warn('ElevenLabs TTS failed; falling back to Azure', e.status || '', e.detail || e.message);
+      let code = '';
+      try { const d = JSON.parse(e.detail || '{}').detail; code = (d && (d.status || d.code)) || ''; } catch (err) { /* 本文が JSON でない */ }
+      ttsNote = `elevenlabs_${e.status || 'error'}${code ? '_' + String(code).replace(/[^\w-]/g, '').slice(0, 40) : ''}`;
     }
   }
 
@@ -321,6 +330,7 @@ module.exports = async function handler(req, res) {
     res.setHeader('Content-Type', 'audio/mpeg');
     res.setHeader('Cache-Control', 'private, max-age=86400');
     res.setHeader('X-Voice', voice);
+    if (ttsNote) res.setHeader('X-Tts-Note', ttsNote);
     if (remaining !== null) res.setHeader('X-Tts-Remaining', String(remaining));
     return res.status(200).send(audio);
   } catch (e) {
