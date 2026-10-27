@@ -28,4 +28,5 @@ ROWS = [
 ("スコア", "점수", "分數", "Score", "Puntuación"),
 ("アドバイスを活かしてもう一度練習", "조언을 살려 다시 연습하기", "運用建議再練習一次", "Recommencer en appliquant les conseils", "Practicar de nuevo con los consejos"),
 ("読み上げ音声: {name}（ElevenLabs）", "읽기 음성: {name} (ElevenLabs)", "朗讀語音：{name}（ElevenLabs）", "Voix de lecture : {name} (ElevenLabs)", "Voz de lectura: {name} (ElevenLabs)"),
+("高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。", "고품질 AI 음성(ElevenLabs 또는 Azure)으로 읽어 줘요. '미리 듣기'를 누르면 사용 중인 음성 이름이 표시돼요.", "以高品質的 AI 語音（ElevenLabs 或 Azure）朗讀。按下「試聽」即可顯示目前使用的語音名稱。", "Lecture avec une voix IA de haute qualité (ElevenLabs ou Azure). Appuyez sur « Écouter » pour afficher le nom de la voix utilisée.", "Lectura con una voz de IA de alta calidad (ElevenLabs o Azure). Pulsa «Escuchar» para ver el nombre de la voz que se usa."),
 ]
