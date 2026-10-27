@@ -359,7 +359,6 @@ header .spacer{flex:1;}
 .level-btn:hover{border-color:var(--border);}
 .level-btn.selected{border-color:var(--accent);background:var(--accent-dim);}
 .level-flag{font-size:18px;margin-bottom:4px;}
-.level-btn{padding-top:16px;padding-bottom:16px;}
 .level-name{font-size:12px;font-weight:600;color:var(--text);}
 .level-hint{font-size:10px;color:var(--text-sub);margin-top:2px;line-height:1.3;}
 
@@ -928,16 +927,27 @@ button,input,textarea{font-family:inherit;}
   .score-row{gap:6px;}
 }
 /* ─── ログイン前（紹介・ログイン画面）はロゴを大きく ─── */
-body.is-guest header .wordmark{font-size:28px;}
+body.is-guest header .wordmark{font-size:34px;}
+@media(max-width:900px){
+  .theme-switch .ts-label{display:none;}   /* タブレット幅ではデザイン案の切り替えを A/B/C だけにして、ヘッダーを1行に収める */
+  body.is-guest header .wordmark{font-size:30px;}
+}
+@media(max-width:760px){
+  .theme-switch{display:none;}
+}
 @media(max-width:600px){
-  /* ロゴを大きくした分、右のボタンを少し詰めて1行に収める */
-  body.is-guest header{gap:6px;padding-left:14px;padding-right:12px;}
-  body.is-guest header .wordmark{font-size:24px;}
+  /* ロゴを大きくした分、β を小さくし、右のボタンを少し詰めて1行に収める */
+  body.is-guest header{gap:5px;padding-left:12px;padding-right:12px;}
+  body.is-guest header .wordmark{font-size:28px;}
+  body.is-guest .beta-badge{font-size:9px;padding:2px 5px;margin-left:-3px;align-self:flex-start;margin-top:4px;}
   body.is-guest .hdr-actions{gap:5px;}
   body.is-guest .hdr-btn{padding:7px 9px;font-size:11.5px;}
 }
+@media(max-width:389px){
+  body.is-guest header .wordmark{font-size:26px;}
+}
 @media(max-width:374px){
-  body.is-guest header .wordmark{font-size:22px;}
+  body.is-guest header .wordmark{font-size:24px;}
   body.is-guest .beta-badge{display:none;}
 }
 
@@ -1521,6 +1531,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <!-- 自分の題材で練習（記事の代わりに、自分の状況を題材にする） -->
   <section class="my-topic" id="my-topic" aria-labelledby="mt-h">
     <div class="mt-head">
+      <span class="mt-icon"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg></span>
       <div>
         <h2 class="mt-title" id="mt-h">自分の題材で練習する</h2>
         <p class="mt-sub">これから参加するプロジェクトや会議、面接など、自分の状況を題材にディスカッション・ファシリテーション・面接の練習ができます。</p>
@@ -1556,6 +1567,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="section-title">練習モードを選ぶ</div>
     <div class="mode-cards">
       <div class="mode-card" data-mode="discussion" onclick="selectMode(this)">
+        <div class="mode-icon disc"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ディスカッション</div>
           <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝える力を養う。</div>
@@ -1563,6 +1575,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         </div>
       </div>
       <div class="mode-card" data-mode="facilitation" onclick="selectMode(this)">
+        <div class="mode-icon faci"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ファシリテーション</div>
           <div class="mode-desc">AIが参加者役になり、あなたが議題を進行する。会議・プレゼンのスピーキング力を鍛える。</div>
@@ -1570,6 +1583,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         </div>
       </div>
       <div class="mode-card" data-mode="interview" onclick="selectMode(this)">
+        <div class="mode-icon inte"><svg class="ic" aria-hidden="true"><use href="#i-usercheck"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">面接スピーチ</div>
           <div class="mode-desc">記事をテーマに英語面接を模擬体験。外資・海外就職を目指す人に最適な実践練習。</div>
@@ -1585,14 +1599,17 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="section-title">英語レベルを選ぶ</div>
     <div class="level-row">
       <div class="level-btn" data-level="beginner" onclick="selectLevel(this)">
+        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig1"/></svg></div>
         <div class="level-name">初級</div>
         <div class="level-hint">日本語サポートあり</div>
       </div>
       <div class="level-btn" data-level="intermediate" onclick="selectLevel(this)">
+        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig2"/></svg></div>
         <div class="level-name">中級</div>
         <div class="level-hint">英語メイン+補足</div>
       </div>
       <div class="level-btn" data-level="advanced" onclick="selectLevel(this)">
+        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig3"/></svg></div>
         <div class="level-name">上級</div>
         <div class="level-hint">フル英語</div>
       </div>
