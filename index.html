@@ -359,6 +359,7 @@ header .spacer{flex:1;}
 .level-btn:hover{border-color:var(--border);}
 .level-btn.selected{border-color:var(--accent);background:var(--accent-dim);}
 .level-flag{font-size:18px;margin-bottom:4px;}
+.level-btn{padding-top:16px;padding-bottom:16px;}
 .level-name{font-size:12px;font-weight:600;color:var(--text);}
 .level-hint{font-size:10px;color:var(--text-sub);margin-top:2px;line-height:1.3;}
 
@@ -926,6 +927,20 @@ button,input,textarea{font-family:inherit;}
   .input-bar{padding:10px 14px 14px;}
   .score-row{gap:6px;}
 }
+/* ─── ログイン前（紹介・ログイン画面）はロゴを大きく ─── */
+body.is-guest header .wordmark{font-size:28px;}
+@media(max-width:600px){
+  /* ロゴを大きくした分、右のボタンを少し詰めて1行に収める */
+  body.is-guest header{gap:6px;padding-left:14px;padding-right:12px;}
+  body.is-guest header .wordmark{font-size:24px;}
+  body.is-guest .hdr-actions{gap:5px;}
+  body.is-guest .hdr-btn{padding:7px 9px;font-size:11.5px;}
+}
+@media(max-width:374px){
+  body.is-guest header .wordmark{font-size:22px;}
+  body.is-guest .beta-badge{display:none;}
+}
+
 /* ─── スマホの会話画面：会話の部分をできるだけ広く見せる ─── */
 .strip-toggle,.hdr-menu-btn,.ib-break{display:none;}
 @media(max-width:760px){
@@ -1154,7 +1169,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="feature-media" aria-hidden="true"><img src="images/feature-news.webp" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
         <div class="feature-body">
         <span class="feature-num" aria-hidden="true">01</span>
-        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
         <h3 class="feature-title">毎日届く最新ニュース</h3>
         <p class="feature-text">世界の英字ニュースの最新記事を題材に。時事ネタで、実際に使える語彙と表現が身につきます。</p>
         </div>
@@ -1163,7 +1177,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="feature-media" aria-hidden="true"><img src="images/feature-discussion.webp" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
         <div class="feature-body">
         <span class="feature-num" aria-hidden="true">02</span>
-        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <h3 class="feature-title">AIとディスカッション</h3>
         <p class="feature-text">ディスカッション・ファシリテーション・インタビューの3モード。レベルに合わせてAIが問いかけます。</p>
         </div>
@@ -1172,7 +1185,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="feature-media" aria-hidden="true"><img id="voice-img" src="images/feature-voice-d.webp" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
         <div class="feature-body">
         <span class="feature-num" aria-hidden="true">03</span>
-        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
         <h3 class="feature-title">音声入力とシャドーイング</h3>
         <p class="feature-text">マイクで話して、そのまま回答。シャドーイングで発音とリズムも鍛えられます。</p>
         </div>
@@ -1181,7 +1193,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <div class="feature-media" aria-hidden="true"><img src="images/feature-progress.webp" alt="" loading="lazy" decoding="async" width="1024" height="1024"></div>
         <div class="feature-body">
         <span class="feature-num" aria-hidden="true">04</span>
-        <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg></div>
         <h3 class="feature-title">スコアと単語帳で成長を記録</h3>
         <p class="feature-text">セッションごとのスコア、連続学習日数、保存した単語をいつでも振り返れます。</p>
         </div>
@@ -1359,7 +1370,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       </ul>
     </div>
     <div class="auth-done" id="auth-done" hidden>
-      <div class="feature-icon"><svg class="ic" aria-hidden="true"><use href="#i-usercheck"/></svg></div>
       <h1 class="auth-title">確認メールを送信しました</h1>
       <p class="auth-sub">メール内のリンクをクリックして登録を完了してください。完了後、こちらからログインできます。</p>
       <button type="button" class="ns-btn ghost" style="margin-top:20px;width:100%;" onclick="setAuthMode('login')">ログイン画面へ</button>
@@ -1446,7 +1456,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="主要" onclick="selectCat(this)">
       <video class="cat-video" src="videos/top-news.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-news"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Top News</div>
       <div class="cat-name">主要</div>
@@ -1454,7 +1463,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="国内" onclick="selectCat(this)">
       <video class="cat-video" src="videos/domestic.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Domestic</div>
       <div class="cat-name">国内</div>
@@ -1462,7 +1470,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="国際" onclick="selectCat(this)">
       <video class="cat-video" src="videos/world.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">World</div>
       <div class="cat-name">国際</div>
@@ -1470,7 +1477,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="経済" onclick="selectCat(this)">
       <video class="cat-video" src="videos/economy.mp4#t=0.3" data-start="0.3" muted playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-trend"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Economy</div>
       <div class="cat-name">経済</div>
@@ -1478,7 +1484,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="エンタメ" onclick="selectCat(this)">
       <video class="cat-video" src="videos/entertainment.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-film"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Entertainment</div>
       <div class="cat-name">エンタメ</div>
@@ -1486,7 +1491,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="スポーツ" onclick="selectCat(this)">
       <video class="cat-video" src="videos/sports.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Sports</div>
       <div class="cat-name">スポーツ</div>
@@ -1494,7 +1498,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="IT" onclick="selectCat(this)">
       <video class="cat-video" src="videos/technology.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-laptop"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-laptop"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Technology</div>
       <div class="cat-name">IT</div>
@@ -1502,7 +1505,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="科学" onclick="selectCat(this)">
       <video class="cat-video" src="videos/science.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-flask"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Science</div>
       <div class="cat-name">科学</div>
@@ -1510,7 +1512,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="cat-card has-video" data-cat="ライフ" onclick="selectCat(this)">
       <video class="cat-video" src="videos/lifestyle.mp4#t=0.1" muted loop playsinline preload="metadata" aria-hidden="true"></video>
       <div class="cat-bg"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg></div>
-      <div class="cat-glyph"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg></div>
       <div class="cat-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
       <div class="cat-name-en">Lifestyle</div>
       <div class="cat-name">ライフ</div>
@@ -1520,7 +1521,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <!-- 自分の題材で練習（記事の代わりに、自分の状況を題材にする） -->
   <section class="my-topic" id="my-topic" aria-labelledby="mt-h">
     <div class="mt-head">
-      <span class="mt-icon"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg></span>
       <div>
         <h2 class="mt-title" id="mt-h">自分の題材で練習する</h2>
         <p class="mt-sub">これから参加するプロジェクトや会議、面接など、自分の状況を題材にディスカッション・ファシリテーション・面接の練習ができます。</p>
@@ -1556,7 +1556,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="section-title">練習モードを選ぶ</div>
     <div class="mode-cards">
       <div class="mode-card" data-mode="discussion" onclick="selectMode(this)">
-        <div class="mode-icon disc"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ディスカッション</div>
           <div class="mode-desc">記事のテーマについてAIと英語で意見を交わす。自分の考えを論理的に伝える力を養う。</div>
@@ -1564,7 +1563,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         </div>
       </div>
       <div class="mode-card" data-mode="facilitation" onclick="selectMode(this)">
-        <div class="mode-icon faci"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">ファシリテーション</div>
           <div class="mode-desc">AIが参加者役になり、あなたが議題を進行する。会議・プレゼンのスピーキング力を鍛える。</div>
@@ -1572,7 +1570,6 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         </div>
       </div>
       <div class="mode-card" data-mode="interview" onclick="selectMode(this)">
-        <div class="mode-icon inte"><svg class="ic" aria-hidden="true"><use href="#i-usercheck"/></svg></div>
         <div class="mode-body">
           <div class="mode-name">面接スピーチ</div>
           <div class="mode-desc">記事をテーマに英語面接を模擬体験。外資・海外就職を目指す人に最適な実践練習。</div>
@@ -1588,17 +1585,14 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <div class="section-title">英語レベルを選ぶ</div>
     <div class="level-row">
       <div class="level-btn" data-level="beginner" onclick="selectLevel(this)">
-        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig1"/></svg></div>
         <div class="level-name">初級</div>
         <div class="level-hint">日本語サポートあり</div>
       </div>
       <div class="level-btn" data-level="intermediate" onclick="selectLevel(this)">
-        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig2"/></svg></div>
         <div class="level-name">中級</div>
         <div class="level-hint">英語メイン+補足</div>
       </div>
       <div class="level-btn" data-level="advanced" onclick="selectLevel(this)">
-        <div class="level-flag"><svg class="ic" aria-hidden="true"><use href="#i-sig3"/></svg></div>
         <div class="level-name">上級</div>
         <div class="level-hint">フル英語</div>
       </div>
