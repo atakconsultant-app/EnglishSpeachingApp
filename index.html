@@ -926,6 +926,74 @@ button,input,textarea{font-family:inherit;}
   .input-bar{padding:10px 14px 14px;}
   .score-row{gap:6px;}
 }
+/* ─── スマホの会話画面：会話の部分をできるだけ広く見せる ─── */
+.strip-toggle,.hdr-menu-btn,.ib-break{display:none;}
+@media(max-width:760px){
+  /* ヘッダーを少し低く */
+  body.in-session header{padding-top:8px;padding-bottom:8px;}
+  body.in-session .wordmark{font-size:20px;}
+  body.in-session .progress-dots{display:none;}   /* ☰ ボタンの場所をあける（テーマBでは横にはみ出していた） */
+  body.in-session .hdr-menu-btn{
+    display:flex;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;
+    border:1px solid var(--border2);background:var(--surface);color:var(--text-sub);border-radius:10px;cursor:pointer;
+  }
+  body.in-session.nav-open .hdr-menu-btn{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
+  .hdr-menu-btn svg{width:18px;height:18px;fill:currentColor;}
+
+  /* 下のメニュー：会話中はしまっておき、ヘッダーの ☰ で出し入れする */
+  body.is-authed.in-session .app-main{padding-bottom:0;}
+  body.in-session .side-nav{transform:translateY(110%);transition:transform .22s ease;box-shadow:0 -8px 24px rgba(17,17,24,.12);}
+  body.in-session.nav-open .side-nav{transform:none;}
+
+  /* 記事の見出し：文字を小さめにし、ふだんは1行にたたむ（▼ か見出しを押すと全部表示） */
+  .article-strip{position:relative;padding:8px 46px 8px 16px;}
+  .article-strip.open{max-height:45vh;overflow-y:auto;}
+  .strip-toggle{
+    display:flex;align-items:center;justify-content:center;position:absolute;top:3px;right:6px;
+    width:34px;height:34px;border:none;background:none;color:var(--text-sub);border-radius:8px;cursor:pointer;
+  }
+  .strip-toggle svg{width:22px;height:22px;fill:currentColor;transition:transform .2s;}
+  .article-strip.open .strip-toggle svg{transform:rotate(180deg);}
+  .article-strip-meta{margin-bottom:4px;}
+  .strip-source,.strip-cat,.strip-mode-badge{font-size:10px;}
+  .strip-title{font-size:14px;line-height:1.4;}
+  .article-strip:not(.open) .article-strip-meta,
+  .article-strip:not(.open) .strip-actions,
+  .article-strip:not(.open) .article-full{display:none;}
+  .article-strip:not(.open) .strip-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;padding:3px 0;}
+
+  /* 今日のゴール：細く */
+  .goal-strip{padding:6px 16px;}
+  .goal-row{font-size:11px;margin-bottom:4px;}
+  .goal-bar{height:4px;}
+  .target-row{margin-top:6px;}
+
+  /* 候補ボタン：1行にして横にスクロール */
+  #sugg-row{flex-wrap:nowrap;overflow-x:auto;gap:6px;padding:6px 12px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  #sugg-row::-webkit-scrollbar{display:none;}
+  #sugg-row .sugg{flex-shrink:0;font-size:12px;padding:5px 12px;}
+
+  /* 入力欄：1段目＝入力欄（横いっぱい）・マイク・送信、2段目＝記号ボタン・終了 */
+  .input-bar{gap:6px;padding:8px 12px 10px;}
+  body.in-session .input-bar{padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));}
+  .input-bar .btn-row{display:contents;}
+  .input-col{order:1;}
+  .input-bar .mic-btn{order:2;}
+  .input-bar .send-btn{order:3;}
+  .ib-break{display:block;order:4;flex-basis:100%;height:0;}
+  .input-bar .punct-row{order:5;flex:1 1 auto;min-width:0;flex-wrap:nowrap;gap:4px;}
+  .input-bar #end-btn{order:6;}
+  .input-bar .mic-btn,.input-bar .send-btn{width:38px;height:38px;align-self:flex-end;}
+  .input-bar .mic-btn svg{width:18px !important;height:18px !important;}
+  .input-bar .send-btn svg{width:16px;height:16px;}
+  #inp{font-size:16px;min-height:38px;padding:7px 12px;}   /* 16px 未満だと iPhone で入力時に画面が拡大される */
+  .input-bar .end-session-btn{height:28px;padding:0 10px;font-size:11px;border-radius:8px;gap:4px;}
+  .input-bar .end-session-btn svg{width:12px;height:12px;}
+  .punct-row button{flex:1;min-width:0;height:28px;padding:0;font-size:15px;}
+
+  /* 単語帳ボタン：小さくし、候補ボタンのすぐ上に置く（--dock-h は JS で計算） */
+  body.is-authed.in-session .vocab-fab{width:40px;height:40px;right:12px;bottom:calc(var(--dock-h, 150px) + 10px);}
+}
 </style>
 <link id="theme-css" rel="stylesheet" href="themes/studio.css">
 <link rel="stylesheet" href="intro.css">
@@ -1015,6 +1083,9 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     <button type="button" class="hdr-btn" onclick="openAuth('login')">ログイン</button>
     <button type="button" class="hdr-btn solid" onclick="openAuth('signup')">無料で始める</button>
   </div>
+  <button type="button" class="hdr-menu-btn authed-only" id="hdr-menu-btn" onclick="toggleSessionNav()" aria-expanded="false" aria-label="メニュー" title="メニュー">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"/></svg>
+  </button>
   <div class="hdr-actions authed-only">
     <button type="button" class="hdr-btn" onclick="signOut()">ログアウト</button>
   </div>
@@ -1563,6 +1634,9 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <div id="a-summary"></div>
       <div class="article-points-mini" id="a-points-mini"></div>
     </div>
+    <button type="button" class="strip-toggle" id="strip-toggle" onclick="toggleStrip()" aria-expanded="false" aria-label="記事の情報を表示">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+    </button>
   </div>
 
   <!-- Goal strip: 保有進捗効果 + ゴール勾配 + 復習語彙 -->
@@ -1635,6 +1709,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
         <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
       </button>
     </div>
+    <span class="ib-break" aria-hidden="true"></span>
     <div class="punct-row" id="punct-row" role="group" aria-label="記号を入力">
       <button type="button" data-p="," title="カンマ">,</button>
       <button type="button" data-p="." title="ピリオド">.</button>
@@ -2596,6 +2671,7 @@ async function startSession(){
 
 function renderArticle(){
   const a = state.article;
+  toggleStrip(false);
   document.getElementById('a-source').textContent = a.custom ? t(a.source) : a.source;
   document.getElementById('a-cat').textContent = state.cat;
   document.getElementById('a-title').textContent = a.title;
@@ -3403,10 +3479,11 @@ function showSuggestions(){
   // スマホでは入力欄の横が狭いので、「相談」ボタンは候補の列の先頭に出す
   row.innerHTML=`<button type="button" class="sugg sugg-coach" onclick="openCoach()">${ICON('help')}${escHtml(t('相談'))}</button>`
     + picks.map((s,i)=>`<button type="button" class="sugg" data-i="${i}">${escHtml(s)}</button>`).join('');
-  row.querySelectorAll('.sugg').forEach(b=>b.addEventListener('click',()=>useSuggestion(picks[+b.dataset.i])));
+  row.querySelectorAll('.sugg[data-i]').forEach(b=>b.addEventListener('click',()=>useSuggestion(picks[+b.dataset.i])));
 }
 // 候補ボタン：送信せずに入力欄へ入れて、続きを書けるようにする（「I think...」→「I think 」）
 function useSuggestion(text){
+  if(typeof text !== 'string' || !text.trim()) return;
   if(isListening) stopVoice(false);
   const inp = document.getElementById('inp');
   const phrase = String(text).replace(/(\.\.\.|…)\s*$/, '').replace(/\s+$/, '') + ' ';
@@ -3925,7 +4002,7 @@ let interimText = '';
         const seg = tidySpeech(t, final);
         if(seg) final += (final ? ' ' : '') + seg;
       } else {
-        interim += t;
+        interim += t || '';
       }
     }
     inp.dataset.finalText = final;
@@ -4477,8 +4554,48 @@ window.addEventListener('popstate', e=>{
   renderRoute(st.route);
 });
 
+// ══ スマホの会話画面：記事の見出し・下のメニューをたためるようにする ══
+function toggleStrip(force){
+  const strip = document.getElementById('article-strip');
+  const open = typeof force === 'boolean' ? force : !strip.classList.contains('open');
+  strip.classList.toggle('open', open);
+  const btn = document.getElementById('strip-toggle');
+  btn.setAttribute('aria-expanded', String(open));
+  btn.setAttribute('aria-label', t(open ? '記事の情報をたたむ' : '記事の情報を表示'));
+  updateDockHeight();
+}
+document.getElementById('a-title').addEventListener('click', ()=>{
+  if(window.matchMedia('(max-width:760px)').matches && !document.getElementById('article-strip').classList.contains('open')) toggleStrip(true);
+});
+function toggleSessionNav(force){
+  const open = typeof force === 'boolean' ? force : !document.body.classList.contains('nav-open');
+  document.body.classList.toggle('nav-open', open);
+  document.getElementById('hdr-menu-btn').setAttribute('aria-expanded', String(open));
+}
+document.querySelector('.side-nav').addEventListener('click', e=>{ if(e.target.closest('.nav-item')) toggleSessionNav(false); });
+document.getElementById('chat').addEventListener('pointerdown', ()=>{ if(document.body.classList.contains('nav-open')) toggleSessionNav(false); });
+// 単語帳ボタンを、候補ボタン（なければ入力欄）のすぐ上に置くための高さ
+function updateDockHeight(){
+  const app = document.getElementById('app'), sugg = document.getElementById('sugg-row');
+  if(!app || !sugg || !document.getElementById('s-session').classList.contains('active')) return;
+  const h = Math.max(0, Math.round(app.getBoundingClientRect().bottom - sugg.getBoundingClientRect().top));
+  document.documentElement.style.setProperty('--dock-h', h + 'px');
+}
+(function watchDock(){
+  window.addEventListener('resize', updateDockHeight);
+  if(!('ResizeObserver' in window)) return;
+  const ro = new ResizeObserver(updateDockHeight);
+  ['sugg-row','retry-bar','coach-panel','chat'].forEach(id=>{ const el = document.getElementById(id); if(el) ro.observe(el); });
+  ro.observe(document.querySelector('#s-session .input-bar'));
+})();
+
 (function watchScreens(){
   const obs = new MutationObserver(()=>{
+    const inSession = !!document.querySelector('#s-session.active');
+    if(document.body.classList.contains('in-session') !== inSession){
+      document.body.classList.toggle('in-session', inSession);
+      if(!inSession) toggleSessionNav(false);
+    }
     const route = activeRoute();
     if(route === null || route === curRoute) return;
     curRoute = route;

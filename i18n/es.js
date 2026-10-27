@@ -528,5 +528,7 @@ I18N.add('es', {
  "スコア": "Puntuación",
  "アドバイスを活かしてもう一度練習": "Practicar de nuevo con los consejos",
  "読み上げ音声: {name}（ElevenLabs）": "Voz de lectura: {name} (ElevenLabs)",
- "高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。": "Lectura con una voz de IA de alta calidad (ElevenLabs o Azure). Pulsa «Escuchar» para ver el nombre de la voz que se usa."
+ "高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。": "Lectura con una voz de IA de alta calidad (ElevenLabs o Azure). Pulsa «Escuchar» para ver el nombre de la voz que se usa.",
+ "記事の情報を表示": "Mostrar la información del artículo",
+ "記事の情報をたたむ": "Ocultar la información del artículo"
 });
