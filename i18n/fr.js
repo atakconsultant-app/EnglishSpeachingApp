@@ -494,5 +494,12 @@ I18N.add('fr', {
  "コーチ": "Coach",
  "Feedbackについて": "À propos du Feedback",
  "考えています…": "Réflexion…",
- "入力欄に入れる": "Utiliser"
+ "入力欄に入れる": "Utiliser",
+ "記号を入力": "Insérer un signe",
+ "カンマ": "Virgule",
+ "ピリオド": "Point",
+ "クエスチョンマーク": "Point d'interrogation",
+ "エクスクラメーションマーク": "Point d'exclamation",
+ "クオーテーションマーク": "Guillemets",
+ "アポストロフィ": "Apostrophe"
 });

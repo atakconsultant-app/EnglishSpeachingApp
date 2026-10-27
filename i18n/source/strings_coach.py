@@ -25,4 +25,11 @@ ROWS = [
 ("Feedbackについて", "Feedback 관련", "關於 Feedback", "À propos du Feedback", "Sobre el Feedback"),
 ("考えています…", "생각하는 중…", "思考中…", "Réflexion…", "Pensando…"),
 ("入力欄に入れる", "입력란에 넣기", "填入輸入欄", "Utiliser", "Usar"),
+("記号を入力", "기호 입력", "輸入符號", "Insérer un signe", "Insertar un signo"),
+("カンマ", "쉼표", "逗號", "Virgule", "Coma"),
+("ピリオド", "마침표", "句號", "Point", "Punto"),
+("クエスチョンマーク", "물음표", "問號", "Point d'interrogation", "Signo de interrogación"),
+("エクスクラメーションマーク", "느낌표", "驚嘆號", "Point d'exclamation", "Signo de exclamación"),
+("クオーテーションマーク", "따옴표", "引號", "Guillemets", "Comillas"),
+("アポストロフィ", "아포스트로피", "撇號", "Apostrophe", "Apóstrofo"),
 ]
