@@ -29,6 +29,6 @@ ROWS = [
 ("アドバイスを活かしてもう一度練習", "조언을 살려 다시 연습하기", "運用建議再練習一次", "Recommencer en appliquant les conseils", "Practicar de nuevo con los consejos"),
 ("読み上げ音声: {name}（ElevenLabs）", "읽기 음성: {name} (ElevenLabs)", "朗讀語音：{name}（ElevenLabs）", "Voix de lecture : {name} (ElevenLabs)", "Voz de lectura: {name} (ElevenLabs)"),
 ("高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。", "고품질 AI 음성(ElevenLabs 또는 Azure)으로 읽어 줘요. '미리 듣기'를 누르면 사용 중인 음성 이름이 표시돼요.", "以高品質的 AI 語音（ElevenLabs 或 Azure）朗讀。按下「試聽」即可顯示目前使用的語音名稱。", "Lecture avec une voix IA de haute qualité (ElevenLabs ou Azure). Appuyez sur « Écouter » pour afficher le nom de la voix utilisée.", "Lectura con una voz de IA de alta calidad (ElevenLabs o Azure). Pulsa «Escuchar» para ver el nombre de la voz que se usa."),
-("記事の情報を表示", "기사 정보 보기", "顯示文章資訊", "Afficher les infos de l'article", "Mostrar la información del artículo"),
-("記事の情報をたたむ", "기사 정보 접기", "收起文章資訊", "Masquer les infos de l'article", "Ocultar la información del artículo"),
+("記事の情報とゴールを表示", "기사 정보와 목표 보기", "顯示文章資訊與目標", "Afficher l'article et l'objectif", "Mostrar el artículo y el objetivo"),
+("記事の情報とゴールをたたむ", "기사 정보와 목표 접기", "收起文章資訊與目標", "Masquer l'article et l'objectif", "Ocultar el artículo y el objetivo"),
 ]
