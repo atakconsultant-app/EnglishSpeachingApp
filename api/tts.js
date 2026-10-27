@@ -11,7 +11,7 @@
 // ElevenLabs との組み合わせ（ELEVENLABS_API_KEY を設定したときだけ有効）
 // - AI の発言など、ある程度長い文（ELEVENLABS_MIN_CHARS 文字以上、既定 40）は ElevenLabs のより自然な声で読む。
 // - 単語や短い語句、1人1日の ElevenLabs 分（ELEVENLABS_DAILY_CHARS、既定 5000 文字）を超えた分は Azure で読む。
-// - ElevenLabs がエラー・文字数切れのとき、または選んだ地域・性別に合う声がないとき（インド英語など）も Azure で読む。
+// - ElevenLabs がエラー・文字数切れのとき、または選んだ地域・性別に合う声がないときも Azure で読む。
 
 const billing = require('../lib/billing');
 
@@ -55,7 +55,13 @@ const ELEVEN_VOICES = {
     male: [['onwK4e9ZLuTAKqWW03F9', 'Daniel'], ['JBFqnCBsd6RMkjVDRZzb', 'George'], ['JBFqnCBsd6RMkjVDRZzb', 'George']],
   },
   au: {
+    female: [['aEO01A4wXwd1O8GPgGlF', 'Arabella'], ['56bWURjYFHyYyVf490Dp', 'Emma'], ['cvpTJfe9LINpHIOmB2Hp', 'Charlotte']],
     male: [['IKne3meq5aSn9XLyUdCD', 'Charlie'], ['IKne3meq5aSn9XLyUdCD', 'Charlie'], ['IKne3meq5aSn9XLyUdCD', 'Charlie']],
+  },
+  // インド英語（Voice Library から追加した声。ElevenLabs の「My Voices」に追加済みであること）
+  in: {
+    female: [['90ipbRoKi4CpHXvKVtl0', 'Anika'], ['OUBnvvuqEKdDWtapoJFn', 'Tia Mirza'], ['MwUMLXurEzSN7bIfIdXF', 'Tripti']],
+    male: [['0muxiGNHAVvmM1qWRtyV', 'Sid'], ['3gsg3cxXyFLcGIfNbM6C', 'Raju'], ['nlyULslzTRhqlyv46oPj', 'Indrajeet']],
   },
 };
 const ELEVEN_DEFAULT_MODEL = 'eleven_flash_v2_5';
