@@ -18,7 +18,7 @@
 | `ELEVENLABS_MODEL`（任意） | ElevenLabs のモデル。既定 `eleven_flash_v2_5` | — |
 | `ELEVENLABS_DAILY_CHARS`（任意） | 1人1日あたり ElevenLabs で読む文字数の目安。既定 5000（超えた分は Azure） | — |
 | `ELEVENLABS_MIN_CHARS`（任意） | この文字数以上の文だけ ElevenLabs で読む。既定 40 | — |
-| `ELEVENLABS_VOICES`（任意） | 声の差し替え（JSON）。例 `{"us":{"female":["若い声のID","中くらい","年配"]}}` | — |
+| `ELEVENLABS_VOICES`（任意） | 声の差し替え・追加（JSON）。`"ID:表示名"` を若い声・中くらい・年配の順に。例 `{"in":{"female":["ID1:Priya","ID2:Ananya"]},"au":{"female":["ID3:Zoe"]}}` | — |
 | `TTS_DAILY_CHAR_LIMIT`（任意） | 1人1日あたりの Azure 読み上げ文字数の上限。未設定なら20000 | ○ |
 | `STRIPE_SECRET_KEY` | Stripe の秘密キー（`sk_test_…` / `sk_live_…`）。`lib/billing.js` だけが使う | ✕ 絶対にブラウザ側に出さない |
 | `STRIPE_WEBHOOK_SECRET` | Stripe の Webhook の署名シークレット（`whsec_…`） | ✕ 絶対にブラウザ側に出さない |
