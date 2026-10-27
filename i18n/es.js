@@ -494,5 +494,12 @@ I18N.add('es', {
  "コーチ": "Coach",
  "Feedbackについて": "Sobre el Feedback",
  "考えています…": "Pensando…",
- "入力欄に入れる": "Usar"
+ "入力欄に入れる": "Usar",
+ "記号を入力": "Insertar un signo",
+ "カンマ": "Coma",
+ "ピリオド": "Punto",
+ "クエスチョンマーク": "Signo de interrogación",
+ "エクスクラメーションマーク": "Signo de exclamación",
+ "クオーテーションマーク": "Comillas",
+ "アポストロフィ": "Apóstrofo"
 });

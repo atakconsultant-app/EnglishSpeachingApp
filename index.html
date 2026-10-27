@@ -550,7 +550,7 @@ header .spacer{flex:1;}
 /* Input */
 .input-bar{
   padding:12px 20px 16px;
-  display:flex;gap:8px;align-items:flex-end;
+  display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;
   border-top:1px solid var(--border);flex-shrink:0;
 }
 .input-col{
@@ -636,6 +636,18 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 }
 .send-btn:hover{opacity:.85;}
 .send-btn svg{width:18px;height:18px;fill:var(--on-accent);}
+
+/* ─── 記号ボタン ─── */
+.punct-row{display:flex;gap:6px;flex-wrap:wrap;flex-basis:100%;order:3;}
+.punct-row button{
+  min-width:38px;height:32px;padding:0 10px;border-radius:9px;
+  border:1px solid var(--border2);background:var(--surface);color:var(--text);
+  font-size:17px;font-weight:700;line-height:1;cursor:pointer;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;transition:border-color .15s,color .15s;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation;
+}
+.punct-row button:hover{border-color:var(--accent);color:var(--accent);}
+.punct-row button:active{transform:translateY(1px);}
 
 /* ─── コーチに相談 ─── */
 .coach-btn .ic{width:15px;height:15px;}
@@ -869,6 +881,8 @@ button,input,textarea{font-family:inherit;}
   #sugg-row{padding:4px 16px 0;}
   .coach-panel{margin:6px 12px 0;padding:12px;}
   .coach-btn{display:none !important;}
+  .punct-row{gap:5px;}
+  .punct-row button{flex:1;min-width:0;height:30px;padding:0;}
   .sugg-coach{display:inline-flex;}
   .coach-phrases li{flex-direction:column;align-items:stretch;}
   .coach-phrase-actions{justify-content:flex-end;}
@@ -1578,6 +1592,14 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <button class="send-btn" onclick="send()">
         <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
       </button>
+    </div>
+    <div class="punct-row" id="punct-row" role="group" aria-label="記号を入力">
+      <button type="button" data-p="," title="カンマ">,</button>
+      <button type="button" data-p="." title="ピリオド">.</button>
+      <button type="button" data-p="?" title="クエスチョンマーク">?</button>
+      <button type="button" data-p="!" title="エクスクラメーションマーク">!</button>
+      <button type="button" data-p="&quot;" title="クオーテーションマーク">"</button>
+      <button type="button" data-p="'" title="アポストロフィ">'</button>
     </div>
   </div>
 </div>
@@ -3597,6 +3619,7 @@ function resize(el){
 let recognition = null;
 let isListening = false;
 let voiceTimerInterval = null;
+let voiceInterim = '';   // 確定前（話している途中）の認識結果
 let voiceSeconds = 0;
 let interimText = '';
 
@@ -3635,13 +3658,14 @@ let interimText = '';
     for(let i = e.resultIndex; i < e.results.length; i++){
       const t = e.results[i][0].transcript;
       if(e.results[i].isFinal){
-        const seg = tidySpeech(t);
+        const seg = tidySpeech(t, final);
         if(seg) final += (final ? ' ' : '') + seg;
       } else {
         interim += t;
       }
     }
     inp.dataset.finalText = final;
+    voiceInterim = interim;
     // 確定テキスト + リアルタイム中間テキストを表示
     inp.value = final + (interim ? ' ' + interim : '');
     resize(inp);
@@ -3661,16 +3685,56 @@ let interimText = '';
   };
 })();
 
-// 音声認識の結果を読みやすく整える：文頭を大文字に、単独の i を I に
-function tidySpeech(t){
+// 音声認識の結果を読みやすく整える：文の始まり（先頭や . ? ! の後）だけ大文字に、単独の i を I に
+function tidySpeech(t, prev){
   let s = String(t || '').trim().replace(/\s+/g, ' ');
   if(!s) return '';
   s = s.replace(/\bi\b/g, 'I').replace(/\bi'(m|ve|ll|d)\b/gi, (m, x)=>"I'" + x.toLowerCase());
-  return s.charAt(0).toUpperCase() + s.slice(1);
+  const startsSentence = !prev || /[.?!]["']?\s*$/.test(prev);
+  return startsSentence ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 }
 // マイクで話している途中に手で入力・修正したら、マイクを一時停止して手直しした文を残す
 // （次にマイクを押すと、手直しした文の続きに話した内容を足していく）
 document.getElementById('inp').addEventListener('input', ()=>{ if(isListening) stopVoice(false); });
+
+// ══ 記号ボタン（音声入力では付かない , . ? ! " ' を手軽に入れる）══
+function insertPunct(mark){
+  const inp = document.getElementById('inp');
+  const isPunct = /[,.?!]/.test(mark);
+  const joinMark = (before, after)=>{
+    if(isPunct){
+      before = before.replace(/\s+$/, '');
+      return { text: before + mark + (after && /^\s/.test(after) ? '' : ' '), after };
+    }
+    return { text: before + mark, after };
+  };
+  if(isListening){
+    // 話している途中：確定した文の続きに記号を足し、マイクは止めない
+    const r = joinMark(inp.dataset.finalText || '', '');
+    inp.dataset.finalText = r.text.replace(/\s+$/, '');
+    inp.value = r.text + (voiceInterim ? voiceInterim : '');
+    resize(inp);
+    return;
+  }
+  const start = typeof inp.selectionStart === 'number' ? inp.selectionStart : inp.value.length;
+  const end = typeof inp.selectionEnd === 'number' ? inp.selectionEnd : start;
+  const r = joinMark(inp.value.slice(0, start), inp.value.slice(end));
+  inp.value = r.text + r.after;
+  const pos = r.text.length;
+  inp.focus();
+  try{ inp.setSelectionRange(pos, pos); }catch(e){}
+  resize(inp);
+}
+(function initPunct(){
+  const row = document.getElementById('punct-row');
+  // 押してもキーボードが閉じず、カーソル位置も変わらないようにする
+  row.addEventListener('pointerdown', e=>{ if(e.target.closest('button')) e.preventDefault(); });
+  row.addEventListener('mousedown', e=>{ if(e.target.closest('button')) e.preventDefault(); });
+  row.addEventListener('click', e=>{
+    const b = e.target.closest('button[data-p]');
+    if(b) insertPunct(b.dataset.p);
+  });
+})();
 
 function toggleVoice(){
   if(document.getElementById('mic-btn').classList.contains('unsupported')) return;
