@@ -19,6 +19,7 @@ module.exports = async function handler(req, res) {
       GNEWS_API_KEY: has('GNEWS_API_KEY'),
       AZURE_SPEECH_KEY: has('AZURE_SPEECH_KEY'),
       AZURE_SPEECH_REGION: env('AZURE_SPEECH_REGION') || false,
+      ELEVENLABS: !!env('ELEVENLABS_API_KEY'),
       SUPABASE_URL: !!supabaseUrl,
       SUPABASE_ANON_KEY: !!anon,
       SUPABASE_SECRET_KEY: !!secret,

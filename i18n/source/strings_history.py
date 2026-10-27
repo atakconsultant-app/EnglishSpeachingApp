@@ -27,4 +27,5 @@ ROWS = [
 ("前回", "지난번", "上次", "Avant", "Antes"),
 ("スコア", "점수", "分數", "Score", "Puntuación"),
 ("アドバイスを活かしてもう一度練習", "조언을 살려 다시 연습하기", "運用建議再練習一次", "Recommencer en appliquant les conseils", "Practicar de nuevo con los consejos"),
+("読み上げ音声: {name}（ElevenLabs）", "읽기 음성: {name} (ElevenLabs)", "朗讀語音：{name}（ElevenLabs）", "Voix de lecture : {name} (ElevenLabs)", "Voz de lectura: {name} (ElevenLabs)"),
 ]

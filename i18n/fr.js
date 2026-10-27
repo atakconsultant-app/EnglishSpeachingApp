@@ -526,5 +526,6 @@ I18N.add('fr', {
  "あなた": "Vous",
  "前回": "Avant",
  "スコア": "Score",
- "アドバイスを活かしてもう一度練習": "Recommencer en appliquant les conseils"
+ "アドバイスを活かしてもう一度練習": "Recommencer en appliquant les conseils",
+ "読み上げ音声: {name}（ElevenLabs）": "Voix de lecture : {name} (ElevenLabs)"
 });

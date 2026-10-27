@@ -526,5 +526,6 @@ I18N.add('es', {
  "あなた": "Tú",
  "前回": "Antes",
  "スコア": "Puntuación",
- "アドバイスを活かしてもう一度練習": "Practicar de nuevo con los consejos"
+ "アドバイスを活かしてもう一度練習": "Practicar de nuevo con los consejos",
+ "読み上げ音声: {name}（ElevenLabs）": "Voz de lectura: {name} (ElevenLabs)"
 });
