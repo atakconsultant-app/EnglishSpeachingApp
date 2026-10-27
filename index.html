@@ -637,6 +637,45 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 .send-btn:hover{opacity:.85;}
 .send-btn svg{width:18px;height:18px;fill:var(--on-accent);}
 
+/* ─── コーチに相談 ─── */
+.coach-btn .ic{width:15px;height:15px;}
+.sugg-coach{display:none;align-items:center;gap:4px;border-color:var(--accent) !important;color:var(--accent) !important;background:var(--accent-dim) !important;font-weight:700;}
+.sugg-coach .ic{width:14px;height:14px;}
+.coach-panel{margin:6px 24px 0;padding:14px 16px;border:1.5px solid var(--accent);border-radius:16px;background:var(--surface);box-shadow:0 8px 24px rgba(17,17,24,.08);display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
+.coach-panel[hidden]{display:none;}
+.coach-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.coach-head b{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--text);}
+.coach-head b .ic{width:16px;height:16px;color:var(--accent);}
+.coach-sub{display:block;font-size:12px;color:var(--text-dim);margin-top:2px;}
+.coach-close{background:none;border:none;font-size:20px;line-height:1;color:var(--text-dim);cursor:pointer;padding:2px 6px;}
+.coach-ctx{font-size:12px;color:var(--accent);background:var(--accent-dim);border-radius:8px;padding:4px 10px;align-self:flex-start;}
+.coach-ctx[hidden]{display:none;}
+.coach-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.coach-chips button{font-size:12px;padding:6px 12px;border-radius:999px;border:1px solid var(--border2);background:var(--surface2);color:var(--text-sub);cursor:pointer;}
+.coach-chips button:hover{border-color:var(--accent);color:var(--accent);}
+#coach-inp{min-height:56px;max-height:140px;font-size:14px;}
+.coach-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;}
+.coach-msg{font-size:12px;color:#c0392b;margin-right:auto;}
+.coach-av{background:var(--accent-dim) !important;color:var(--accent) !important;}
+.coach-card{flex:1;min-width:0;border:1.5px dashed var(--accent);border-radius:16px;background:var(--surface);padding:14px 16px;}
+.coach-card-title{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin-bottom:8px;}
+.coach-card-title .ic{width:14px;height:14px;}
+.coach-q{font-size:13px;color:var(--text-sub);background:var(--surface2);border-radius:10px;padding:8px 10px;margin-bottom:10px;}
+.coach-q-tag{display:inline-block;font-size:11px;font-weight:700;color:var(--accent);margin-right:6px;}
+.coach-text{font-size:14px;line-height:1.7;color:var(--text);}
+.coach-thinking{font-size:13px;color:var(--text-dim);}
+.coach-phrases{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.coach-phrases li{display:flex;align-items:center;gap:10px;justify-content:space-between;border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:var(--surface2);}
+.coach-en{font-size:14px;font-weight:600;color:var(--text);line-height:1.5;min-width:0;}
+.coach-note{display:block;font-size:11px;font-weight:400;color:var(--text-dim);margin-top:2px;}
+.coach-phrase-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.coach-use{font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;border:none;background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap;}
+.coach-tip{display:flex;gap:6px;align-items:flex-start;margin-top:10px;font-size:13px;color:var(--text-sub);}
+.coach-tip .ic{width:15px;height:15px;color:var(--accent);flex-shrink:0;margin-top:2px;}
+.fb-coach-row{display:flex;justify-content:flex-end;}
+.fb-coach-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:7px 14px;border-radius:999px;border:1px solid var(--accent);background:var(--accent-dim);color:var(--accent);cursor:pointer;}
+.fb-coach-btn .ic{width:14px;height:14px;}
+
 /* ─── End session button ─── */
 .end-session-btn{
   display:flex;align-items:center;gap:5px;
@@ -828,6 +867,11 @@ button,input,textarea{font-family:inherit;}
   .article-strip{padding:12px 16px 10px;}
   #chat{padding:12px 16px;}
   #sugg-row{padding:4px 16px 0;}
+  .coach-panel{margin:6px 12px 0;padding:12px;}
+  .coach-btn{display:none !important;}
+  .sugg-coach{display:inline-flex;}
+  .coach-phrases li{flex-direction:column;align-items:stretch;}
+  .coach-phrase-actions{justify-content:flex-end;}
   .input-bar{padding:10px 14px 14px;}
   .score-row{gap:6px;}
 }
@@ -868,6 +912,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M18 17V9M13 17V5M8 17v-3"/></symbol>
   <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
   <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M9.6 8.2a2.5 2.5 0 0 1 4.8.9c0 1.6-2.4 1.9-2.4 3.4M12 14.6h.01"/></symbol>
   <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
   <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/></symbol>
   <symbol id="i-usercheck" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 11l2 2 4-4"/></symbol>
@@ -1482,6 +1527,25 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <div id="chat"></div>
   <div id="sugg-row"></div>
 
+  <div class="coach-panel" id="coach-panel" hidden>
+    <div class="coach-head">
+      <div><b><svg class="ic" aria-hidden="true"><use href="#i-help"/></svg>コーチに相談</b><span class="coach-sub">会話の相手には伝わりません。日本語で大丈夫です。</span></div>
+      <button type="button" class="coach-close" onclick="closeCoach()" aria-label="閉じる">×</button>
+    </div>
+    <div class="coach-ctx" id="coach-ctx" hidden>このFeedbackについての相談です</div>
+    <div class="coach-chips" id="coach-chips">
+      <button type="button" data-q="本当はこう言いたかった：">本当はこう言いたかった</button>
+      <button type="button" data-q="AIの問いかけに、どう返せばいいか分かりません。">返し方が分からない</button>
+      <button type="button" data-q="今の自分の発言を、もっと自然な英語にしたいです。">もっと自然な言い方</button>
+      <button type="button" data-q="このFeedbackを、もう少し詳しく教えてください。">Feedbackを詳しく</button>
+    </div>
+    <textarea id="coach-inp" rows="2" maxlength="600" placeholder="例：「条件付きで賛成」と言いたかった"></textarea>
+    <div class="coach-actions">
+      <span class="coach-msg" id="coach-msg" aria-live="polite"></span>
+      <button type="button" class="ns-btn primary sm" id="coach-send" onclick="askCoach()">相談する</button>
+    </div>
+  </div>
+
   <div class="input-bar">
     <div class="input-col">
       <textarea id="inp" placeholder="英語で入力、またはマイクで話す…" rows="1"
@@ -1496,6 +1560,9 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       </div>
     </div>
     <div class="btn-row">
+      <button type="button" class="end-session-btn coach-btn" id="coach-btn" onclick="openCoach()" title="コーチに相談（言いたいことの英語表現・返し方など）" aria-label="コーチに相談">
+        <svg class="ic" aria-hidden="true"><use href="#i-help"/></svg><span class="coach-btn-label">相談</span>
+      </button>
       <button class="end-session-btn" id="end-btn" onclick="endSession()" title="セッションを終了してスコアを確認">
         <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 9 12 12 15 9"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
         終了
@@ -2431,6 +2498,7 @@ async function startSession(){
   state.history = [];
   state.sessionLive = true;   // 会話中（「戻る」で離れるときに確認を出す）
   document.getElementById('chat').innerHTML = '';
+  closeCoach();
   document.getElementById('sugg-row').innerHTML = '';
   state.userTurns = 0;
   state.words = 0;
@@ -2521,8 +2589,8 @@ function buildSystem(){
   };
   const feedbackLang = state.level === 'advanced' ? 'English' : L;
   const modeInst = {
-    discussion:`You are an engaging discussion partner. Ask thought-provoking questions. After every 2-3 user responses, provide brief feedback on their English (grammar, vocabulary, fluency) in a "💡 Feedback" section.`,
-    facilitation:`You play the role of a meeting participant (sometimes agreeable, sometimes challenging). The user is the facilitator. After every 2-3 user responses, evaluate their facilitation skills and English in a "💡 Feedback" section.`,
+    discussion:`You are an engaging discussion partner. Ask thought-provoking questions. After every 2 user responses, give feedback on their English (grammar, vocabulary, fluency) in a "💡 Feedback" section.`,
+    facilitation:`You play the role of a meeting participant (sometimes agreeable, sometimes challenging). The user is the facilitator. After every 2 user responses, evaluate their facilitation skills and English in a "💡 Feedback" section.`,
     interview:`You are a professional interviewer at a global company. Ask structured interview questions based on the ${state.article && state.article.custom ? "learner's topic" : 'article'}. After each user answer, give detailed feedback on content, delivery, and English in a "💡 Feedback" section.`
   };
   const targets = (state.targets||[]).map(t=>t.word);
@@ -2538,8 +2606,13 @@ The details may be written in any language; always conduct the session in Englis
   return `${levelInst[state.level]} ${modeInst[state.mode]}
 ${material}
 Key discussion points: ${a.points.join(', ')}
-Keep responses concise (under 120 words for the main content). Always end your turn with a question or prompt so the learner keeps speaking. Format feedback clearly with scores when giving "💡 Feedback".
-In "💡 Feedback", write each score as "Label: n/10" with an English label (for example "Grammar: 7/10"), and write the comments in ${feedbackLang}; keep the English expressions you quote or suggest in English.
+Keep your conversational reply concise (under 120 words; the feedback section does not count toward this). Always end your conversational reply with a question or prompt so the learner keeps speaking. When you give "💡 Feedback", write your conversational reply first and put the "💡 Feedback" section last.
+In "💡 Feedback", write each score on its own line as "Label: n/10" with an English label (for example "Grammar: 7/10"), 2-3 scores. Then give specific, generous comments in ${feedbackLang} (about 80-150 words), each on its own line starting with a short label in ${feedbackLang} followed by a colon:
+- what went well, quoting the learner's own words;
+- 1-3 corrections in the form "learner's phrase" → "better phrase", with a short reason;
+- one more natural, native-like way to express their main point;
+- one concrete thing to try in their next reply.
+Keep the English expressions you quote or suggest in English.
 Never mix ${L} into English sentences. If you give a ${L} hint or explanation, put it on its own separate line that starts with "💬 " (the app reads English aloud and skips those lines).${targetInst}
 ${speakerPersonaInstruction()}`;
 }
@@ -2629,11 +2702,16 @@ function renderFeedbackCard(rawText){
   }
 
   // Clean raw text
-  const cleanText=rawText.replace(/(\w[\w\s]+?):\s*\d+\/\d+/g,'').replace(/^\s*[\-\*]\s*/gm,'').trim();
+  const cleanText=rawText.replace(/(\w[\w\s]+?):\s*\d+\/\d+/g,'').replace(/^\s*[\-\*]\s*/gm,'').replace(/\n{3,}/g,'\n\n').trim();
   if(cleanText){
+    // 「良かった点：…」のような行は、見出し部分を太字にして読みやすくする
+    const lines = cleanText.split('\n').map(line=>{
+      const m = line.match(/^([^:：]{1,24}?)\s*[:：]\s*(.+)$/);
+      return m && !/https?$/i.test(m[1]) ? `<b>${escHtml(m[1])}</b>：${escHtml(m[2])}` : escHtml(line);
+    });
     html+=`<div class="feedback-section">
       <div class="feedback-section-title">コメント</div>
-      <div class="feedback-text">${escHtml(cleanText).replace(/\n/g,'<br>')}</div>
+      <div class="feedback-text">${lines.join('<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>
     </div>`;
   }
 
@@ -2648,10 +2726,133 @@ function renderFeedbackCard(rawText){
       </div>
     </div>`;
   }
+  html+=`<div class="feedback-section fb-coach-row"><button type="button" class="fb-coach-btn">${ICON('help')}このFeedbackについて相談</button></div>`;
   html+=`</div></div>`;
   wrap.innerHTML=html;
+  wrap.querySelector('.fb-coach-btn').addEventListener('click',()=>openCoach({ feedback: rawText }));
   chat.appendChild(wrap);
   chat.scrollTop=chat.scrollHeight;
+}
+
+// ══ コーチに相談（会話の相手とは別に、言いたいことの英語表現や返し方を相談する）══
+// 相談のやり取りは会話の履歴（state.history）に入れないので、会話の相手の進行には影響しない
+let coachCtx = null;
+let coachBusy = false;
+function openCoach(ctx){
+  coachCtx = ctx || null;
+  const panel = document.getElementById('coach-panel');
+  panel.hidden = false;
+  document.getElementById('coach-ctx').hidden = !(coachCtx && coachCtx.feedback);
+  document.getElementById('coach-msg').textContent = '';
+  const inp = document.getElementById('coach-inp');
+  if(coachCtx && coachCtx.feedback && !inp.value.trim()) inp.value = '';
+  setTimeout(()=>inp.focus(), 30);
+}
+function closeCoach(){
+  document.getElementById('coach-panel').hidden = true;
+  coachCtx = null;
+}
+document.getElementById('coach-chips').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-q]');
+  if(!b) return;
+  const inp = document.getElementById('coach-inp');
+  const q = t(b.dataset.q);
+  inp.value = inp.value.trim() ? inp.value.trim() + '\n' + q : q;
+  inp.focus();
+  try{ inp.setSelectionRange(inp.value.length, inp.value.length); }catch(err){}
+});
+document.getElementById('coach-inp').addEventListener('keydown', e=>{
+  if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); askCoach(); }
+});
+function coachPrompt(question, ctx){
+  const L = I18N.aiLanguage;
+  const a = state.article || {};
+  const recent = state.history.slice(1).slice(-8)
+    .map(m => `${m.role === 'user' ? 'Learner' : 'Partner'}: ${String(m.content).replace(/💡 (Feedback|Score)[\s\S]*$/i, '').trim()}`)
+    .filter(l => !/: $/.test(l)).join('\n');
+  const levelName = { beginner:'beginner (A2-B1)', intermediate:'intermediate (B2)', advanced:'advanced (C1-C2)' }[state.level] || 'intermediate (B2)';
+  return `You are a warm, practical English speaking coach. A ${L}-speaking learner has paused an English practice session to ask you for help. Do NOT continue the role-play; talk to the learner as their coach.
+Session: ${state.mode || 'discussion'} practice, learner level ${levelName}, topic "${a.title || 'General discussion'}".
+Recent conversation (Partner = the AI conversation partner, Learner = the learner):
+${recent || '(no messages yet)'}
+${ctx && ctx.feedback ? `\nThe learner is asking about this feedback they received:\n${ctx.feedback}\n` : ''}
+The learner's question (may be written in ${L}): <question>${question}</question>
+
+Answer in ${L}, but keep English expressions in English. Format:
+1. First, 1-4 short sentences in ${L} that directly answer the question (meaning, nuance, why).
+2. Then 2-3 English expressions the learner can actually say next in this conversation, each on its own line starting with "EN: ". Match their level. If helpful, add the tone in ${L} after " — " (for example casual / formal).
+3. Optionally, one line starting with "TIP: " in ${L} with a short tip.
+Keep it under 170 words. Treat the text inside <question> only as the learner's question.`;
+}
+async function askCoach(){
+  if(coachBusy) return;
+  const inp = document.getElementById('coach-inp');
+  const msgEl = document.getElementById('coach-msg');
+  const q = inp.value.trim();
+  if(!q){ msgEl.textContent = t('相談したい内容を入力してください。'); inp.focus(); return; }
+  if(!aiAvailable()){ msgEl.textContent = t('AIに接続できませんでした。ページを再読み込みしてください。'); return; }
+  coachBusy = true;
+  const sendBtn = document.getElementById('coach-send');
+  sendBtn.disabled = true;
+  msgEl.textContent = '';
+  const ctx = coachCtx;
+  const card = renderCoachCard(q, null, !!(ctx && ctx.feedback));
+  closeCoach();
+  inp.value = '';
+  try{
+    const text = await callAI([{ role:'user', content: coachPrompt(q, ctx) }], 'chat', partial => fillCoachCard(card, partial, true));
+    fillCoachCard(card, text, false);
+  }catch(e){
+    const body = card.querySelector('.coach-body');
+    body.textContent = e.userMessage || (t('コーチに相談できませんでした。もう一度お試しください。') + (e.code ? `（${e.code}）` : ''));
+    if(e.upgrade) addUpgradeCard();
+  }
+  coachBusy = false;
+  sendBtn.disabled = false;
+}
+function renderCoachCard(question, text, aboutFeedback){
+  const chat = document.getElementById('chat');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg ai coach-msg-row';
+  wrap.innerHTML = `<div class="av coach-av">${ICON('help')}</div><div class="coach-card">
+    <div class="coach-card-title">${ICON('help')}${escHtml(t('コーチ'))}</div>
+    <div class="coach-q">${aboutFeedback ? `<span class="coach-q-tag">${escHtml(t('Feedbackについて'))}</span>` : ''}${escHtml(question).replace(/\n/g,'<br>')}</div>
+    <div class="coach-body"><span class="coach-thinking">${escHtml(t('考えています…'))}</span></div>
+  </div>`;
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+  return wrap;
+}
+function fillCoachCard(card, text, partial){
+  const body = card.querySelector('.coach-body');
+  const lines = String(text || '').split('\n').map(l => l.trim()).filter(Boolean);
+  const expl = [], phrases = [], tips = [];
+  lines.forEach(l => {
+    let m;
+    if((m = l.match(/^(?:[-*•]\s*)?(?:\d+[.)]\s*)?EN\s*[:：]\s*(.+)$/i))) phrases.push(m[1]);
+    else if((m = l.match(/^(?:[-*•]\s*)?TIP\s*[:：]\s*(.+)$/i))) tips.push(m[1]);
+    else expl.push(l.replace(/^\d+[.)]\s*/, ''));
+  });
+  let html = '';
+  if(expl.length) html += `<div class="coach-text">${expl.map(l => escHtml(l).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')).join('<br>')}</div>`;
+  if(phrases.length){
+    html += `<ul class="coach-phrases">` + phrases.map((p, i) => {
+      const parts = p.split(/\s+[—–]\s+/);
+      const en = parts[0].replace(/^["“]|["”]$/g, '').trim();
+      const note = parts.slice(1).join(' — ');
+      return `<li><div class="coach-en">${escHtml(en)}${note ? `<span class="coach-note">${escHtml(note)}</span>` : ''}</div>
+        ${partial ? '' : `<div class="coach-phrase-actions"><button type="button" class="action-btn coach-say" data-i="${i}" title="${escHtml(t('読み上げる'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button><button type="button" class="coach-use" data-i="${i}">${escHtml(t('入力欄に入れる'))}</button></div>`}</li>`;
+    }).join('') + `</ul>`;
+  }
+  if(tips.length) html += `<div class="coach-tip">${ICON('bulb')}${tips.map(escHtml).join('<br>')}</div>`;
+  body.innerHTML = html || `<span class="coach-thinking">${escHtml(t('考えています…'))}</span>`;
+  if(!partial){
+    const ens = phrases.map(p => p.split(/\s+[—–]\s+/)[0].replace(/^["“]|["”]$/g, '').trim());
+    body.querySelectorAll('.coach-use').forEach(b => b.addEventListener('click', ()=>useSuggestion(ens[+b.dataset.i])));
+    body.querySelectorAll('.coach-say').forEach(b => b.addEventListener('click', ()=>speakText(b, ens[+b.dataset.i])));
+  }
+  const chat = document.getElementById('chat');
+  chat.scrollTop = chat.scrollHeight;
 }
 
 // ══ Chat helpers ══
@@ -2949,11 +3150,14 @@ function showSuggestions(){
     picks.push(pool[i].replace('{home}', I18N.homeShort));
   }
   suggIdx=(suggIdx+3)%pool.length;
-  row.innerHTML=picks.map((s,i)=>`<button type="button" class="sugg" data-i="${i}">${escHtml(s)}</button>`).join('');
+  // スマホでは入力欄の横が狭いので、「相談」ボタンは候補の列の先頭に出す
+  row.innerHTML=`<button type="button" class="sugg sugg-coach" onclick="openCoach()">${ICON('help')}${escHtml(t('相談'))}</button>`
+    + picks.map((s,i)=>`<button type="button" class="sugg" data-i="${i}">${escHtml(s)}</button>`).join('');
   row.querySelectorAll('.sugg').forEach(b=>b.addEventListener('click',()=>useSuggestion(picks[+b.dataset.i])));
 }
 // 候補ボタン：送信せずに入力欄へ入れて、続きを書けるようにする（「I think...」→「I think 」）
 function useSuggestion(text){
+  if(isListening) stopVoice(false);
   const inp = document.getElementById('inp');
   const phrase = String(text).replace(/(\.\.\.|…)\s*$/, '').replace(/\s+$/, '') + ' ';
   const start = typeof inp.selectionStart === 'number' ? inp.selectionStart : inp.value.length;
@@ -3407,8 +3611,11 @@ let interimText = '';
 
   recognition = new SpeechRecognition();
   recognition.lang = 'en-US';       // 英語認識
-  recognition.continuous = true;    // 話し続けても認識
+  // 話し続けても認識。ただし Android の Chrome は連続モードで同じ文を何度も返すことがあるため、
+  // 1文ずつ認識して自動で再開する（onend で再接続）
+  recognition.continuous = !/Android/i.test(navigator.userAgent);
   recognition.interimResults = true; // リアルタイム表示
+  recognition.maxAlternatives = 1;
 
   recognition.onstart = () => {
     isListening = true;
@@ -3419,6 +3626,7 @@ let interimText = '';
   };
 
   recognition.onresult = (e) => {
+    if(!isListening) return;   // 止めた後に届いた結果で、入力欄を上書きしない
     const inp = document.getElementById('inp');
     let interim = '';
     let final = inp.dataset.finalText || '';
@@ -3426,7 +3634,8 @@ let interimText = '';
     for(let i = e.resultIndex; i < e.results.length; i++){
       const t = e.results[i][0].transcript;
       if(e.results[i].isFinal){
-        final += (final ? ' ' : '') + t.trim();
+        const seg = tidySpeech(t);
+        if(seg) final += (final ? ' ' : '') + seg;
       } else {
         interim += t;
       }
@@ -3450,6 +3659,17 @@ let interimText = '';
     if(isListening) recognition.start();
   };
 })();
+
+// 音声認識の結果を読みやすく整える：文頭を大文字に、単独の i を I に
+function tidySpeech(t){
+  let s = String(t || '').trim().replace(/\s+/g, ' ');
+  if(!s) return '';
+  s = s.replace(/\bi\b/g, 'I').replace(/\bi'(m|ve|ll|d)\b/gi, (m, x)=>"I'" + x.toLowerCase());
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+// マイクで話している途中に手で入力・修正したら、マイクを一時停止して手直しした文を残す
+// （次にマイクを押すと、手直しした文の続きに話した内容を足していく）
+document.getElementById('inp').addEventListener('input', ()=>{ if(isListening) stopVoice(false); });
 
 function toggleVoice(){
   if(document.getElementById('mic-btn').classList.contains('unsupported')) return;
@@ -3477,7 +3697,8 @@ function stopVoice(autoSend = false){
   stopVoiceTimer();
 
   const inp = document.getElementById('inp');
-  const finalText = (inp.dataset.finalText || inp.value).trim();
+  // 画面に見えている文をそのまま使う（話したあとに手で直した内容を優先する）
+  const finalText = inp.value.replace(/\s+$/, '').trim();
   inp.value = finalText;
   inp.dataset.finalText = '';
   resize(inp);
