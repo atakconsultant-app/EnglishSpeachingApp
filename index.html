@@ -3622,7 +3622,8 @@ let interimText = '';
     micBtn.classList.add('listening');
     document.getElementById('inp').classList.add('recording');
     document.getElementById('voice-status').classList.add('show');
-    startVoiceTimer();
+    // 無音などで認識が自動で再開したときはタイマーを作り直さない（増えると時間が早送りになり、途中で止まってしまう）
+    if(!voiceTimerInterval) startVoiceTimer();
   };
 
   recognition.onresult = (e) => {
@@ -3732,13 +3733,14 @@ function cancelVoice(){
 }
 
 function startVoiceTimer(){
+  clearInterval(voiceTimerInterval);
   voiceSeconds = 0;
   updateVoiceTimer();
   voiceTimerInterval = setInterval(()=>{
     voiceSeconds++;
     updateVoiceTimer();
-    // 3分で自動停止
-    if(voiceSeconds >= 180) stopVoice(true);
+    // 3分で自動停止（送信はしない。入力欄の文を確認してから送れるように）
+    if(voiceSeconds >= 180) stopVoice(false);
   }, 1000);
 }
 function stopVoiceTimer(){
