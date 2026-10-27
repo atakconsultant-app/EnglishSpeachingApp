@@ -1,0 +1,30 @@
+# ScooPitch 翻訳表（学習履歴の会話記録・言い直し練習・前回のアドバイス）
+# 各行: (日本語の原文, 韓国語, 繁体字中国語（台湾）, フランス語, スペイン語)
+
+ROWS = [
+("Feedbackを活かして言い直す", "Feedback을 살려 다시 말하기", "運用 Feedback 重新回答", "Reformuler avec le Feedback", "Reformular con el Feedback"),
+("言い直し練習", "다시 말하기 연습", "重新回答練習", "Reformulation", "Reformulación"),
+("言い直し中", "다시 말하기 중", "重新回答中", "Reformulation", "Reformulando"),
+("やめる", "그만하기", "結束", "Arrêter", "Salir"),
+("問いかけ", "질문", "提問", "Question", "Pregunta"),
+("前回のあなたの回答", "지난번 내 대답", "上次你的回答", "Votre première réponse", "Tu primera respuesta"),
+("Feedbackの「直すと良い点」「より自然な言い方」を意識して、入力欄からもう一度答えてみましょう（マイクもOK）。", "Feedback의 '고치면 좋은 점'과 '더 자연스러운 표현'을 의식하면서 입력란에서 다시 대답해 보세요(마이크도 OK).", "請留意 Feedback 中「可以改進的地方」與「更自然的說法」，從輸入欄再回答一次（也可以用麥克風）。", "En tenant compte des corrections et des formulations plus naturelles du Feedback, répondez à nouveau dans le champ de saisie (micro possible).", "Teniendo en cuenta las correcciones y las formas más naturales del Feedback, vuelve a responder en el cuadro de texto (también con el micrófono)."),
+("もう一度答えてみましょう（マイクもOK）", "다시 대답해 보세요(마이크도 OK)", "再回答一次吧（也可以用麥克風）", "Répondez à nouveau (micro possible)", "Vuelve a responder (también con el micrófono)"),
+("言い直し完了！会話に戻って、AIの問いかけに答えましょう。", "다시 말하기 완료! 대화로 돌아가 AI의 질문에 답해 보세요.", "重新回答完成！回到對話，回答 AI 的提問吧。", "Reformulation terminée ! Revenez à la conversation et répondez à l'IA.", "¡Reformulación terminada! Vuelve a la conversación y responde a la IA."),
+("言い直し", "다시 말하기", "重新回答", "Reformulation", "Reformulación"),
+("評価できませんでした。もう一度お試しください。", "평가하지 못했어요. 다시 시도해 주세요.", "無法評估，請再試一次。", "Évaluation impossible. Réessayez.", "No se pudo evaluar. Inténtalo de nuevo."),
+("言い直しの結果", "다시 말하기 결과", "重新回答的結果", "Résultat de la reformulation", "Resultado de la reformulación"),
+("良くなった点", "좋아진 점", "進步的地方", "Progrès", "Mejoras"),
+("さらに直すと良い点", "더 고치면 좋은 점", "還可以改進的地方", "À améliorer encore", "Aún por mejorar"),
+("お手本", "모범 답안", "範例", "Exemple de réponse", "Respuesta modelo"),
+("今回意識するポイント（前回のアドバイス）", "이번에 의식할 포인트(지난번 조언)", "這次要注意的重點（上次的建議）", "Points à travailler (conseils précédents)", "Puntos a tener en cuenta (consejos anteriores)"),
+("会話とアドバイスを見る", "대화와 조언 보기", "查看對話與建議", "Voir la conversation et les conseils", "Ver la conversación y los consejos"),
+("ベストフレーズ", "베스트 문장", "最佳句子", "Meilleure phrase", "Mejor frase"),
+("まとめのアドバイス", "정리 조언", "總結建議", "Conseils de synthèse", "Consejos finales"),
+("この回の会話は保存されていません（保存機能を追加する前の記録です）。", "이 회차의 대화는 저장되어 있지 않아요(저장 기능이 추가되기 전의 기록이에요).", "這一次的對話沒有保存（這是新增保存功能之前的紀錄）。", "Cette conversation n'a pas été enregistrée (séance antérieure à cette fonction).", "Esta conversación no se guardó (es anterior a esta función)."),
+("会話の記録", "대화 기록", "對話紀錄", "Conversation", "Conversación"),
+("あなた", "나", "你", "Vous", "Tú"),
+("前回", "지난번", "上次", "Avant", "Antes"),
+("スコア", "점수", "分數", "Score", "Puntuación"),
+("アドバイスを活かしてもう一度練習", "조언을 살려 다시 연습하기", "運用建議再練習一次", "Recommencer en appliquant les conseils", "Practicar de nuevo con los consejos"),
+]
