@@ -1026,6 +1026,9 @@ body.is-guest header{padding-top:14px;padding-bottom:12px;}
 <link rel="stylesheet" href="intro-fx.css">
 <script src="intro-fx.js" defer></script>
 <link rel="stylesheet" href="pages.css">
+<link rel="stylesheet" href="glass.css">
+<script>/* Liquid Glass 風ボタンのプレビュー：?glass=all（すべてのボタン・既定）/ ?glass=nav（浮かぶ操作部分だけ）/ ?glass=off（今のデザイン） */
+(function(){var g=new URLSearchParams(location.search).get('glass');if(g!=='off')document.documentElement.dataset.glass=(g==='nav'?'nav':'all');})();</script>
 <script>
 const THEMES=['studio','playful','gallery'];
 function applyTheme(t){

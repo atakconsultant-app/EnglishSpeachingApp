@@ -1,0 +1,139 @@
+/* ════════════════════════════════════════════════════════════
+   Liquid Glass 風のボタン（プレビュー）
+   - html[data-glass="nav"] … 画面に浮かぶ操作部分だけ（下のメニュー・ヘッダーのボタン・会話の操作ボタン・単語帳ボタン）
+   - html[data-glass="all"] … 上に加えて、ページの中のボタンもすべて
+   URL に ?glass=nav / ?glass=all / ?glass=off を付けて切り替える。
+   ブラウザの Web 技術では、iPhone の「光の屈折（後ろが歪んで見える）」までは再現できないため、
+   すりガラスの透け感・縁の光・ハイライト・押したときの縮みで近づけている。
+   ════════════════════════════════════════════════════════════ */
+
+html[data-glass] {
+  --g-fill: linear-gradient(180deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.34) 100%);
+  --g-sheen: radial-gradient(130% 90% at 18% -10%, rgba(255,255,255,.85) 0%, rgba(255,255,255,0) 52%);
+  --g-border: rgba(255,255,255,.75);
+  --g-edge: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.35), inset 0 0 0 .5px rgba(255,255,255,.5);
+  --g-drop: 0 6px 18px rgba(17,17,24,.10), 0 1px 3px rgba(17,17,24,.08);
+  --g-blur: blur(18px) saturate(185%);
+  --g-dark: linear-gradient(180deg, rgba(46,46,58,.94) 0%, rgba(17,17,24,.9) 100%);
+  --g-dark-sheen: radial-gradient(120% 90% at 20% -10%, rgba(255,255,255,.38) 0%, rgba(255,255,255,0) 50%);
+  --g-dark-edge: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 1px rgba(255,255,255,.08), inset 0 0 0 .5px rgba(255,255,255,.18);
+  --g-accent: linear-gradient(180deg, color-mix(in srgb, var(--accent) 22%, rgba(255,255,255,.7)) 0%, color-mix(in srgb, var(--accent) 14%, rgba(255,255,255,.3)) 100%);
+}
+
+/* ── 共通：白いガラス ── */
+html[data-glass] :is(
+  .hdr-btn:not(.solid), .lang-switch, .hdr-menu-btn,
+  .mic-btn, .end-session-btn, .punct-row button, .sugg:not(.sugg-coach), .strip-toggle, .retry-bar button, .vocab-fab
+),
+html[data-glass="all"] :is(
+  .ns-btn.ghost, .action-btn, .topic-chip:not(.active), .level-btn, .btn-outline, .add-vocab-btn, .back-btn,
+  .strip-expand, .fb-coach-btn, .wtp-btn, .coach-chips button, .voice-cancel
+) {
+  background: var(--g-sheen), var(--g-fill) !important;
+  -webkit-backdrop-filter: var(--g-blur);
+  backdrop-filter: var(--g-blur);
+  border: 1px solid var(--g-border) !important;
+  box-shadow: var(--g-edge), var(--g-drop) !important;
+  color: var(--text);
+  transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s ease, filter .18s ease !important;
+}
+
+/* ── 共通：濃い色のガラス（目立たせたいボタン） ── */
+html[data-glass] :is(.hdr-btn.solid, .send-btn),
+html[data-glass="all"] :is(.ns-btn.primary, .btn-gold:not(:disabled), .topic-chip.active, .fb-retry-btn) {
+  background: var(--g-dark-sheen), var(--g-dark) !important;
+  -webkit-backdrop-filter: var(--g-blur);
+  backdrop-filter: var(--g-blur);
+  border: 1px solid rgba(255,255,255,.22) !important;
+  box-shadow: var(--g-dark-edge), 0 8px 22px rgba(17,17,24,.22), 0 1px 3px rgba(17,17,24,.18) !important;
+  color: #fff !important;
+  transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s ease, filter .18s ease !important;
+}
+html[data-glass] .send-btn svg { fill: #fff !important; }
+
+/* ── アクセント色のガラス（選択中・相談） ── */
+html[data-glass] :is(.sugg-coach),
+html[data-glass="all"] :is(.level-btn.selected, .wtp-btn[aria-pressed="true"]) {
+  background: var(--g-sheen), var(--g-accent) !important;
+  -webkit-backdrop-filter: var(--g-blur);
+  backdrop-filter: var(--g-blur);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, white) !important;
+  box-shadow: var(--g-edge), 0 6px 18px color-mix(in srgb, var(--accent) 22%, transparent) !important;
+  color: var(--accent) !important;
+}
+html[data-glass="all"] .wtp-btn[data-v="no"][aria-pressed="true"] { color: #c46a12 !important; border-color: #f1c9a0 !important; }
+html[data-glass="all"] .wtp-btn[data-v="yes"][aria-pressed="true"] { color: #0f9f7a !important; border-color: #a8e0cd !important; }
+
+/* 録音中のマイク */
+html[data-glass] .mic-btn.listening {
+  background: radial-gradient(120% 90% at 20% -10%, rgba(255,255,255,.8), rgba(255,255,255,0) 52%), linear-gradient(180deg, rgba(255,214,214,.8), rgba(255,170,170,.45)) !important;
+  border-color: rgba(255,190,190,.9) !important;
+}
+/* ゴール達成で光る「終了」 */
+html[data-glass] .end-session-btn.ready {
+  background: var(--g-dark-sheen), linear-gradient(180deg, color-mix(in srgb, var(--accent) 92%, white), color-mix(in srgb, var(--accent) 80%, black)) !important;
+  color: #fff !important; border-color: rgba(255,255,255,.35) !important;
+}
+
+/* ── 押したとき：ぷにっと縮む／触れたとき：少し明るく ── */
+html[data-glass] :is(
+  .hdr-btn, .lang-switch, .hdr-menu-btn, .mic-btn, .send-btn, .end-session-btn, .punct-row button, .sugg,
+  .strip-toggle, .retry-bar button, .vocab-fab, .nav-item
+):hover,
+html[data-glass="all"] :is(
+  .ns-btn, .btn-gold, .action-btn, .topic-chip, .level-btn, .btn-outline, .add-vocab-btn, .back-btn,
+  .strip-expand, .fb-coach-btn, .fb-retry-btn, .wtp-btn, .coach-chips button, .voice-cancel
+):hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.04);
+}
+html[data-glass] :is(
+  .hdr-btn, .lang-switch, .hdr-menu-btn, .mic-btn, .send-btn, .end-session-btn, .punct-row button, .sugg,
+  .strip-toggle, .retry-bar button, .vocab-fab, .nav-item
+):active,
+html[data-glass="all"] :is(
+  .ns-btn, .btn-gold, .action-btn, .topic-chip, .level-btn, .btn-outline, .add-vocab-btn, .back-btn,
+  .strip-expand, .fb-coach-btn, .fb-retry-btn, .wtp-btn, .coach-chips button, .voice-cancel
+):active {
+  transform: scale(.95) !important;
+  filter: brightness(1.08);
+}
+
+/* 紹介ページ最後の黒い帯の中のボタン：白いガラス */
+html[data-glass="all"] .final-cta .ns-btn.primary {
+  background: radial-gradient(130% 90% at 18% -10%, rgba(255,255,255,.6), rgba(255,255,255,0) 52%), linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.12)) !important;
+  border-color: rgba(255,255,255,.45) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 8px 22px rgba(0,0,0,.3) !important;
+}
+
+/* ── スマホの下のメニュー：画面から浮いたガラスのカプセル（後ろの内容が透けて見える） ── */
+@media (max-width: 760px) {
+  html[data-glass] .side-nav {
+    left: 10px; right: 10px; bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    padding: 5px; border-radius: 30px;
+    background: radial-gradient(140% 120% at 15% -20%, rgba(255,255,255,.75), rgba(255,255,255,0) 55%), linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,.62));
+    -webkit-backdrop-filter: blur(22px) saturate(190%);
+    backdrop-filter: blur(22px) saturate(190%);
+    border: 1px solid rgba(255,255,255,.8) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.3), 0 12px 32px rgba(17,17,24,.16), 0 2px 6px rgba(17,17,24,.08);
+  }
+  html[data-glass] .nav-item { border-radius: 24px; transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .18s ease; }
+  html[data-glass] .nav-item[aria-current="page"] {
+    background: var(--g-sheen), var(--g-accent) !important;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, white) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 2px 8px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+  }
+  /* メニューの後ろまで内容をスクロールさせ、最後だけメニューの高さ分の余白をとる */
+  html[data-glass] body.is-authed .app-main { padding-bottom: 0; }
+  html[data-glass] body.is-authed :is(#s-cat, #s-mode, #s-summary, .page-screen)::after {
+    content: ''; display: block; flex: 0 0 calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+  /* 会話中は下に隠す（☰ で出す） */
+  html[data-glass] body.in-session .side-nav { transform: translateY(calc(100% + 40px)); }
+  html[data-glass] body.in-session.nav-open .side-nav { transform: none; }
+}
+
+/* 透明表示を減らす設定の人には、すりガラスをやめて不透明にする */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-glass] * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+}

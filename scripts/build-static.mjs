@@ -8,7 +8,7 @@ import './gen-config.mjs';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const dist = join(root, 'dist');
 const PUBLIC = [
-  'index.html', 'i18n.js', 'auth-client.js', 'supabase-config.js', 'intro.css', 'intro-fx.css', 'intro-fx.js', 'pages.css',
+  'index.html', 'i18n.js', 'auth-client.js', 'supabase-config.js', 'intro.css', 'intro-fx.css', 'intro-fx.js', 'pages.css', 'glass.css',
   'staticwebapp.config.json', 'themes', 'videos', 'auth', 'legal',
   'robots.txt', 'sitemap.xml', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'og-image.png',
 ];
