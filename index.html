@@ -3180,7 +3180,7 @@ async function azureAudioUrl(text, p){
   azureTts = 'on';
   lastAzureVoice = res.headers.get('X-Voice') || lastAzureVoice;
   const url = URL.createObjectURL(await res.blob());
-  ttsCache.set(key, { url, voice: lastAzureVoice });
+  ttsCache.set(key, { url, voice: lastAzureVoice, note: res.headers.get('X-Tts-Note') || '' });
   // スピーカー設定を開いているときは、実際に使った声の名前をすぐ表示する
   if(document.getElementById('s-speaker').classList.contains('active')) renderVoiceStatus();
   if(ttsCache.size > 40){ const [k, v] = ttsCache.entries().next().value; ttsCache.delete(k); URL.revokeObjectURL(v.url); }
@@ -4752,6 +4752,23 @@ function speechLabel(key, val){
   if(key === 'volume') return Math.round(val * 100) + '%';
   return Number(val).toFixed(2);
 }
+// ElevenLabs ではなく Azure で読み上げた理由（サーバーの X-Tts-Note）を、利用者に分かる言葉にする
+function ttsNoteText(note){
+  if(!note || note === 'short_text') return '';
+  if(note === 'not_configured') return ' ／ ' + t('ElevenLabs の鍵（ELEVENLABS_API_KEY）が設定されていないため、Azure の声で読み上げています。');
+  if(note === 'daily_share_used') return ' ／ ' + t('今日の ElevenLabs の読み上げ分を使い切ったため、Azure の声で読み上げています。');
+  if(note === 'no_voice') return ' ／ ' + t('この発音・性別に合う ElevenLabs の声がないため、Azure の声で読み上げています。');
+  const m = String(note).match(/^elevenlabs_(\w+?)(?:_(.+))?$/);
+  if(!m) return '';
+  const status = m[1], code = (m[2] || '').toLowerCase();
+  let hint = '';
+  if(/permission/.test(code)) hint = t('鍵に「Text to Speech」の権限があるか確認してください。');
+  else if(/voice_not_found|voice/.test(code) || status === '404') hint = t('この声が ElevenLabs の「My Voices」に追加されているか確認してください。');
+  else if(/quota|credit|limit/.test(code) || status === '429') hint = t('ElevenLabs の残りの文字数（クレジット）を確認してください。');
+  else if(/payment|paid|subscription|plan/.test(code) || status === '402') hint = t('この声を使うには ElevenLabs の有料プランが必要です。');
+  else if(/api_key|unauthorized|invalid/.test(code) || status === '401') hint = t('鍵が正しく登録されているか確認してください。');
+  return ' ／ ' + t('ElevenLabs でエラーが起きたため、Azure の声で読み上げています（{code}）。', {code: status + (code ? ' ' + code : '')}) + (hint ? ' ' + hint : '');
+}
 function renderVoiceStatus(){
   const el = document.getElementById('sp-voice-status');
   if(!el) return;
@@ -4763,7 +4780,7 @@ function renderVoiceStatus(){
       ? t('高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。')
       : v.startsWith('ElevenLabs:')
         ? t('読み上げ音声: {name}（ElevenLabs）', {name: v.slice(11)})
-        : t('読み上げ音声: {name}（Azure ニューラル音声）', {name: v.replace(/^en-\w+-|Neural$/g, '') + ' · ' + v.slice(0, 5)});
+        : t('読み上げ音声: {name}（Azure ニューラル音声）', {name: v.replace(/^en-\w+-|Neural$/g, '') + ' · ' + v.slice(0, 5)}) + ttsNoteText(hit[1].note);
     return;
   }
   if(!('speechSynthesis' in window)) return;
