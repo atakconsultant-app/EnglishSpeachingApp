@@ -528,14 +528,5 @@ I18N.add('zh-TW', {
  "スコア": "分數",
  "アドバイスを活かしてもう一度練習": "運用建議再練習一次",
  "読み上げ音声: {name}（ElevenLabs）": "朗讀語音：{name}（ElevenLabs）",
- "高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。": "以高品質的 AI 語音（ElevenLabs 或 Azure）朗讀。按下「試聽」即可顯示目前使用的語音名稱。",
- "ElevenLabs の鍵（ELEVENLABS_API_KEY）が設定されていないため、Azure の声で読み上げています。": "尚未設定 ElevenLabs 金鑰（ELEVENLABS_API_KEY），因此使用 Azure 語音朗讀。",
- "今日の ElevenLabs の読み上げ分を使い切ったため、Azure の声で読み上げています。": "今天的 ElevenLabs 朗讀額度已用完，因此使用 Azure 語音朗讀。",
- "この発音・性別に合う ElevenLabs の声がないため、Azure の声で読み上げています。": "沒有符合此口音與性別的 ElevenLabs 語音，因此使用 Azure 語音朗讀。",
- "ElevenLabs でエラーが起きたため、Azure の声で読み上げています（{code}）。": "ElevenLabs 發生錯誤，因此使用 Azure 語音朗讀（{code}）。",
- "鍵に「Text to Speech」の権限があるか確認してください。": "請確認金鑰是否具有「Text to Speech」權限。",
- "この声が ElevenLabs の「My Voices」に追加されているか確認してください。": "請確認此語音已加入 ElevenLabs 的「My Voices」。",
- "ElevenLabs の残りの文字数（クレジット）を確認してください。": "請確認 ElevenLabs 的剩餘字數（點數）。",
- "この声を使うには ElevenLabs の有料プランが必要です。": "使用此語音需要 ElevenLabs 付費方案。",
- "鍵が正しく登録されているか確認してください。": "請確認金鑰已正確設定。"
+ "高品質な AI 音声（ElevenLabs または Azure）で読み上げます。「試聴する」を押すと、使っている声の名前が表示されます。": "以高品質的 AI 語音（ElevenLabs 或 Azure）朗讀。按下「試聽」即可顯示目前使用的語音名稱。"
 });
