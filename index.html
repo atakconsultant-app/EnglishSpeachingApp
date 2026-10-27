@@ -4756,9 +4756,12 @@ function renderVoiceStatus(){
   if(azureTts !== 'off' && !sample && currentUserId && isProPlan()){
     const p = loadSpeechPrefs();
     const hit = [...ttsCache.entries()].reverse().find(([k]) => k.startsWith([p.accent, p.gender, p.age, p.rate].join('|') + '|'));
-    el.textContent = hit
-      ? t('読み上げ音声: {name}（Azure ニューラル音声）', {name: hit[1].voice.replace(/^en-\w+-|Neural$/g, '') + ' · ' + hit[1].voice.slice(0, 5)})
-      : t('高品質な Azure のニューラル音声で読み上げます。「試聴する」で実際の声を確認できます。');
+    const v = hit ? String(hit[1].voice || '') : '';
+    el.textContent = !hit
+      ? t('高品質な Azure のニューラル音声で読み上げます。「試聴する」で実際の声を確認できます。')
+      : v.startsWith('ElevenLabs:')
+        ? t('読み上げ音声: {name}（ElevenLabs）', {name: v.slice(11)})
+        : t('読み上げ音声: {name}（Azure ニューラル音声）', {name: v.replace(/^en-\w+-|Neural$/g, '') + ' · ' + v.slice(0, 5)});
     return;
   }
   if(!('speechSynthesis' in window)) return;
