@@ -1,0 +1,28 @@
+# ScooPitch 翻訳表（会話中の「コーチに相談」機能）
+# 各行: (日本語の原文, 韓国語, 繁体字中国語（台湾）, フランス語, スペイン語)
+
+ROWS = [
+("コーチに相談", "코치에게 상담", "向教練諮詢", "Demander au coach", "Consultar al coach"),
+("相談", "상담", "諮詢", "Coach", "Coach"),
+("コーチに相談（言いたいことの英語表現・返し方など）", "코치에게 상담 (하고 싶은 말의 영어 표현, 대답하는 법 등)", "向教練諮詢（想說的話的英文說法、回應方式等）", "Demander au coach (comment le dire en anglais, comment répondre…)", "Consultar al coach (cómo decirlo en inglés, cómo responder…)"),
+("会話の相手には伝わりません。日本語で大丈夫です。", "대화 상대에게는 전달되지 않아요. 한국어로 물어봐도 괜찮아요.", "對話對象不會看到。用中文發問也沒問題。", "Votre interlocuteur ne le verra pas. Vous pouvez écrire en français.", "Tu interlocutor no lo verá. Puedes escribir en español."),
+("閉じる", "닫기", "關閉", "Fermer", "Cerrar"),
+("このFeedbackについての相談です", "이 Feedback에 대한 상담이에요", "這是關於這則 Feedback 的諮詢", "Question sur ce Feedback", "Consulta sobre este Feedback"),
+("本当はこう言いたかった", "사실은 이렇게 말하고 싶었어요", "其實我想這樣說", "Ce que je voulais dire", "Lo que quería decir"),
+("返し方が分からない", "어떻게 대답할지 모르겠어요", "不知道怎麼回應", "Je ne sais pas quoi répondre", "No sé cómo responder"),
+("もっと自然な言い方", "더 자연스러운 표현", "更自然的說法", "Une formulation plus naturelle", "Una forma más natural"),
+("Feedbackを詳しく", "Feedback 자세히", "詳細說明 Feedback", "Détailler le Feedback", "Explicar el Feedback"),
+("本当はこう言いたかった：", "사실은 이렇게 말하고 싶었어요:", "其實我想這樣說：", "En fait, je voulais dire :", "En realidad quería decir:"),
+("AIの問いかけに、どう返せばいいか分かりません。", "AI의 질문에 어떻게 대답하면 좋을지 모르겠어요.", "我不知道該怎麼回應 AI 的提問。", "Je ne sais pas comment répondre à la question de l'IA.", "No sé cómo responder a la pregunta de la IA."),
+("今の自分の発言を、もっと自然な英語にしたいです。", "방금 제 발언을 더 자연스러운 영어로 바꾸고 싶어요.", "我想把剛才自己說的話改成更自然的英文。", "J'aimerais rendre ma dernière réponse plus naturelle en anglais.", "Quiero que mi última respuesta suene más natural en inglés."),
+("このFeedbackを、もう少し詳しく教えてください。", "이 Feedback을 좀 더 자세히 알려 주세요.", "請更詳細地說明這則 Feedback。", "Pouvez-vous m'expliquer ce Feedback plus en détail ?", "¿Puedes explicarme este Feedback con más detalle?"),
+("例：「条件付きで賛成」と言いたかった", "예: '조건부로 찬성'이라고 말하고 싶었어요", "例：我想說「有條件地贊成」", "Ex. : je voulais dire « je suis d'accord, sous conditions »", "Ej.: quería decir «estoy de acuerdo, con condiciones»"),
+("相談する", "상담하기", "諮詢", "Envoyer", "Enviar"),
+("このFeedbackについて相談", "이 Feedback에 대해 상담", "針對這則 Feedback 諮詢", "Poser une question sur ce Feedback", "Consultar sobre este Feedback"),
+("相談したい内容を入力してください。", "상담하고 싶은 내용을 입력해 주세요.", "請輸入想諮詢的內容。", "Écrivez votre question.", "Escribe tu consulta."),
+("コーチに相談できませんでした。もう一度お試しください。", "코치에게 상담하지 못했어요. 다시 시도해 주세요.", "無法向教練諮詢，請再試一次。", "Impossible de joindre le coach. Réessayez.", "No se pudo consultar al coach. Inténtalo de nuevo."),
+("コーチ", "코치", "教練", "Coach", "Coach"),
+("Feedbackについて", "Feedback 관련", "關於 Feedback", "À propos du Feedback", "Sobre el Feedback"),
+("考えています…", "생각하는 중…", "思考中…", "Réflexion…", "Pensando…"),
+("入力欄に入れる", "입력란에 넣기", "填入輸入欄", "Utiliser", "Usar"),
+]
