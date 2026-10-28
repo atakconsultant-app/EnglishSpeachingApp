@@ -30,7 +30,7 @@ if (existsSync(imgSrc)) {
   }
 }
 // 訳の辞書（i18n/*.js）だけを公開し、元の翻訳表（i18n/source）は含めない
-for (const lang of ['ko', 'zh-TW', 'fr', 'es']) cpSync(join(root, 'i18n', `${lang}.js`), join(dist, 'i18n', `${lang}.js`));
+for (const lang of ['en', 'ko', 'zh-TW', 'fr', 'es']) cpSync(join(root, 'i18n', `${lang}.js`), join(dist, 'i18n', `${lang}.js`));
 
 // ── 公開前チェック（問題があれば公開を止める）──
 const problems = [];

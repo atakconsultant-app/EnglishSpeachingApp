@@ -1,4 +1,4 @@
-// Vercel Serverless Function: GET /api/news?cat=<カテゴリ>[&home=<言語>] | ?q=<キーワード>
+// Vercel Serverless Function: GET /api/news?cat=<カテゴリ>[&home=<言語>[&region=<国コード>]] | ?q=<キーワード>
 // home は「国内」カテゴリのときだけ使う。利用者の言語に合わせ、その国の英語ニュースを返す（ko→韓国 など）。
 // GNews APIをサーバー側で呼び出す。APIキーは環境変数 GNEWS_API_KEY にだけ置き、ブラウザには出さない。
 // 同じURLへの応答はキャッシュされるため、GNewsへの呼び出しは
@@ -79,6 +79,18 @@ const JA_KEYWORDS = {
 
 // 「国内」= 利用者の国（言語から決める）
 const HOME_QUERY = { ja: 'Japan', ko: '"South Korea"', 'zh-TW': 'Taiwan', fr: 'France', es: 'Spain' };
+// 英語版の利用者は、ブラウザの地域（例: GB, IN, BR）からその国の英語ニュースを探す
+function regionQuery(region) {
+  const code = String(region || '').toUpperCase();
+  if (!/^[A-Z]{2}$/.test(code)) return null;
+  try {
+    const name = new Intl.DisplayNames(['en'], { type: 'region' }).of(code);
+    if (!name || name === code) return null;
+    return /\s/.test(name) ? `"${name}"` : name;
+  } catch (e) {
+    return null;
+  }
+}
 
 // 韓国語・繁体字中国語・フランス語・スペイン語のよく使われるキーワード → 英語
 const OTHER_KEYWORDS = {
@@ -165,7 +177,7 @@ module.exports = async function handler(req, res) {
     return res.status(503).json({ error: 'not_configured', message: 'GNEWS_API_KEY が設定されていません' });
   }
 
-  const { cat, q, home } = req.query || {};
+  const { cat, q, home, region } = req.query || {};
   let endpoint;
   const params = new URLSearchParams({ lang: 'en', max: String(MAX_ARTICLES), apikey: apiKey });
   let resultCat = '国際';
@@ -187,7 +199,8 @@ module.exports = async function handler(req, res) {
       params.set('category', m.category);
     } else {
       endpoint = 'search';
-      params.set('q', (m.home && HOME_QUERY[home]) || m.q);
+      const homeQ = m.home && (home === 'en' ? (regionQuery(region) || '"United States"') : HOME_QUERY[home]);
+      params.set('q', homeQ || m.q);
       params.set('sortby', 'publishedAt');
     }
   } else {

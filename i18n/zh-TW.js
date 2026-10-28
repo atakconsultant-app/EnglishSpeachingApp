@@ -440,6 +440,7 @@ I18N.add('zh-TW', {
  "特定商取引法に基づく表記 — ScooPitch": "特定商業交易法標示 — ScooPitch",
  "この文書は日本語版が正式なものです。": "本文件以日文版為準。",
  "ScooPitch に戻る": "回到 ScooPitch",
+ "<a href=\"/legal/terms.html\" target=\"_blank\" rel=\"noopener\">利用規約</a> · <a href=\"/legal/tokushoho.html\" target=\"_blank\" rel=\"noopener\">特定商取引法に基づく表記</a> · <a href=\"/legal/privacy.html\" target=\"_blank\" rel=\"noopener\">プライバシーポリシー</a>": "<a href=\"/legal/terms.html\" target=\"_blank\" rel=\"noopener\">使用條款</a> · <a href=\"/legal/tokushoho.html\" target=\"_blank\" rel=\"noopener\">特定商業交易法標示</a> · <a href=\"/legal/privacy.html\" target=\"_blank\" rel=\"noopener\">隱私權政策</a>",
  "β版（無料で公開中）": "Beta 版（免費公開中）",
  "<b>β版</b>として無料で公開中です。使ってみた感想や不具合を、ぜひお聞かせください。": "目前以<b>Beta 版</b>免費公開中。歡迎告訴我們使用心得或發現的問題。",
  "感想を送る": "傳送使用心得",

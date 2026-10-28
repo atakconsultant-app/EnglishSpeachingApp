@@ -11,7 +11,8 @@
  * - <strong> や <br> を含む文は、要素の innerHTML 全体を1つの原文として訳す（語順が言語ごとに違うため）。
  * - 数値などを埋め込む文は JS 側で I18N.t('今日練習しないと {n}日の記録が途切れます', {n}) のように書く。
  * - AIの返答・利用者の入力・記事本文など、訳してはいけない場所は SKIP_SELECTOR で除外する。
- * - 言語は 1) 利用者が選んだ言語（localStorage: ns_lang） 2) ブラウザの言語 3) 日本語 の順で決める。
+ * - 言語は 1) URL の ?lang= 2) 利用者が選んだ言語（localStorage: ns_lang） 3) ブラウザの言語 の順で決める。
+ *   ブラウザの言語に日本語・韓国語・繁体字中国語・フランス語・スペイン語のどれも含まれない人には英語版を出す。
  */
 (function () {
   'use strict';
@@ -22,8 +23,10 @@
     'zh-TW': { name: '繁體中文', locale: 'zh-TW', ai: 'Traditional Chinese as used in Taiwan', home: 'Taiwan', homeShort: 'Taiwan' },
     fr: { name: 'Français', locale: 'fr-FR', ai: 'French', home: 'France', homeShort: 'France' },
     es: { name: 'Español', locale: 'es-ES', ai: 'Spanish', home: 'Spain', homeShort: 'Spain' },
+    // 英語版：上の5言語以外の国・地域の人向け。解説は「やさしい英語」で行う
+    en: { name: 'English', locale: 'en-US', ai: 'simple English', home: 'my country', homeShort: 'my country' },
   };
-  var ORDER = ['ja', 'ko', 'zh-TW', 'fr', 'es'];
+  var ORDER = ['ja', 'en', 'ko', 'zh-TW', 'fr', 'es'];
   var STORE_KEY = 'ns_lang';
 
   // 訳さない場所（AIの返答、利用者の入力、記事のタイトル・本文、メールアドレスなど）
@@ -47,14 +50,25 @@
     if (c === 'es' || c.indexOf('es-') === 0) return 'es';
     return null;
   }
+  // 地域（国）のコード。英語版の「国内」ニュースに使う（例: en-GB → GB、pt-BR → BR）
+  function detectRegion() {
+    var list = (navigator.languages && navigator.languages.length) ? navigator.languages.slice() : [navigator.language];
+    try { list.push(Intl.DateTimeFormat().resolvedOptions().locale); } catch (e) {}
+    for (var i = 0; i < list.length; i++) {
+      var m = /^[a-z]{2,3}(?:-[a-z]{4})?-([a-z]{2})\b/i.exec(String(list[i] || ''));
+      if (m) return m[1].toUpperCase();
+    }
+    return 'US';
+  }
   function detect() {
     var q = null;
     try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
     if (q && LANGS[q]) return q;
     try { var s = localStorage.getItem(STORE_KEY); if (s && LANGS[s]) return s; } catch (e) {}
     var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language];
+    // 日本語・韓国語・繁体字中国語・フランス語・スペイン語のどれかがブラウザの言語にあればそれを使い、なければ英語版
     for (var i = 0; i < list.length; i++) { var m = matchLang(list[i]); if (m) return m; }
-    return 'ja';
+    return 'en';
   }
 
   var dicts = {};          // lang -> { 原文: 訳 }
@@ -235,6 +249,7 @@
     get aiLanguage() { return LANGS[lang].ai; },
     get home() { return LANGS[lang].home; },
     get homeShort() { return LANGS[lang].homeShort; },
+    get region() { return detectRegion(); },
     // 辞書ファイルから呼ばれる
     add: function (l, table) {
       dicts[l] = dicts[l] || {};

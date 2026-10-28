@@ -440,6 +440,7 @@ I18N.add('fr', {
  "特定商取引法に基づく表記 — ScooPitch": "Mentions légales — ScooPitch",
  "この文書は日本語版が正式なものです。": "Seule la version japonaise de ce document fait foi.",
  "ScooPitch に戻る": "Revenir à ScooPitch",
+ "<a href=\"/legal/terms.html\" target=\"_blank\" rel=\"noopener\">利用規約</a> · <a href=\"/legal/tokushoho.html\" target=\"_blank\" rel=\"noopener\">特定商取引法に基づく表記</a> · <a href=\"/legal/privacy.html\" target=\"_blank\" rel=\"noopener\">プライバシーポリシー</a>": "<a href=\"/legal/terms.html\" target=\"_blank\" rel=\"noopener\">Conditions d'utilisation</a> · <a href=\"/legal/tokushoho.html\" target=\"_blank\" rel=\"noopener\">Mentions légales (loi japonaise sur le commerce)</a> · <a href=\"/legal/privacy.html\" target=\"_blank\" rel=\"noopener\">Politique de confidentialité</a>",
  "β版（無料で公開中）": "Version bêta (gratuite)",
  "<b>β版</b>として無料で公開中です。使ってみた感想や不具合を、ぜひお聞かせください。": "ScooPitch est disponible gratuitement en <b>version bêta</b>. Partagez-nous vos impressions et les bugs rencontrés !",
  "感想を送る": "Donner mon avis",
