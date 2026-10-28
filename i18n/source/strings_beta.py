@@ -21,4 +21,11 @@ ROWS = [
 ("削除しています…", "삭제하는 중…", "刪除中…", "Suppression…", "Eliminando…"),
 ("退会の手続きが完了しました。ご利用ありがとうございました。", "탈퇴가 완료되었어요. 이용해 주셔서 감사합니다.", "已完成退出會員手續，感謝你的使用。", "Votre compte a été supprimé. Merci d'avoir utilisé ScooPitch.", "Tu cuenta se ha eliminado. Gracias por usar ScooPitch."),
 ("退会の手続きができませんでした。時間をおいてもう一度お試しいただくか、お問い合わせください。", "탈퇴하지 못했어요. 잠시 후 다시 시도하거나 문의해 주세요.", "無法完成退出會員手續，請稍後再試或與我們聯絡。", "La suppression a échoué. Réessayez plus tard ou contactez-nous.", "No se ha podido eliminar la cuenta. Vuelve a intentarlo más tarde o contáctanos."),
+# ── Cookie の同意・設定 ──
+("Cookie の設定", "쿠키 설정", "Cookie 設定", "Paramètres des cookies", "Configuración de cookies"),
+("アクセス解析と広告の効果測定のために Cookie を使います。", "접속 분석과 광고 효과 측정을 위해 쿠키를 사용합니다.", "我們會使用 Cookie 進行流量分析與廣告成效評估。", "Nous utilisons des cookies pour mesurer l'audience et l'efficacité de nos publicités.", "Usamos cookies para analizar el tráfico y medir la eficacia de nuestros anuncios."),
+("詳しく見る", "자세히 보기", "了解更多", "En savoir plus", "Más información"),
+("拒否する", "거부", "拒絕", "Refuser", "Rechazar"),
+("同意する", "동의", "同意", "Accepter", "Aceptar"),
+("現在、アクセス解析や広告の Cookie は使っていません。", "현재 접속 분석이나 광고용 쿠키는 사용하지 않습니다.", "目前未使用流量分析或廣告用的 Cookie。", "Nous n'utilisons actuellement aucun cookie d'analyse ou de publicité.", "Actualmente no usamos cookies de análisis ni de publicidad."),
 ]
