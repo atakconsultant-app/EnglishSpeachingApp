@@ -1030,6 +1030,7 @@ html[lang="en"] .cat-card.has-video{--cat-label-h:44px;}
 <link rel="stylesheet" href="intro-fx.css">
 <script src="intro-fx.js" defer></script>
 <link rel="stylesheet" href="pages.css">
+<script src="analytics.js" defer></script>
 <script>
 const THEMES=['studio','playful','gallery'];
 function applyTheme(t){
@@ -1342,6 +1343,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <a href="/legal/terms.html">利用規約</a>
       <a href="/legal/privacy.html">プライバシーポリシー</a>
       <a href="/legal/tokushoho.html">特定商取引法に基づく表記</a>
+      <button type="button" class="link-btn cookie-link" onclick="NSA.openSettings()">Cookie の設定</button>
     </nav>
     <span>News data provided by GNews</span>
   </footer>
@@ -2194,6 +2196,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       <p class="form-msg" id="delete-msg" role="status"></p>
       <div class="btn-row"><button type="button" class="ns-btn danger" id="delete-btn" onclick="deleteAccount()"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg>退会する</button></div>
     </div>
+    <p class="cookie-row"><button type="button" class="link-btn cookie-link" onclick="NSA.openSettings()">Cookie の設定</button></p>
   </div>
 </section>
 
@@ -2692,6 +2695,7 @@ async function startSession(){
   updateVocabBadge();
   loading(null);
 
+  if(window.NSA) NSA.event('start_practice', { mode: state.mode, level: state.level, category: state.cat || '', custom: !!(state.article && state.article.custom) });
   await aiOpen();
 }
 
@@ -3807,6 +3811,7 @@ Score: fluency 30, vocabulary range 30, grammar accuracy 20, content relevance 2
     const score = Math.min(100, Math.max(0, Math.round(Number(result.score)||0)));
     updateStreak();
     saveScoreHistory(score, sessionRecord(result.improvements || [], result.best_phrase, result.best_reason));
+    if(window.NSA) NSA.event('complete_practice', { score, mode: state.mode, level: state.level });
     loading(null);
     showSummaryScreen(score, result.improvements || [], result.best_phrase, result.best_reason, prevHistory, true);
   } catch(e) {
@@ -4299,12 +4304,14 @@ document.getElementById('auth-form').addEventListener('submit', async e=>{
     if(authMode === 'signup'){
       const { data, error } = await sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.nsAuthRedirectUrl } });
       if(error && error.code !== 'user_already_exists') return showFormMsg('auth-msg','error',authErrorMessage(error));
+      if(!error && window.NSA) NSA.event('sign_up', { method: 'email' });
       if(data && data.session) return;
       document.getElementById('auth-main').hidden = true;
       document.getElementById('auth-done').hidden = false;
     }else{
       const { error } = await sb.auth.signInWithPassword({ email, password });
       if(error) return showFormMsg('auth-msg','error',authErrorMessage(error));
+      if(window.NSA) NSA.event('login', { method: 'email' });
     }
   }catch(err){
     showFormMsg('auth-msg','error','通信エラーが発生しました。接続を確認してください。');
@@ -4628,6 +4635,7 @@ function updateDockHeight(){
     const route = activeRoute();
     if(route === null || route === curRoute) return;
     curRoute = route;
+    setTimeout(()=>{ if(window.NSA) NSA.page(); }, 0);   // アクセス解析：画面ごとのページビュー
     if(popRendering) return;
     recordRoute(route);
   });
@@ -5039,6 +5047,7 @@ document.getElementById('feedback-form').addEventListener('submit', async e => {
     if(error) throw error;
     e.target.reset();
     showFormMsg('fb-msg','success',t('送信しました。ご協力ありがとうございます。'));
+    if(window.NSA) NSA.event('send_feedback');
   }catch(err){
     showFormMsg('fb-msg','error','送信できませんでした。時間をおいて再度お試しください。');
   }finally{
@@ -5079,6 +5088,7 @@ async function sendWtp(v){
     });
     if(error) throw error;
     try{ localStorage.setItem(wtpKey(), JSON.stringify({ v, at: new Date().toISOString() })); }catch(e){}
+    if(window.NSA) NSA.event('wtp_vote', { answer: v });
     showFormMsg('fb-msg','','');
     renderWtp();
     document.getElementById('fb-message').focus();

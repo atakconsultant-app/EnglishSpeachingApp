@@ -95,3 +95,11 @@
 - **新しいファイル**（CSS / JS / 画像フォルダなど）を追加したら、`scripts/build-static.mjs` の `PUBLIC` に加える。漏れていると公開時のチェックで止まる。
 - **画像**は `.png` の元画像と一緒に、軽い `.webp` を置いて HTML からは `.webp` を読み込む。同じ名前の `.webp` がある `.png` は公開されない。
 - 公開時に、文字化け（�）を含むファイルや、読み込み先が公開されないファイルがあると、自動で公開を中止する。
+
+## アクセス解析・広告の効果測定
+
+- `analytics.js` の `CONFIG` に Google アナリティクス 4 の測定ID・Meta ピクセルID・LinkedIn パートナーIDを入れると有効になる（空なら何も読み込まない）。
+- 送るイベント：画面ごとの `page_view`、`sign_up`（登録）、`login`、`start_practice`、`complete_practice`（採点あり）、`wtp_vote`（有料でも使いたいか）、`send_feedback`。
+  Meta には `sign_up` を標準イベント `CompleteRegistration` として送る。LinkedIn はコンバージョンIDを `linkedinConversions` に入れたものだけ送る。
+- 欧州の時間帯（`Europe/...`）の人には同意バナーを出し、同意するまで読み込まない。「Cookie の設定」（紹介ページ下・アカウント設定）でいつでも変更できる。
+- 外部送信の公表はプライバシーポリシーの「5. アクセス解析・広告の効果測定」に記載。

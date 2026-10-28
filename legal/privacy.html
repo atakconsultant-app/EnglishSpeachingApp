@@ -29,7 +29,7 @@
 <li>入力した文章：AIとの会話の内容、「自分の題材」に入力した内容、翻訳を求めた文章</li>
 <li>お支払いに関する情報：契約の状態、お支払いの履歴。クレジットカード番号は決済代行事業者（Stripe）が直接取得し、運営者は保持しません。</li>
 <li>お問い合わせ・感想の内容：お名前、メールアドレス、お問い合わせや感想の本文</li>
-<li>利用状況：AI・読み上げの利用回数、アクセス日時、ブラウザの種類などの技術的な情報</li>
+<li>利用状況：AI・読み上げの利用回数、アクセス日時、閲覧したページ、参照元（どの広告・サイトから来たか）、ブラウザや端末の種類、IPアドレス、Cookie などの識別子といった技術的な情報</li>
 </ol>
 
 <h2>2. 利用目的</h2>
@@ -39,6 +39,7 @@
 <li>有料プランの料金の請求と契約の管理</li>
 <li>お問い合わせへの対応、重要なお知らせの連絡</li>
 <li>本サービスの改善と、利用状況の分析（個人を特定しない形で行います）</li>
+<li>広告の配信と、その効果の測定</li>
 </ol>
 
 <h2>3. 外部の事業者への提供（委託）</h2>
@@ -48,6 +49,7 @@
 <tr><th>Supabase, Inc.（米国）</th><td>アカウント情報・学習データ・契約の状態の保存、ログインの管理</td></tr>
 <tr><th>Anthropic, PBC（米国）</th><td>AIとの会話・フィードバック・採点・翻訳のため、入力した文章と会話の内容を送信</td></tr>
 <tr><th>Microsoft Corporation（米国。Azure の日本のデータセンターを利用）</th><td>本サービスの公開（Azure Static Web Apps）、読み上げ（Azure AI Speech）のための英文の送信</td></tr>
+<tr><th>ElevenLabs, Inc.（米国）</th><td>読み上げのため、読み上げる英文を送信</td></tr>
 <tr><th>Stripe, Inc.（米国）</th><td>有料プランの決済、契約の管理</td></tr>
 <tr><th>GNews（Opennews S.A.S.、フランス）</th><td>ニュースの検索のため、検索した語句を送信（個人を特定する情報は送信しません）</td></tr>
 </table>
@@ -55,21 +57,37 @@
 <p>上記のほか、法令に基づく場合を除き、本人の同意なく個人情報を第三者に提供することはありません。</p>
 
 <h2>4. ブラウザへの保存</h2>
-<p>本サービスは、表示言語やデザイン、学習データの一部を、利用者のブラウザ（localStorage）に保存します。広告を目的とした Cookie は使用していません。</p>
+<p>本サービスは、表示言語やデザイン、学習データの一部を、利用者のブラウザ（localStorage）に保存します。</p>
 
-<h2>5. 安全管理</h2>
+<h2 id="cookie">5. アクセス解析・広告の効果測定（Cookie と外部送信）</h2>
+<p>本サービスは、利用状況の分析と広告の効果測定のため、次のツールを利用します。これらのツールにより、利用者の端末から各事業者へ下記の情報が送信されます（電気通信事業法に基づく外部送信に関する公表事項を兼ねます）。</p>
+<table>
+<tr><th>ツール・送信先</th><td>送信される情報と利用目的</td></tr>
+<tr><th>Google アナリティクス、Google 広告（Google LLC、米国）</th><td>閲覧したページのURL、参照元、端末・ブラウザの情報、IPアドレス、Cookie の識別子、登録・練習の開始などの操作。アクセス状況の分析と、広告の効果測定のため</td></tr>
+<tr><th>Meta ピクセル（Meta Platforms, Inc.、米国）</th><td>閲覧したページのURL、端末・ブラウザの情報、IPアドレス、Cookie の識別子、登録などの操作。Instagram・Facebook 広告の効果測定と配信の最適化のため</td></tr>
+<tr><th>LinkedIn Insight タグ（LinkedIn Corporation、米国）</th><td>閲覧したページのURL、端末・ブラウザの情報、IPアドレス、Cookie の識別子、登録などの操作。LinkedIn 広告の効果測定のため</td></tr>
+</table>
+<p>メールアドレスや会話の内容など、利用者を直接特定できる情報は送信しません。</p>
+<p>欧州の地域からご利用の場合は、同意をいただくまでこれらのツールを読み込みません。どの地域からご利用の場合も、本サービスの「Cookie の設定」（紹介ページの下、またはアカウント設定）からいつでも送信を止められます。各事業者による取り扱いと、送信を止める方法は、次をご確認ください。</p>
+<ul>
+<li>Google：<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>、<a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google アナリティクス オプトアウト アドオン</a>、<a href="https://adssettings.google.com/" target="_blank" rel="noopener">広告設定</a></li>
+<li>Meta：<a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener">プライバシーポリシー</a>、<a href="https://www.facebook.com/adpreferences/" target="_blank" rel="noopener">広告設定</a></li>
+<li>LinkedIn：<a href="https://www.linkedin.com/legal/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>、<a href="https://www.linkedin.com/psettings/guest-controls/retargeting-opt-out" target="_blank" rel="noopener">オプトアウト</a></li>
+</ul>
+
+<h2>6. 安全管理</h2>
 <p>運営者は、通信の暗号化、アクセス権限の制限、秘密鍵のサーバー側での管理など、個人情報の漏えい・滅失・毀損を防ぐための措置を講じます。</p>
 
-<h2>6. 保存期間</h2>
+<h2>7. 保存期間</h2>
 <p>アカウントを削除するまで、または利用目的の達成に必要な期間保存します。お支払いに関する記録は、法令で定められた期間保存します。</p>
 
-<h2>7. 開示・訂正・利用停止等の請求</h2>
+<h2>8. 開示・訂正・利用停止等の請求</h2>
 <p>利用者は、運営者が保有する自己の個人情報について、開示、訂正、追加、削除、利用の停止、第三者提供の停止を請求できます。下記のお問い合わせ先までご連絡ください。ご本人であることを確認したうえで、法令に従い対応します。アカウントの削除は、本サービスのアカウント設定の「退会する」からいつでも行えます。</p>
 
-<h2>8. 改定</h2>
+<h2>9. 改定</h2>
 <p>運営者は、法令の変更や本サービスの内容の変更に応じて、本ポリシーを改定することがあります。重要な変更は、本サービス上でお知らせします。</p>
 
-<h2>9. お問い合わせ</h2>
+<h2>10. お問い合わせ</h2>
 <p>個人情報の取り扱いに関するお問い合わせは、<a href="mailto:atak.consultant@gmail.com">atak.consultant@gmail.com</a>、または本サービスのお問い合わせフォームまでご連絡ください。</p>
 <p>事業者：AtakConsultant合同会社（所在地・代表者の氏名は、請求があった場合に遅滞なく開示します）</p>
 </div>

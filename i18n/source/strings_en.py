@@ -554,4 +554,11 @@ EN = {
     "特によかった点や、あるともっと嬉しい機能を教えてください。": "Tell us what you liked most, or features that would make it even better.",
     "どうなれば有料でも使いたいと思えますか？（価格・機能・使い勝手など）": "What would make you willing to pay? (price, features, ease of use, etc.)",
     "<a href=\"/legal/terms.html\" target=\"_blank\" rel=\"noopener\">利用規約</a> · <a href=\"/legal/tokushoho.html\" target=\"_blank\" rel=\"noopener\">特定商取引法に基づく表記</a> · <a href=\"/legal/privacy.html\" target=\"_blank\" rel=\"noopener\">プライバシーポリシー</a>": "<a href=\"/legal/terms.html\" target=\"_blank\" rel=\"noopener\">Terms of Service</a> · <a href=\"/legal/tokushoho.html\" target=\"_blank\" rel=\"noopener\">Legal notice (Specified Commercial Transactions Act)</a> · <a href=\"/legal/privacy.html\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>",
+    # ── Cookie ──
+    "Cookie の設定": "Cookie settings",
+    "アクセス解析と広告の効果測定のために Cookie を使います。": "We use cookies for analytics and to measure the effectiveness of our ads.",
+    "詳しく見る": "Learn more",
+    "拒否する": "Decline",
+    "同意する": "Accept",
+    "現在、アクセス解析や広告の Cookie は使っていません。": "We don't currently use any analytics or advertising cookies.",
 }
