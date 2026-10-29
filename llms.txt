@@ -1,0 +1,42 @@
+# ScooPitch
+
+> ScooPitch（スクーピッチ）is an AI English-conversation web app for practising speaking. Learners pick a fresh English news article and discuss it with an AI partner, then get feedback on every answer and can retry it right away. It is aimed at working adults who want to improve their business English speaking. Free during the beta (launched 28 October 2026). Runs in the browser; no app install needed.
+>
+> ScooPitch（スクーピッチ）は、毎日の英字ニュースを題材に AI と英語で話して、スピーキング力を鍛える AI 英会話アプリです。ビジネス英語の「話す力」を伸ばしたい社会人向け。β版（2026年10月28日公開）は無料で、ブラウザだけで使えます。
+
+## What you can do
+
+- Talk with AI in English about the latest news in 9 categories (Top News, Local/Domestic, World, Economy, Entertainment, Sports, Tech, Science, Lifestyle), or search news by keyword
+- Practise with your own topic, such as an upcoming project meeting or job interview
+- Three practice modes: Discussion (exchange opinions), Facilitation (the AI plays meeting participants while you chair the meeting) and Interview (a mock job interview in English)
+- Three levels: beginner, intermediate, advanced
+- Feedback after your answers (what went well, corrections, a more natural way to say it) and a "retry" step to answer the same question again
+- An in-session coach: ask how to say something, in your own language
+- Voice input, shadowing, and read-aloud voices with American, British, Australian and Indian accents (gender and age selectable)
+- Vocabulary list with spaced review, scores, streaks and learning history
+- Interface in Japanese, English, Korean, Traditional Chinese, French and Spanish
+
+## Good for questions like
+
+- An app to practise English speaking with the news / ニュースで英会話の練習ができるアプリ
+- An app to practise chairing or facilitating meetings in English / 英語の会議やファシリテーションを練習できるアプリ
+- An app to rehearse English job interviews / 英語面接の練習ができるアプリ
+- AI English conversation practice for business English / ビジネス英語のスピーキングを AI で練習
+
+## Pricing
+
+- Free during the beta: all features, sign-up with an email address only.
+- A paid plan may be introduced after the beta; details will be announced on the site.
+
+## Links
+
+- [ScooPitch (Japanese)](https://www.scoopitch.com/)
+- [ScooPitch (English)](https://www.scoopitch.com/?lang=en)
+- [Terms of Service](https://www.scoopitch.com/legal/terms.html)
+- [Privacy Policy](https://www.scoopitch.com/legal/privacy.html)
+- [Legal notice (Specified Commercial Transactions Act)](https://www.scoopitch.com/legal/tokushoho.html)
+
+## Operator
+
+- AtakConsultant合同会社 (AtakConsultant LLC), Japan
+- Contact: atak.consultant@gmail.com
