@@ -10,7 +10,7 @@
   'use strict';
 
   var CONFIG = {
-    ga4: '',                         // Google アナリティクス 4 の測定ID（例: G-XXXXXXXXXX）
+    ga4: 'G-JYYM8G6H7E',             // Google アナリティクス 4 の測定ID
     metaPixel: '',                   // Meta ピクセル（データセット）ID（数字）
     linkedin: '',                    // LinkedIn Insight タグのパートナーID（数字）
     linkedinConversions: {},         // LinkedIn のコンバージョンID（例: { sign_up: '12345678' }）
