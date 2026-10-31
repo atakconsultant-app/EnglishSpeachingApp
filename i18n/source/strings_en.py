@@ -561,4 +561,13 @@ EN = {
     "拒否する": "Decline",
     "同意する": "Accept",
     "現在、アクセス解析や広告の Cookie は使っていません。": "We don't currently use any analytics or advertising cookies.",
+    # ── 画像の説明（alt） ──
+    "英字ニュースの新聞と地球のイラスト": "Illustration of English newspapers and a globe",
+    "AIと英語で話し合う人のイラスト": "Illustration of a person discussing in English with AI",
+    "声の波と向かい合う2人の横顔のイラスト": "Illustration of sound waves and two faces in profile",
+    "上がっていく棒グラフとカレンダーのイラスト": "Illustration of a rising bar chart and a calendar",
+    "ステップ1：興味のあるカテゴリーを選ぶイメージ": "Step 1: choose a category you're interested in",
+    "ステップ2：練習モードとレベルを選ぶイメージ": "Step 2: choose a practice mode and level",
+    "ステップ3：AIと英語で話すイメージ": "Step 3: talk with AI in English",
+    "ステップ4：スコアを見て振り返るイメージ": "Step 4: review with your score",
 }
