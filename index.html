@@ -2317,11 +2317,25 @@ function useYesterdayArticle(){
 }
 
 // ══ 最新ニュース（GNews をサーバー経由で取得。APIキーはサーバー側のみ） ══
-function toAppArticle(a, cat){
+// 最新ニュースのカテゴリー → ホームのトピック（絞り込みボタン）。最初のものを記事のトピックとして表示する
+const LIVE_TOPICS = {
+  '国内': ['社会・労働'],
+  '国際': ['地政学'],
+  '経済': ['経済・投資', 'ビジネス'],
+  'エンタメ': ['スポーツ・文化'],
+  'スポーツ': ['スポーツ・文化'],
+  'IT': ['AI・テック'],
+  '科学': ['環境・科学'],
+  'ライフ': ['医療・健康'],
+};
+// search: キーワード検索で見つけた記事（カテゴリーが分からないので、トピックは付けない）
+function toAppArticle(a, cat, search){
+  const topics = search ? [] : (LIVE_TOPICS[cat] || []);
   return {
     source: a.source || 'GNews',
     emoji: CAT_EMOJIS[cat] || '📰',
-    topic: cat,
+    topic: topics[0] || '',
+    topics,
     keywords: a.title.toLowerCase().split(/\W+/).filter(w=>w.length>3),
     title: a.title,
     summary: a.summary || a.title,
@@ -2439,6 +2453,13 @@ function sourceLabel(a){
 const ALL_ARTICLES = [];
 Object.entries(ARTICLES).forEach(([cat, arr]) => arr.forEach(a => ALL_ARTICLES.push({...a, cat})));
 
+// 最新ニュースを先に、練習用の記事を後ろに並べる（同じ記事が複数のカテゴリーにあるときは1つにまとめる）
+function liveFirst(list){
+  const seen = new Set();
+  const uniq = list.filter(a => { if(seen.has(a.title)) return false; seen.add(a.title); return true; });
+  return [...uniq.filter(a => a.live), ...uniq.filter(a => !a.live)];
+}
+
 // ══ Search & Filter state ══
 let searchMode = false; // true = show results list, false = show cat grid
 let activeTopic = 'all';
@@ -2460,13 +2481,13 @@ function onSearch(val){
 async function doSearch(val){
   const q = val.toLowerCase();
   // Local results first
-  const localHits = ALL_ARTICLES.filter(a =>
+  const localHits = liveFirst(ALL_ARTICLES.filter(a =>
     a.title.toLowerCase().includes(q) ||
     a.summary.toLowerCase().includes(q) ||
     (a.keywords||[]).some(k => k.toLowerCase().includes(q)) ||
     a.cat.includes(q) ||
     (a.topic||'').toLowerCase().includes(q)
-  );
+  ));
   showResults(localHits, val, true); // show local + loading spinner
 
   if(!liveNews){ showResults(localHits, val, false); return; } // サーバー未接続時は内蔵記事のみ
@@ -2478,11 +2499,12 @@ async function doSearch(val){
     if(document.getElementById('cat-search').value !== val) return; // 入力が変わっていたら古い結果は捨てる
     const apiHits = (data.articles || []).map(a => {
       const cat = a.cat || '国際';
-      return {...toAppArticle(a, cat), cat, _fromApiSearch: true};
+      return {...toAppArticle(a, cat, true), cat, _fromApiSearch: true};
     });
     const localTitles = new Set(localHits.map(a=>a.title));
     const newApiHits = apiHits.filter(a => !localTitles.has(a.title));
-    showResults([...localHits, ...newApiHits], val, false);
+    // 最新ニュース → 検索で見つけた最新ニュース → 練習用の記事 の順に並べる
+    showResults([...localHits.filter(a => a.live), ...newApiHits, ...localHits.filter(a => !a.live)], val, false);
   } catch(e) {
     console.warn('News search failed', e);
     showResults(localHits, val, false);
@@ -2502,7 +2524,7 @@ function filterTopic(el){
     exitSearchMode();
     return;
   }
-  const hits = ALL_ARTICLES.filter(a => a.topic === activeTopic);
+  const hits = liveFirst(ALL_ARTICLES.filter(a => a.topic === activeTopic || (a.topics||[]).includes(activeTopic)));
   showResults(hits, null);
 }
 
@@ -2530,7 +2552,7 @@ function showResults(hits, query, loading=false){
         <div class="result-title">${escHtml(a.title)}</div>
         <div class="result-meta">
           <span class="result-cat">${escHtml(sourceLabel(a))}</span>
-          <span class="result-topic">${escHtml(t(a.cat))} · ${escHtml(a.topic ? t(a.topic) : '')}</span>
+          <span class="result-topic">${escHtml(t(a.cat))}${a.topic && a.topic !== a.cat ? ' · ' + escHtml(t(a.topic)) : ''}</span>
           ${a._fromApiSearch?'<span class="result-live-tag">LIVE</span>':''}
         </div>
       </div>
