@@ -11,7 +11,7 @@
 
   var CONFIG = {
     ga4: 'G-JYYM8G6H7E',             // Google アナリティクス 4 の測定ID
-    metaPixel: '',                   // Meta ピクセル（データセット）ID（数字）
+    metaPixel: '1524660079487033',   // Meta ピクセル（データセット「ScooPitch Web」）ID
     linkedin: '',                    // LinkedIn Insight タグのパートナーID（数字）
     linkedinConversions: {},         // LinkedIn のコンバージョンID（例: { sign_up: '12345678' }）
   };
