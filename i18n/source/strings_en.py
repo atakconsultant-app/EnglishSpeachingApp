@@ -570,4 +570,6 @@ EN = {
     "ステップ2：練習モードとレベルを選ぶイメージ": "Step 2: choose a practice mode and level",
     "ステップ3：AIと英語で話すイメージ": "Step 3: talk with AI in English",
     "ステップ4：スコアを見て振り返るイメージ": "Step 4: review with your score",
+    "ScooPitch 練習用トピック": "ScooPitch practice topic",
+    "※練習用に作成した架空のニュースです": "Note: this is a fictional news story written for practice.",
 }

@@ -554,5 +554,7 @@ I18N.add('fr', {
  "回答を記録しました。よろしければ、理由を下に一言お聞かせください。": "Réponse enregistrée. Si vous le souhaitez, dites-nous en un mot pourquoi ci-dessous.",
  "使ってみた感想、ほしい機能、不具合など": "Vos impressions, les fonctions souhaitées, les bugs…",
  "特によかった点や、あるともっと嬉しい機能を教えてください。": "Dites-nous ce qui vous a le plus plu, ou les fonctions qui vous feraient encore plus plaisir.",
- "どうなれば有料でも使いたいと思えますか？（価格・機能・使い勝手など）": "Qu'est-ce qui vous donnerait envie de payer ? (prix, fonctions, ergonomie…)"
+ "どうなれば有料でも使いたいと思えますか？（価格・機能・使い勝手など）": "Qu'est-ce qui vous donnerait envie de payer ? (prix, fonctions, ergonomie…)",
+ "ScooPitch 練習用トピック": "Sujet d'entraînement ScooPitch",
+ "※練習用に作成した架空のニュースです": "Remarque : actualité fictive créée pour l'entraînement."
 });

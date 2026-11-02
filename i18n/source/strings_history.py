@@ -40,4 +40,7 @@ ROWS = [
 ("使ってみた感想、ほしい機能、不具合など", "사용 소감, 원하는 기능, 오류 등", "使用心得、希望的功能、錯誤等", "Vos impressions, les fonctions souhaitées, les bugs…", "Tus impresiones, funciones que te gustaría tener, errores…"),
 ("特によかった点や、あるともっと嬉しい機能を教えてください。", "특히 좋았던 점이나, 있으면 더 좋을 기능을 알려 주세요.", "請告訴我們特別滿意的地方，或希望增加的功能。", "Dites-nous ce qui vous a le plus plu, ou les fonctions qui vous feraient encore plus plaisir.", "Cuéntanos qué te gustó especialmente o qué funciones te harían aún más feliz."),
 ("どうなれば有料でも使いたいと思えますか？（価格・機能・使い勝手など）", "어떻게 되면 유료라도 쓰고 싶어질까요? (가격·기능·사용성 등)", "怎樣的情況下您會願意付費使用？（價格、功能、使用體驗等）", "Qu'est-ce qui vous donnerait envie de payer ? (prix, fonctions, ergonomie…)", "¿Qué haría que quisieras pagar por usarlo? (precio, funciones, facilidad de uso…)"),
+# 練習用の内蔵記事（架空のニュース）の表示
+("ScooPitch 練習用トピック", "ScooPitch 연습용 주제", "ScooPitch 練習用主題", "Sujet d'entraînement ScooPitch", "Tema de práctica de ScooPitch"),
+("※練習用に作成した架空のニュースです", "※연습용으로 만든 가상의 뉴스예요", "※此為練習用的虛構新聞", "Remarque : actualité fictive créée pour l'entraînement.", "Nota: noticia ficticia creada para practicar."),
 ]

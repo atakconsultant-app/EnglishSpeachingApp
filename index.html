@@ -416,6 +416,9 @@ header .spacer{flex:1;}
   font-size:13px;color:var(--text-sub);line-height:1.7;
 }
 .article-full.show{display:block;}
+.strip-source.is-sample{text-transform:none;letter-spacing:.3px;}
+.sample-note{margin:6px 0 0;font-size:11px;color:var(--text-dim);}
+.sample-note[hidden]{display:none;}
 .article-points-mini{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
 .article-points-mini li{font-size:12px;color:var(--text-dim);margin-bottom:3px;padding-left:12px;position:relative;list-style:none;}
 .article-points-mini li::before{content:'·';position:absolute;left:0;color:var(--accent);}
@@ -1654,6 +1657,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
     </div>
     <div class="article-full" id="article-full">
       <div id="a-summary"></div>
+      <p class="sample-note" id="a-sample-note" hidden>※練習用に作成した架空のニュースです</p>
       <div class="article-points-mini" id="a-points-mini"></div>
     </div>
     <button type="button" class="strip-toggle" id="strip-toggle" onclick="toggleStrip()" aria-expanded="false" aria-label="記事の情報とゴールを表示">
@@ -2347,42 +2351,45 @@ async function fetchLiveNews(){
 }
 
 // ══ Articles DB (with topic + emoji + keywords) ══
+// 内蔵記事は、最新ニュースが取れないときの予備として練習用に作った架空のニュース。
+// 実在の報道機関の記事と誤解されないよう、配信元は「ScooPitch 練習用トピック」と表示する。
+const SAMPLE_SOURCE = 'ScooPitch 練習用トピック';
 const ARTICLES = {
   主要:[
-    {source:'Reuters',emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギー政策との整合性']},
-    {source:'AP News',emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。各国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🌍',topic:'環境・科学',keywords:['気候','環境','エネルギー','G7','climate','再生可能エネルギー','renewable','green energy','カーボン','carbon','脱炭素','COP'],title:'G7 Leaders Reach Historic Climate Financing Deal at Summit',summary:'G7首脳がサミットで歴史的な気候資金協定に合意。先進国は途上国への支援として年間1,000億ドルのコミットメントを更新し、再生可能エネルギー移行を加速させることを約束した。',points:['気候資金の公平な分配','先進国の責任','日本のエネルギー政策との整合性']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🏥',topic:'医療・健康',keywords:['医療','健康','ウイルス','感染','WHO','health','パンデミック','pandemic','病院','感染症','public health','ワクチン'],title:'WHO Declares New Global Health Emergency Amid Respiratory Virus Spread',summary:'世界保健機関が新たな呼吸器ウイルスの拡大を受けて国際的な公衆衛生上の緊急事態を宣言。各国は水際対策と医療体制の強化を迫られている。',points:['パンデミック対策の教訓','医療システムの脆弱性','グローバルな協調の課題']}
   ],
   国内:[
-    {source:'Japan Times',emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
-    {source:'NHK World',emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'👥',topic:'社会・労働',keywords:['少子化','移民','社会','労働','人口','society','出生率','birth rate','外国人','多様性','ダイバーシティ','人手不足'],title:"Japan's Birth Rate Hits Record Low, Sparking Debate on Immigration Policy",summary:'日本の出生率が過去最低を更新。政府は少子化対策を強化する一方、移民政策の抜本的な見直しを求める声も高まっており、社会的な議論が活発化している。',points:['少子化の根本原因','移民政策の是非','日本社会の変容']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🤖',topic:'AI・テック',keywords:['AI','人工知能','テック','防災','disaster','technology','スマートシティ','データセンター','データ','インフラ','デジタル','自治体','クラウド'],title:'Tokyo to Launch World\'s First AI-Powered Disaster Response System',summary:'東京都が世界初のAI活用型災害対応システムを導入。リアルタイムデータ分析により避難誘導の精度を高め、災害時の対応速度を大幅に改善することを目指す。',points:['AIと公共安全','プライバシーとセキュリティ','自治体のデジタル化']}
   ],
   国際:[
-    {source:'Financial Times',emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
-    {source:'BBC',emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🕊️',topic:'地政学',keywords:['外交','安全保障','戦争','平和','ウクライナ','geopolitics','NATO','ロシア','Russia','停戦','ceasefire','国際法'],title:'Ukraine Peace Talks Resume in Vienna as Both Sides Signal Flexibility',summary:'ウクライナ平和交渉がウィーンで再開。両陣営が一定の柔軟性を示す中、領土問題と安全保障の枠組みをめぐる協議が続いている。欧米の支援継続が鍵を握る。',points:['持続可能な平和の条件','欧州安全保障の将来','日本の外交的役割']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'⚓',topic:'地政学',keywords:['南シナ海','安全保障','軍事','中国','地政学','china','台湾','Taiwan','ASEAN','紛争','conflict','アメリカ','米中'],title:'South China Sea Tensions Escalate as New Military Drills Begin',summary:'南シナ海で新たな軍事演習が開始され、緊張が高まっている。関係国の外交チャンネルは機能しているものの、偶発的な衝突リスクに対する懸念が国際社会に広がっている。',points:['航行の自由と主権','多国間外交の限界','地域の安定と経済']}
   ],
   経済:[
-    {source:'Bloomberg',emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
-    {source:'Wall Street Journal',emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した。大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'📉',topic:'経済・投資',keywords:['金利','インフレ','投資','経済','FRB','Fed','economy','利下げ','rate cut','ドル','円','為替','株式','recession','景気後退','データセンター投資'],title:'Federal Reserve Signals Rate Cuts Ahead as Inflation Cools Globally',summary:'米連邦準備制度がインフレ沈静化を受けた利下げを示唆。世界経済への波及効果が注目される中、新興国市場の資本流出リスクと日本の金融政策正常化との兼ね合いが議論されている。',points:['金利政策と実体経済','円安と日本企業の競争力','個人投資家への影響']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'💰',topic:'AI・テック',keywords:['AI','投資','スタートアップ','テック','startup','venture','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','半導体'],title:'AI Startups Attract Record $180 Billion in Global Investment in 2026',summary:'AI関連スタートアップへの世界的な投資が2026年に過去最高の1,800億ドルに達した。大手テック企業による買収競争も激化しており、市場の独占化への懸念が浮上している。',points:['AI投資バブルのリスク','イノベーションと市場集中','日本のAIエコシステム']}
   ],
   エンタメ:[
-    {source:'Variety',emoji:'🎵',topic:'スポーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
-    {source:'The Hollywood Reporter',emoji:'🎬',topic:'ビジネス',keywords:['ストリーミング','映画','メディア','Netflix','streaming','content','動画配信','サブスク','subscription','データセンター','クラウド','コンテンツ','OTT'],title:'Streaming Wars Enter New Phase as Studios Merge Content Libraries',summary:'大手スタジオのコンテンツライブラリ統合が進み、ストリーミング戦争が新局面へ。消費者の選択肢が変わる中、クリエイターへの報酬体系の見直しを求める声も上がっている。',points:['コンテンツの多様性','クリエイターエコノミー','日本コンテンツのグローバル展開']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🎵',topic:'スポーツ・文化',keywords:['K-POP','音楽','エンタメ','文化','labor','mental health','韓国','芸能','アイドル','コンテンツ','グローバル'],title:'K-Pop Industry Faces Reckoning Over Artist Mental Health and Labor Practices',summary:'K-POP業界がアーティストのメンタルヘルスと労働環境をめぐる批判に直面。ファンダムの過激な文化や所属事務所との契約問題が国際的な注目を集めている。',points:['エンタメ産業における搾取','文化輸出と倫理','ファンとアーティストの関係']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🎬',topic:'ビジネス',keywords:['ストリーミング','映画','メディア','Netflix','streaming','content','動画配信','サブスク','subscription','データセンター','クラウド','コンテンツ','OTT'],title:'Streaming Wars Enter New Phase as Studios Merge Content Libraries',summary:'大手スタジオのコンテンツライブラリ統合が進み、ストリーミング戦争が新局面へ。消費者の選択肢が変わる中、クリエイターへの報酬体系の見直しを求める声も上がっている。',points:['コンテンツの多様性','クリエイターエコノミー','日本コンテンツのグローバル展開']}
   ],
   スポーツ:[
-    {source:'ESPN',emoji:'🏅',topic:'スポーツ・文化',keywords:['オリンピック','スポーツ','テクノロジー','Olympic','LA','2028','eスポーツ','esports','AI審判','データ分析','athletics'],title:'Olympic Games 2028 LA: Technology and Inclusion Take Center Stage',summary:'2028年ロサンゼルス五輪に向けて、テクノロジー活用とインクルージョンが重点テーマに。AI審判システムの導入やeスポーツの正式種目化をめぐる議論が活発化している。',points:['スポーツとテクノロジーの融合','公平性と新技術','五輪の商業化と純粋性']},
-    {source:'Sky Sports',emoji:'⚽',topic:'ビジネス',keywords:['サッカー','プレミアリーグ','スポーツビジネス','Premier League','salary','移籍','transfer','UEFA','FFP','ビジネス','経営'],title:'Premier League Clubs Face New Salary Cap Rules Amid Financial Fair Play Reforms',summary:'プレミアリーグがファイナンシャル・フェアプレー改革として新たな給与上限規制を導入。クラブ経営の透明性が高まる一方、競争力への影響を懸念する声もある。',points:['スポーツ経営と持続可能性','ビッグクラブ vs 中小クラブ','日本人選手への影響']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🏅',topic:'スポーツ・文化',keywords:['オリンピック','スポーツ','テクノロジー','Olympic','LA','2028','eスポーツ','esports','AI審判','データ分析','athletics'],title:'Olympic Games 2028 LA: Technology and Inclusion Take Center Stage',summary:'2028年ロサンゼルス五輪に向けて、テクノロジー活用とインクルージョンが重点テーマに。AI審判システムの導入やeスポーツの正式種目化をめぐる議論が活発化している。',points:['スポーツとテクノロジーの融合','公平性と新技術','五輪の商業化と純粋性']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'⚽',topic:'ビジネス',keywords:['サッカー','プレミアリーグ','スポーツビジネス','Premier League','salary','移籍','transfer','UEFA','FFP','ビジネス','経営'],title:'Premier League Clubs Face New Salary Cap Rules Amid Financial Fair Play Reforms',summary:'プレミアリーグがファイナンシャル・フェアプレー改革として新たな給与上限規制を導入。クラブ経営の透明性が高まる一方、競争力への影響を懸念する声もある。',points:['スポーツ経営と持続可能性','ビッグクラブ vs 中小クラブ','日本人選手への影響']}
   ],
   IT:[
-    {source:'TechCrunch',emoji:'🧠',topic:'AI・テック',keywords:['AI','GPT','OpenAI','人工知能','テクノロジー','LLM','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','生成AI','generative','半導体','電力','電気代','energy'],title:'OpenAI Launches GPT-6 with Real-Time Reasoning and Multimodal Capabilities',summary:'OpenAIがリアルタイム推論とマルチモーダル機能を持つGPT-6を発表。産業界への影響が広がる中、AI安全性とガバナンスをめぐる議論が一層重要性を増している。',points:['AIの進化と雇用','AI規制の国際標準','日本のAI産業戦略']},
-    {source:'Wired',emoji:'🔐',topic:'AI・テック',keywords:['量子コンピュータ','暗号','セキュリティ','quantum','encryption','cybersecurity','データセンター','data center','ハッキング','hacking','サイバー攻撃','デジタル','インフラ','infrastructure'],title:'Quantum Computing Breakthrough Threatens Current Encryption Standards',summary:'量子コンピューティングの突破口となる研究成果が発表され、現行の暗号化標準が脅威にさらされる可能性が浮上。各国政府とテック企業は「量子後」セキュリティへの移行を急いでいる。',points:['サイバーセキュリティの将来','量子技術の軍事利用','デジタルインフラ保護']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🧠',topic:'AI・テック',keywords:['AI','GPT','OpenAI','人工知能','テクノロジー','LLM','データセンター','data center','クラウド','cloud','GPU','NVIDIA','インフラ','infrastructure','生成AI','generative','半導体','電力','電気代','energy'],title:'OpenAI Launches GPT-6 with Real-Time Reasoning and Multimodal Capabilities',summary:'OpenAIがリアルタイム推論とマルチモーダル機能を持つGPT-6を発表。産業界への影響が広がる中、AI安全性とガバナンスをめぐる議論が一層重要性を増している。',points:['AIの進化と雇用','AI規制の国際標準','日本のAI産業戦略']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🔐',topic:'AI・テック',keywords:['量子コンピュータ','暗号','セキュリティ','quantum','encryption','cybersecurity','データセンター','data center','ハッキング','hacking','サイバー攻撃','デジタル','インフラ','infrastructure'],title:'Quantum Computing Breakthrough Threatens Current Encryption Standards',summary:'量子コンピューティングの突破口となる研究成果が発表され、現行の暗号化標準が脅威にさらされる可能性が浮上。各国政府とテック企業は「量子後」セキュリティへの移行を急いでいる。',points:['サイバーセキュリティの将来','量子技術の軍事利用','デジタルインフラ保護']}
   ],
   科学:[
-    {source:'Nature',emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
-    {source:'Science',emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🧬',topic:'医療・健康',keywords:['医療','老化','mRNA','遺伝子','aging','longevity','バイオテック','biotech','製薬','薬','治療','clinical','試験'],title:'Scientists Reverse Aging in Human Cells Using mRNA Therapy Breakthrough',summary:'科学者たちがmRNA療法を用いてヒト細胞の老化を逆転させることに成功したと発表。老化関連疾患の治療に革命をもたらす可能性がある一方、倫理的な課題も浮上している。',points:['寿命延長の倫理','医療アクセスの格差','テクノロジーと自然の境界']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🚀',topic:'環境・科学',keywords:['火星','宇宙','NASA','探査','Mars','space','SpaceX','イーロン','宇宙開発','衛星','satellite','JAXA','天文'],title:'First Evidence of Water Ice Confirmed on Mars Surface',summary:'火星表面での水氷の存在が初めて確認された。将来の有人火星探査や植民地化計画に向けた重要なマイルストーンとして、宇宙機関や民間企業が注目している。',points:['火星探査の将来','宇宙開発と国際競争','科学的発見と商業利用']}
   ],
   ライフ:[
-    {source:'The Guardian',emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
-    {source:'Time',emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
+    {source:SAMPLE_SOURCE,sample:true,emoji:'🏙️',topic:'社会・労働',keywords:['都市','住環境','交通','urban','15-minute city','planning','まちづくり','公共交通','自転車','サステナブル','sustainable','生活','コミュニティ'],title:'The 15-Minute City: Urban Planning Revolution Spreads Across Europe',summary:'徒歩15分圏内で生活が完結する「15分都市」の概念がヨーロッパ全土に広がっている。都市計画の革命として注目される一方、車社会からの転換に伴う課題も議論されている。',points:['都市と生活の質','環境負荷の低減','日本の都市計画への示唆']},
+    {source:SAMPLE_SOURCE,sample:true,emoji:'💔',topic:'社会・労働',keywords:['孤独','SNS','メンタルヘルス','社会','loneliness','social media','スマホ','smartphone','うつ','depression','コミュニティ','つながり','connection','若者'],title:'The Loneliness Epidemic: How Social Media Failed to Connect Us',summary:'孤独感の蔓延が現代社会の深刻な問題として浮上。SNSが普及した時代にむしろ孤立が深まっている現象に、研究者たちは警鐘を鳴らしている。',points:['テクノロジーと人間関係','メンタルヘルスと社会設計','日本の「孤独」文化']}
   ]
 };
 
@@ -2417,6 +2424,16 @@ function localizeArticle(a){
   return a;
 }
 Object.values(ARTICLES).forEach(arr => arr.forEach(localizeArticle));
+// 練習用の架空ニュースか（以前に保存された、旧い配信元名の記事も題名で見分ける）
+function isSampleArticle(a){
+  return !!(a && !a.live && !a.custom && (a.sample || ARTICLE_EN[a.title]));
+}
+// 画面に出す配信元の名前
+function sourceLabel(a){
+  if(isSampleArticle(a)) return t(SAMPLE_SOURCE);
+  if(a.custom) return t(a.source);
+  return a.source || 'GNews';
+}
 
 // ══ Flat article list for search ══
 const ALL_ARTICLES = [];
@@ -2512,7 +2529,7 @@ function showResults(hits, query, loading=false){
       <div class="result-body">
         <div class="result-title">${escHtml(a.title)}</div>
         <div class="result-meta">
-          <span class="result-cat">${escHtml(a.source||'GNews')}</span>
+          <span class="result-cat">${escHtml(sourceLabel(a))}</span>
           <span class="result-topic">${escHtml(t(a.cat))} · ${escHtml(a.topic ? t(a.topic) : '')}</span>
           ${a._fromApiSearch?'<span class="result-live-tag">LIVE</span>':''}
         </div>
@@ -2704,7 +2721,10 @@ async function startSession(){
 function renderArticle(){
   const a = state.article;
   toggleStrip(false);
-  document.getElementById('a-source').textContent = a.custom ? t(a.source) : a.source;
+  const src = document.getElementById('a-source');
+  src.textContent = sourceLabel(a);
+  src.classList.toggle('is-sample', isSampleArticle(a)); // 「ScooPitch」の表記を崩さないよう大文字にしない
+  document.getElementById('a-sample-note').hidden = !isSampleArticle(a);
   document.getElementById('a-cat').textContent = state.cat;
   document.getElementById('a-title').textContent = a.title;
   document.getElementById('a-summary').textContent = a.summary;
@@ -2785,6 +2805,8 @@ function buildSystem(){
     ? `Topic provided by the learner. This is their own real situation (for example an upcoming project, meeting or interview), not a news article: "${a.title}"
 ${a.scene ? `Situation they want to rehearse: ${a.scene}\n` : ''}Details: ${a.body || a.summary}
 The details may be written in any language; always conduct the session in English. Treat this as a realistic rehearsal: raise the questions, concerns and counterpoints the learner is likely to face in this real situation, and keep everything specific to these details.`
+    : isSampleArticle(a)
+    ? `Article (a fictional practice scenario written for this app, not real news; discuss it as a hypothetical and never present its details as real facts): "${a.title}" — ${a.summary}`
     : `Article: "${a.title}" — ${a.summary}`;
   return `${levelInst[state.level]} ${modeInst[state.mode]}
 ${material}
