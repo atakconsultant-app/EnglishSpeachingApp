@@ -441,6 +441,7 @@ I18N.add('en', {
  "この文書は日本語版が正式なものです。": "The Japanese version of this document is the official one.",
  "ScooPitch に戻る": "Back to ScooPitch",
  "<a href=\"/legal/terms.html\" target=\"_blank\" rel=\"noopener\">利用規約</a> · <a href=\"/legal/tokushoho.html\" target=\"_blank\" rel=\"noopener\">特定商取引法に基づく表記</a> · <a href=\"/legal/privacy.html\" target=\"_blank\" rel=\"noopener\">プライバシーポリシー</a>": "<a href=\"/legal/terms.html\" target=\"_blank\" rel=\"noopener\">Terms of Service</a> · <a href=\"/legal/tokushoho.html\" target=\"_blank\" rel=\"noopener\">Legal notice (Specified Commercial Transactions Act)</a> · <a href=\"/legal/privacy.html\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>",
+ "運営：AtakConsultant合同会社（東京都新宿区）　お問い合わせ：": "Operated by AtakConsultant LLC (Shinjuku, Tokyo, Japan)　Contact: ",
  "β版（無料で公開中）": "Beta (free for now)",
  "<b>β版</b>として無料で公開中です。使ってみた感想や不具合を、ぜひお聞かせください。": "ScooPitch is free during the <b>beta</b>. We'd love to hear your impressions and any bugs you find.",
  "感想を送る": "Send feedback",

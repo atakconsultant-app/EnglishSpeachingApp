@@ -11,7 +11,7 @@
  * - <strong> や <br> を含む文は、要素の innerHTML 全体を1つの原文として訳す（語順が言語ごとに違うため）。
  * - 数値などを埋め込む文は JS 側で I18N.t('今日練習しないと {n}日の記録が途切れます', {n}) のように書く。
  * - AIの返答・利用者の入力・記事本文など、訳してはいけない場所は SKIP_SELECTOR で除外する。
- * - 言語は 1) URL の ?lang= 2) 利用者が選んだ言語（localStorage: ns_lang） 3) ブラウザの言語 の順で決める。
+ * - 言語は 1) URL の ?lang= 2) 利用者が選んだ言語（localStorage: ns_lang） 3) Google 広告からの訪問なら日本語 4) ブラウザの言語 の順で決める。
  *   ブラウザの言語に日本語・韓国語・繁体字中国語・フランス語・スペイン語のどれも含まれない人には英語版を出す。
  */
 (function () {
@@ -65,6 +65,8 @@
     try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
     if (q && LANGS[q]) return q;
     try { var s = localStorage.getItem(STORE_KEY); if (s && LANGS[s]) return s; } catch (e) {}
+    // Google 広告から来た人（URL に gclid などの広告の印がある人）には、広告と同じ日本語のページを出す
+    try { if (/[?&](gclid|gbraid|wbraid|gad_source)=/.test(location.search)) return 'ja'; } catch (e) {}
     var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language];
     // 日本語・韓国語・繁体字中国語・フランス語・スペイン語のどれかがブラウザの言語にあればそれを使い、なければ英語版
     for (var i = 0; i < list.length; i++) { var m = matchLang(list[i]); if (m) return m; }

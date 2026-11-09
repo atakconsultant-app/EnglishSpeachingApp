@@ -2,7 +2,8 @@
 body{background:#f7f7f9;color:#111118;font:15px/1.85 'Inter','Noto Sans JP',system-ui,sans-serif;padding:32px 16px 64px;}
 main{max-width:760px;margin:0 auto;background:#fff;border:1px solid #dad8e4;border-radius:18px;padding:36px 32px;}
 .mark{font-weight:800;font-size:18px;margin-bottom:24px;display:inline-block;color:#111118;text-decoration:none;}
-.mark span{color:#5b4ce6;font-weight:600;}
+.mark .s{color:#5b4ce6;}
+.mark .p{background:linear-gradient(120deg,#4f46e5 10%,#a855f7 55%,#ec4899 95%);-webkit-background-clip:text;background-clip:text;color:transparent;}
 h1{font-size:24px;line-height:1.4;margin-bottom:8px;}
 .meta{font-size:13px;color:#5d5c6b;margin-bottom:28px;}
 h2{font-size:16px;margin:28px 0 8px;}
