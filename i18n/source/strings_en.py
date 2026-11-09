@@ -572,4 +572,5 @@ EN = {
     "ステップ4：スコアを見て振り返るイメージ": "Step 4: review with your score",
     "ScooPitch 練習用トピック": "ScooPitch practice topic",
     "※練習用に作成した架空のニュースです": "Note: this is a fictional news story written for practice.",
+    "運営：AtakConsultant合同会社（東京都新宿区）　お問い合わせ：": "Operated by AtakConsultant LLC (Shinjuku, Tokyo, Japan)　Contact: ",
 }
