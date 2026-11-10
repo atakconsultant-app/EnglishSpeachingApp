@@ -152,12 +152,18 @@ function toEnglishQuery(raw) {
   return text.replace(/["()\\]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+// GNews の本文（無料プランでは途中まで）。末尾の「... [1234 chars]」を除く。練習前の要約を少し詳しくするために使う
+function cleanContent(text) {
+  return String(text || '').replace(/\s*(?:\.\.\.|…)?\s*\[\+?\d+\s*chars?\]\s*$/i, '').trim().slice(0, 1500);
+}
+
 function normalize(article, cat) {
   const title = (article.title || '').trim();
   return {
     source: (article.source && article.source.name) || 'GNews',
     title,
     summary: (article.description || title).trim(),
+    content: cleanContent(article.content),
     url: article.url || '',
     image: article.image || '',
     publishedAt: article.publishedAt || '',
