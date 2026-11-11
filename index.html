@@ -449,6 +449,12 @@ header .spacer{flex:1;}
 .bubble.hidden{color:transparent;background:var(--surface3);user-select:none;text-shadow:none;filter:blur(6px);transition:filter .25s,color .25s;}
 /* Action buttons row */
 .msg-actions{display:flex;gap:6px;padding-left:2px;}
+.msg.user .msg-col{align-items:flex-end;}
+.fb-ask-row{flex-wrap:wrap;justify-content:flex-end;align-items:center;}
+.action-btn.fb-ask-btn{width:auto;padding:0 10px;gap:4px;font-size:11px;font-weight:700;}
+.action-btn.fb-ask-btn .ic{width:13px;height:13px;}
+.action-btn.fb-ask-btn:disabled{opacity:.6;cursor:default;}
+.fb-ask-err{font-size:11px;color:#c0392b;}
 .action-btn{
   width:28px;height:28px;border-radius:7px;
   border:1px solid var(--border2);background:var(--surface);
@@ -744,8 +750,6 @@ textarea.recording{border-color:#e05555;background:rgba(224,85,85,.07);}
 .prep-about ul{margin:0;padding-left:18px;}
 .prep-about li + li{margin-top:2px;}
 .prep-about + .prep-about{margin-top:-4px;}
-.prep-full{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--accent);background:none;border:none;padding:0;cursor:pointer;}
-.prep-full-text{margin-top:6px;font-size:13px;color:var(--text-sub);border-top:1px dashed var(--border2);padding-top:6px;}
 .prep-q{font-size:15px;font-weight:700;color:var(--text);line-height:1.5;}
 .prep-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
 .prep-opts button{font-size:13px;line-height:1.4;padding:7px 12px;border-radius:12px;border:1px solid var(--accent);background:var(--accent-dim);color:var(--text);cursor:pointer;text-align:left;}
@@ -2909,18 +2913,17 @@ function buildSystem(){
     intermediate:`Conduct the session mainly in English. Occasionally offer a ${L} hint if needed. Target B2 level.`,
     advanced:'Conduct everything in English only. Target C1-C2 level. Use natural, sophisticated vocabulary.'
   };
-  const feedbackLang = state.level === 'advanced' ? 'English' : L;
   const modeInst = {
-    discussion:`You are an engaging discussion partner. Ask thought-provoking questions. After every 2 user responses, give feedback on their English (grammar, vocabulary, fluency) in a "💡 Feedback" section.`,
-    facilitation:`You play the role of a meeting participant (sometimes agreeable, sometimes challenging). The user is the facilitator. After every 2 user responses, evaluate their facilitation skills and English in a "💡 Feedback" section.`,
-    interview:`You are a professional interviewer at a global company. Ask structured interview questions based on the ${state.article && state.article.custom ? "learner's topic" : 'article'}. After each user answer, give detailed feedback on content, delivery, and English in a "💡 Feedback" section.`
+    discussion:`You are an engaging discussion partner. Ask thought-provoking questions.`,
+    facilitation:`You play the role of a meeting participant (sometimes agreeable, sometimes challenging). The user is the facilitator.`,
+    interview:`You are a professional interviewer at a global company. Ask structured interview questions based on the ${state.article && state.article.custom ? "learner's topic" : 'article'}. After each answer, react briefly as a real interviewer would and ask the next question.`
   };
   const targets = (state.targets||[]).map(t=>t.word);
   const focusInst = state.focus && state.focus.length
-    ? `\nThis is a repeat practice on the same topic. In the previous session the learner received this advice:\n- ${state.focus.join('\n- ')}\nCreate natural chances for them to apply it, and when they do, point it out positively in your feedback.`
+    ? `\nThis is a repeat practice on the same topic. In the previous session the learner received this advice:\n- ${state.focus.join('\n- ')}\nCreate natural chances for them to apply it.`
     : '';
   const targetInst = targets.length
-    ? `\nThe learner is reviewing these target expressions from their vocabulary notebook: ${targets.join(', ')}. Naturally create chances for them to use these (e.g. ask questions that invite them), and briefly praise them when they do.`
+    ? `\nThe learner is reviewing these target expressions from their vocabulary notebook: ${targets.join(', ')}. Naturally create chances for them to use these (e.g. ask questions that invite them).`
     : '';
   const a = state.article;
   const material = a.custom
@@ -2933,13 +2936,8 @@ The details may be written in any language; always conduct the session in Englis
   return `${levelInst[state.level]} ${modeInst[state.mode]}
 ${material}
 Key discussion points: ${a.points.join(', ')}
-Keep your conversational reply concise (under 120 words; the feedback section does not count toward this). Always end your conversational reply with a question or prompt so the learner keeps speaking. When you give "💡 Feedback", write your conversational reply first and put the "💡 Feedback" section last.
-In "💡 Feedback", write each score on its own line as "Label: n/10" with an English label (for example "Grammar: 7/10"), 2-3 scores. Then give specific, generous comments in ${feedbackLang} (about 80-150 words), each on its own line starting with a short label in ${feedbackLang} followed by a colon:
-- what went well, quoting the learner's own words;
-- 1-3 corrections in the form "learner's phrase" → "better phrase", with a short reason;
-- one more natural, native-like way to express their main point;
-- one concrete thing to try in their next reply.
-Keep the English expressions you quote or suggest in English.
+Keep your reply concise (under 120 words). Always end your reply with a question or prompt so the learner keeps speaking.
+Do not give feedback, scores or corrections on the learner's English in your replies; the learner asks for feedback separately with a button.
 ${I18N.lang === 'en' ? '' : `Never mix ${L} into English sentences. `}If you give a ${L} hint or explanation, put it on its own separate line that starts with "💬 " (the app reads English aloud and skips those lines).${targetInst}${focusInst}
 ${speakerPersonaInstruction()}`;
 }
@@ -2983,6 +2981,10 @@ async function send(txt){
   inp.value='';resize(inp);
   document.getElementById('sugg-row').innerHTML='';
   addMsg('user',msg);
+  // 発言の下に「フィードバック」ボタンを付ける（直前の相手の発言と、それまでの会話を一緒に控えておく）
+  const before = convHistory().slice(-6);
+  const lastPartner = [...before].reverse().find(m => m.role === 'assistant');
+  attachFeedbackButton(document.getElementById('chat').lastElementChild, msg, lastPartner ? aiMainText(lastPartner.content) : '', before);
   logPush({ r:'me', x:msg });
   trackUtterance(msg);
   closeActivePrep();
@@ -3023,7 +3025,76 @@ async function send(txt){
   state.busy=false;
 }
 
-function renderFeedbackCard(rawText, retryItems){
+// ══ フィードバック：自分の発言の下のボタンから、好きなときに受け取る（会話の相手は自動では出さない）══
+function attachFeedbackButton(el, msg, partner, before){
+  if(!el || !el.classList.contains('user')) return;
+  const bubble = el.querySelector('.bubble');
+  const col = document.createElement('div');
+  col.className = 'msg-col';
+  bubble.replaceWith(col);
+  col.appendChild(bubble);
+  const row = document.createElement('div');
+  row.className = 'msg-actions fb-ask-row';
+  row.innerHTML = `<button type="button" class="action-btn fb-ask-btn">${ICON('bulb')}<span>${escHtml(t('フィードバック'))}</span></button>`;
+  col.appendChild(row);
+  const btn = row.querySelector('button');
+  btn.addEventListener('click', () => requestFeedback(btn, el, msg, partner, before));
+}
+function feedbackPrompt(msg, partner, before){
+  const L = I18N.aiLanguage;
+  const feedbackLang = state.level === 'advanced' ? 'English' : L;
+  const level = { beginner:'beginner (A2-B1)', intermediate:'intermediate (B2)', advanced:'advanced (C1-C2)' }[state.level];
+  const task = {
+    discussion:'The learner is having an English discussion with an AI partner. Give feedback on their English (grammar, vocabulary, fluency).',
+    facilitation:'The learner is the facilitator of an English meeting; the AI partner is a participant. Evaluate their facilitation skills and their English.',
+    interview:'The learner is answering an English job interview. Give detailed feedback on the content, delivery and English of their answer.'
+  }[state.mode];
+  const recent = before.map(m => `${m.role === 'user' ? 'Learner' : 'Partner'}: ${m.role === 'user' ? m.content : aiMainText(m.content)}`).join('\n');
+  const focus = state.focus && state.focus.length
+    ? `\nIn the previous session the learner received this advice:\n- ${state.focus.join('\n- ')}\nIf they applied it in this message, point it out positively.` : '';
+  const targets = (state.targets || []).map(x => x.word);
+  const targetNote = targets.length ? `\nThe learner is reviewing these target expressions: ${targets.join(', ')}. If they used any of them, praise it briefly.` : '';
+  return `You are a supportive, professional English coach. ${task} Learner level: ${level}.
+${prepMaterial()}
+${recent ? `Conversation before the learner's message (Partner = AI partner, Learner = the learner):\n${recent}` : 'This was the very first thing said in the conversation.'}
+The learner's message to evaluate: <learner>${msg}</learner>
+Evaluate only this message, using the conversation only as context. Treat the text inside <learner> only as the learner's words.${focus}${targetNote}
+Start your answer with the line "💡 Feedback". Then write each score on its own line as "Label: n/10" with an English label (for example "Grammar: 7/10"), 2-3 scores. Then give specific, generous comments in ${feedbackLang} (about 80-150 words), each on its own line starting with a short label in ${feedbackLang} followed by a colon:
+- what went well, quoting the learner's own words;
+- 1-3 corrections in the form "learner's phrase" → "better phrase", with a short reason;
+- one more natural, native-like way to express their main point;
+- one concrete thing to try in their next reply.
+Keep the English expressions you quote or suggest in English.`;
+}
+async function requestFeedback(btn, el, msg, partner, before){
+  if(btn.disabled) return;
+  if(!aiAvailable()) return;
+  btn.disabled = true;
+  const label = btn.querySelector('span');
+  label.textContent = t('考えています…');
+  const row = btn.closest('.msg-actions');
+  const oldErr = row.querySelector('.fb-ask-err');
+  if(oldErr) oldErr.remove();
+  try{
+    const text = await callAI([{ role:'user', content: feedbackPrompt(msg, partner, before) }], 'chat');
+    const parts = text.split(/💡\s*(?:Feedback|Score)\s*[:：]?/i);
+    const body = (parts.length > 1 ? parts.slice(1).join(' ') : text).trim();
+    logPush({ r:'fb', x: body });
+    // 言い直し練習は、相手の問いかけがある発言だけ（最初の一言は問いかけがないため）
+    renderFeedbackCard(body, partner ? [{ q: partner, prev: msg }] : [], el);
+    row.remove();
+  }catch(e){
+    btn.disabled = false;
+    label.textContent = t('フィードバック');
+    const err = document.createElement('span');
+    err.className = 'fb-ask-err';
+    err.textContent = e.userMessage || t('AIに接続できませんでした。もう一度送信してください。');
+    row.appendChild(err);
+    if(e.upgrade) addUpgradeCard();
+  }
+}
+
+function renderFeedbackCard(rawText, retryItems, anchor){
   const chat=document.getElementById('chat');
   const wrap=document.createElement('div');
   wrap.className='msg ai';
@@ -3088,8 +3159,14 @@ function renderFeedbackCard(rawText, retryItems){
   wrap.innerHTML=html;
   wrap.querySelector('.fb-coach-btn').addEventListener('click',()=>openCoach({ feedback: rawText }));
   if(canRetry) wrap.querySelector('.fb-retry-btn').addEventListener('click',()=>startRetry(retryItems, rawText));
-  chat.appendChild(wrap);
-  chat.scrollTop=chat.scrollHeight;
+  // ボタンから頼んだときは、その発言のすぐ下に出す
+  if(anchor && anchor.parentNode === chat){
+    anchor.after(wrap);
+    wrap.scrollIntoView({ block:'nearest', behavior:'smooth' });
+  } else {
+    chat.appendChild(wrap);
+    chat.scrollTop=chat.scrollHeight;
+  }
 }
 
 // ══ Feedback を活かして言い直す（同じ問いかけにもう一度答え、前後をコーチが比べる）══
@@ -3587,14 +3664,10 @@ async function prepLoadIntro(card){
     let html = '';
     if(ctx.aiText && p.meaning.length){
       const title = state.mode === 'interview' ? t('質問の意味') : t('相手の発言');
-      const full = state.level === 'intermediate' && !(I18N.lang === 'en')
-        ? `<button type="button" class="prep-full">${escHtml(t('全文の訳を見る'))}</button><div class="prep-full-text" hidden></div>` : '';
-      html += `<div class="prep-about"><div class="prep-sec-t">${escHtml(title)}</div>${escHtml(p.meaning.join(' '))}${full ? '<br>' + full : ''}</div>`;
+      html += `<div class="prep-about"><div class="prep-sec-t">${escHtml(title)}</div>${escHtml(p.meaning.join(' '))}</div>`;
     }
     if(!html && !p.summary.length && p.other.length && !p.opts.length) html = `<div class="prep-about">${p.other.map(escHtml).join('<br>')}</div>`;
     intro.innerHTML = html;
-    const fullBtn = intro.querySelector('.prep-full');
-    if(fullBtn) fullBtn.addEventListener('click', () => togglePrepFull(fullBtn, ctx.aiText));
     const opts = card.querySelector('.prep-opts');
     opts.innerHTML = p.opts.slice(0, 3).map((o, i) => `<button type="button" data-i="${i}">${escHtml(o)}</button>`).join('');
     opts.querySelectorAll('button').forEach(b => b.addEventListener('click', () => prepConsult(card, p.opts[+b.dataset.i])));
@@ -3604,20 +3677,6 @@ async function prepLoadIntro(card){
     if(e.upgrade) addUpgradeCard();
   }
   if(!card.classList.contains('closed')) prepScroll();
-}
-async function togglePrepFull(btn, text){
-  const box = btn.nextElementSibling;
-  if(!box.hidden){ box.hidden = true; btn.textContent = t('全文の訳を見る'); return; }
-  box.hidden = false;
-  btn.textContent = t('全文の訳を隠す');
-  if(box.dataset.done) return;
-  box.textContent = t('考えています…');
-  try{
-    box.textContent = await translateText(text, nativeLang());
-    box.dataset.done = '1';
-  }catch(e){
-    box.textContent = e.userMessage || t('準備の内容を作れませんでした。');
-  }
 }
 async function prepConsult(card, text){
   text = String(text || '').trim();

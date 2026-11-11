@@ -569,8 +569,6 @@ I18N.add('es', {
  "日本語で自由に相談できます（例：条件付きで賛成と言いたい）": "Escribe libremente en español (p. ej.: quiero decir que estoy de acuerdo con condiciones)",
  "質問の意味": "Qué te preguntan",
  "相手の発言": "Lo que dijo tu interlocutor",
- "全文の訳を見る": "Ver la traducción completa",
- "全文の訳を隠す": "Ocultar la traducción completa",
  "準備の内容を作れませんでした。": "No se pudo preparar el contenido.",
  "もう一度": "Reintentar",
  "話す文": "Lo que vas a decir",
@@ -587,5 +585,6 @@ I18N.add('es', {
  "相手から返事が来ましたね！どう返しましょうか？話をどう進めていきたいですか？": "¡Tu interlocutor ha respondido! ¿Qué quieres contestar? ¿Hacia dónde quieres llevar la conversación?",
  "準備に戻る": "Volver a la preparación",
  "穴埋めに戻す": "Volver a los huecos",
- "話して入力": "Dictar"
+ "話して入力": "Dictar",
+ "フィードバック": "Comentarios"
 });
