@@ -13,8 +13,6 @@ ROWS = [
 ("日本語で自由に相談できます（例：条件付きで賛成と言いたい）", "한국어로 자유롭게 상담할 수 있어요 (예: 조건부로 찬성한다고 말하고 싶어요)", "可以用中文自由諮詢（例：我想說「有條件地贊成」）", "Écrivez librement en français (ex. : je veux dire que je suis d'accord sous conditions)", "Escribe libremente en español (p. ej.: quiero decir que estoy de acuerdo con condiciones)"),
 ("質問の意味", "질문의 의미", "問題的意思", "Sens de la question", "Qué te preguntan"),
 ("相手の発言", "상대의 말", "對方說的話", "Ce que dit votre interlocuteur", "Lo que dijo tu interlocutor"),
-("全文の訳を見る", "전체 번역 보기", "查看全文翻譯", "Voir la traduction complète", "Ver la traducción completa"),
-("全文の訳を隠す", "전체 번역 숨기기", "隱藏全文翻譯", "Masquer la traduction complète", "Ocultar la traducción completa"),
 ("準備の内容を作れませんでした。", "준비 내용을 만들지 못했어요.", "無法產生準備內容。", "Impossible de préparer le contenu.", "No se pudo preparar el contenido."),
 ("もう一度", "다시 시도", "再試一次", "Réessayer", "Reintentar"),
 ("話す文", "말할 문장", "要說的句子", "Ce que vous allez dire", "Lo que vas a decir"),
@@ -32,4 +30,5 @@ ROWS = [
 ("準備に戻る", "준비로 돌아가기", "回到準備", "Revenir à la préparation", "Volver a la preparación"),
 ("穴埋めに戻す", "빈칸으로 되돌리기", "改回填空", "Revenir aux blancs", "Volver a los huecos"),
 ("話して入力", "말해서 입력", "用說的輸入", "Dicter", "Dictar"),
+("フィードバック", "피드백", "回饋", "Retour", "Comentarios"),
 ]

@@ -569,8 +569,6 @@ I18N.add('en', {
  "日本語で自由に相談できます（例：条件付きで賛成と言いたい）": "Ask freely in your own words (e.g. I want to say I agree, with conditions)",
  "質問の意味": "What the question means",
  "相手の発言": "What your partner said",
- "全文の訳を見る": "See a simpler version",
- "全文の訳を隠す": "Hide the simpler version",
  "準備の内容を作れませんでした。": "Couldn't prepare this.",
  "もう一度": "Try again",
  "話す文": "What you'll say",
@@ -587,5 +585,6 @@ I18N.add('en', {
  "相手から返事が来ましたね！どう返しましょうか？話をどう進めていきたいですか？": "Your partner replied! How do you want to respond? Where do you want to take the discussion?",
  "準備に戻る": "Back to preparing",
  "穴埋めに戻す": "Back to the blanks",
- "話して入力": "Dictate"
+ "話して入力": "Dictate",
+ "フィードバック": "Feedback"
 });
