@@ -14,8 +14,8 @@
  * - 言語は 1) URL の ?lang= 2) 利用者が選んだ言語（localStorage: ns_lang） 3) 日本語 の順で決める。
  *   同じ URL で見る人ごとに言語を変えると、Google（言語の設定なしでアメリカから見に来る）に別の言語のページとして
  *   扱われるため、トップページは常に日本語にし、各言語は ?lang=en などの別 URL（hreflang でつなぐ）にする。
- * - 日本語以外のブラウザの人（日本語・韓国語・繁体字中国語・フランス語・スペイン語のどれも含まれない人は英語）には、
- *   画面の一番上に「English で見る」のような案内を出し、1回押せば切り替わる（選んだ言語は ns_lang に覚える）。
+ * - 見る人のブラウザの言語・地域・端末などによって表示を変える処理は入れない（誰が開いても同じページにする）。
+ *   言語は画面右上の言語メニューで切り替える（選んだ言語は ns_lang に覚える）。
  */
 (function () {
   'use strict';
@@ -43,16 +43,6 @@
   var ATTRS = ['placeholder', 'title', 'aria-label', 'alt'];
   var INLINE_TAGS = { STRONG: 1, EM: 1, B: 1, I: 1, BR: 1, SMALL: 1, A: 1 };
 
-  function matchLang(code) {
-    if (!code) return null;
-    var c = String(code).toLowerCase();
-    if (c === 'ja' || c.indexOf('ja-') === 0) return 'ja';
-    if (c === 'ko' || c.indexOf('ko-') === 0) return 'ko';
-    if (c === 'zh-tw' || c === 'zh-hk' || c === 'zh-mo' || c.indexOf('zh-hant') === 0) return 'zh-TW';
-    if (c === 'fr' || c.indexOf('fr-') === 0) return 'fr';
-    if (c === 'es' || c.indexOf('es-') === 0) return 'es';
-    return null;
-  }
   // 地域（国）のコード。英語版の「国内」ニュースに使う（例: en-GB → GB、pt-BR → BR）
   function detectRegion() {
     var list = (navigator.languages && navigator.languages.length) ? navigator.languages.slice() : [navigator.language];
@@ -69,12 +59,6 @@
     if (q && LANGS[q]) return q;
     try { var s = localStorage.getItem(STORE_KEY); if (s && LANGS[s]) return s; } catch (e) {}
     return 'ja';
-  }
-  // ブラウザの言語から、案内に出す言語を選ぶ（5言語のどれも含まれなければ英語）
-  function browserLang() {
-    var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language];
-    for (var i = 0; i < list.length; i++) { var m = matchLang(list[i]); if (m) return m; }
-    return 'en';
   }
   function urlLang() {
     try { var q = new URLSearchParams(location.search).get('lang'); return (q && LANGS[q]) ? q : null; } catch (e) { return null; }
@@ -313,7 +297,6 @@
   document.addEventListener('DOMContentLoaded', function () {
     if (lang !== 'ja') translateTree(document);
     fixCanonical();
-    showLangHint();
   });
 
   // ?lang=en などで開いたページは、その URL を正規の URL にする（日本語はトップページが正規）
@@ -322,48 +305,5 @@
     var link = document.querySelector('link[rel="canonical"]');
     if (!link) return;
     link.href = 'https://www.scoopitch.com/' + (q && q !== 'ja' ? '?lang=' + encodeURIComponent(q) : '');
-  }
-
-  // 日本語以外のブラウザの人への案内（その人の言語で書く）
-  var HINTS = {
-    en: ['This page is also available in English.', 'View in English', 'Close'],
-    ko: ['이 페이지는 한국어로도 볼 수 있어요.', '한국어로 보기', '닫기'],
-    'zh-TW': ['此頁面也提供繁體中文版。', '以繁體中文顯示', '關閉'],
-    fr: ['Cette page existe aussi en français.', 'Voir en français', 'Fermer'],
-    es: ['Esta página también está disponible en español.', 'Ver en español', 'Cerrar'],
-  };
-  var HINT_KEY = 'ns_lang_hint';
-  function showLangHint() {
-    var app = document.getElementById('app');
-    if (!app || urlLang() || storedLang()) return;
-    var target = browserLang();
-    if (target === 'ja' || !HINTS[target]) return;
-    try { if (localStorage.getItem(HINT_KEY)) return; } catch (e) {}
-    var h = HINTS[target];
-    var bar = document.createElement('div');
-    bar.id = 'lang-hint';
-    bar.setAttribute('translate', 'no');
-    bar.setAttribute('lang', target);
-    bar.setAttribute('role', 'region');
-    bar.setAttribute('aria-label', h[0]);
-    bar.style.cssText = 'flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;' +
-      'padding:8px 44px 8px 16px;position:relative;background:#111118;color:#fff;font:500 13px/1.5 Inter,system-ui,sans-serif;';
-    var msg = document.createElement('span');
-    msg.textContent = h[0];
-    var go = document.createElement('button');
-    go.type = 'button';
-    go.textContent = h[1];
-    go.style.cssText = 'font:700 13px/1 Inter,system-ui,sans-serif;padding:7px 14px;border-radius:999px;border:0;background:#fff;color:#111118;cursor:pointer;';
-    var close = document.createElement('button');
-    close.type = 'button';
-    close.setAttribute('aria-label', h[2]);
-    close.textContent = '\u00d7';
-    close.style.cssText = 'position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:0;background:none;color:#fff;font-size:20px;line-height:1;cursor:pointer;';
-    function remove() { if (bar.parentNode) bar.parentNode.removeChild(bar); }
-    go.addEventListener('click', function () { remove(); window.I18N.set(target); });
-    close.addEventListener('click', function () { try { localStorage.setItem(HINT_KEY, 'dismissed'); } catch (e) {} remove(); });
-    window.I18N.onChange(remove); // 右上の言語メニューで切り替えたときも消す
-    bar.appendChild(msg); bar.appendChild(go); bar.appendChild(close);
-    app.insertBefore(bar, app.firstChild);
   }
 })();
