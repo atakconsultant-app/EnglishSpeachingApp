@@ -402,6 +402,22 @@ header .spacer{flex:1;}
 @media (prefers-reduced-motion:reduce){
   .cat-video,.cat-card.has-video:hover .cat-video{transition:none;transform:none;}
 }
+/* カテゴリーカードの動き：①ホームで一覧が見えたとき、左上から順にポンと出て光が通る　③1枚ずつ浮き上がり、そのカードの動画を数秒流す（スポットライト） */
+.cat-shine{position:absolute;top:0;left:0;bottom:var(--cat-label-h,0px);width:45%;z-index:1;pointer-events:none;opacity:0;
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.7),rgba(255,255,255,0));transform:translateX(-130%) skewX(-18deg);}
+#cat-grid .cat-card:not(:active){transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease,background .15s ease;}
+.cat-grid.pre .cat-card{opacity:0;transform:translateY(14px) scale(.9);}
+.cat-grid.intro .cat-card{animation:catPop .55s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--i,0) * 70ms);}
+.cat-grid.intro .cat-shine{animation:catShine .9s ease-in-out both;animation-delay:calc(var(--i,0) * 70ms + .45s);}
+@keyframes catPop{0%{opacity:0;transform:translateY(16px) scale(.6)}60%{opacity:1;transform:translateY(-3px) scale(1.05)}80%{transform:translateY(0) scale(.98)}100%{opacity:1;transform:none}}
+@keyframes catShine{0%{opacity:1;transform:translateX(-130%) skewX(-18deg)}99%{opacity:1}100%{opacity:0;transform:translateX(330%) skewX(-18deg)}}
+#cat-grid .cat-card.spot{transform:translateY(-4px);border-color:var(--vid-sky);box-shadow:0 6px 0 var(--border2),0 14px 26px rgba(74,139,215,.28);}
+.cat-card.spot .cat-video{transform:scale(1.05);}
+@media (prefers-reduced-motion:reduce){
+  .cat-grid.intro .cat-card,.cat-grid.intro .cat-shine{animation:none;}
+  .cat-grid.pre .cat-card{opacity:1;transform:none;}
+  #cat-grid .cat-card.spot{transform:none;}
+}
 
 /* ════════════════════════════════════
    SCREEN 2 — Mode + Level
@@ -434,6 +450,8 @@ header .spacer{flex:1;}
   color:var(--mc);background:#eef2fb;background:color-mix(in srgb,var(--mc) 12%,#fff);}
 .mode-art{flex-shrink:0;display:block;}
 .mode-art .sc-l{fill:#c9c2ff;fill:color-mix(in srgb,currentColor 35%,#fff);}
+.mode-art .sc-m{fill:#9dbaf5;fill:color-mix(in srgb,currentColor 50%,#fff);}
+.mode-art .sc-ls{stroke:#c9c2ff;stroke:color-mix(in srgb,currentColor 35%,#fff);}
 .mode-scene-label{margin-left:auto;font-size:11px;font-weight:700;text-align:right;color:var(--mc);color:color-mix(in srgb,var(--mc) 65%,#000);}
 .mode-body{flex:1;display:flex;flex-direction:column;gap:4px;padding:12px 16px 14px;}
 .mode-name{font-size:16px;font-weight:800;color:var(--text);margin:0;}
@@ -1963,11 +1981,11 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
   <div class="section-pad">
     <div class="section-title">練習モードを選ぶ</div>
     <p class="mode-lead">場面を選ぶと、AIがその相手役になります</p>
-    <!-- 案A（シーン型）：上の帯の図で場面が伝わるようにする。図の色はテーマのモード色に合わせて変わる -->
+    <!-- 案A（シーン型）：上の帯の図で場面が伝わるようにする。図はディスカッション＝C（ニュースをはさんで話す）、ファシリテーション＝B（オンライン会議）、面接＝A（机をはさむ2人）。色はテーマのモード色に合わせて変わる -->
     <div class="mode-cards">
       <div class="mode-card" data-mode="discussion" role="button" tabindex="0" aria-pressed="false" onclick="selectMode(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectMode(this);}">
         <div class="mode-scene">
-          <svg class="mode-art" width="120" height="44" viewBox="0 0 120 44" fill="none" aria-hidden="true"><rect x="2" y="6" width="58" height="26" rx="13" fill="currentColor"/><path d="M14 32 L10 40 L22 32 Z" fill="currentColor"/><rect x="14" y="15" width="34" height="4" rx="2" fill="#fff" opacity=".9"/><rect x="56" y="12" width="58" height="26" rx="13" fill="#fff" stroke="currentColor" stroke-width="2"/><path d="M102 38 L108 44 L96 38 Z" fill="#fff" stroke="currentColor" stroke-width="2"/><rect x="68" y="21" width="34" height="4" rx="2" fill="currentColor" opacity=".5"/></svg>
+          <svg class="mode-art" width="140" height="48" viewBox="0 0 140 48" fill="none" aria-hidden="true"><rect x="50" y="6" width="40" height="38" rx="4" fill="#fff" stroke="currentColor" stroke-width="2"/><rect x="56" y="12" width="28" height="6" rx="2" fill="currentColor"/><rect class="sc-l" x="56" y="22" width="12" height="10" rx="1.5"/><rect class="sc-m" x="71" y="22" width="13" height="2.5" rx="1.25"/><rect class="sc-m" x="71" y="27" width="13" height="2.5" rx="1.25"/><rect class="sc-m" x="56" y="36" width="28" height="2.5" rx="1.25"/><rect x="6" y="4" width="34" height="22" rx="11" fill="currentColor"/><path d="M14 25 L10 33 L23 25 Z" fill="currentColor"/><rect x="21.5" y="8.5" width="3" height="9" rx="1.5" fill="#fff"/><circle cx="23" cy="21" r="1.8" fill="#fff"/><rect x="100" y="18" width="34" height="22" rx="11" fill="#fff" stroke="currentColor" stroke-width="2"/><text x="117" y="34" text-anchor="middle" font-size="15" font-weight="800" fill="currentColor" font-family="Inter, sans-serif">?</text></svg>
           <span class="mode-scene-label">1対1</span>
         </div>
         <div class="mode-body">
@@ -1979,7 +1997,7 @@ applyTheme(new URLSearchParams(location.search).get('theme')||(()=>{try{return l
       </div>
       <div class="mode-card" data-mode="facilitation" role="button" tabindex="0" aria-pressed="false" onclick="selectMode(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectMode(this);}">
         <div class="mode-scene">
-          <svg class="mode-art" width="120" height="48" viewBox="0 0 120 48" fill="none" aria-hidden="true"><ellipse cx="60" cy="26" rx="34" ry="14" fill="#fff" stroke="currentColor" stroke-width="2"/><circle class="sc-l" cx="24" cy="14" r="7"/><circle class="sc-l" cx="96" cy="14" r="7"/><circle class="sc-l" cx="60" cy="6" r="6"/><circle cx="60" cy="44" r="8" fill="currentColor"/><rect x="57" y="36" width="6" height="8" rx="3" fill="#fff"/></svg>
+          <svg class="mode-art" width="140" height="48" viewBox="0 0 140 48" fill="none" aria-hidden="true"><rect class="sc-ls" x="30" y="1" width="38" height="22" rx="5" fill="#fff" stroke-width="1.5"/><circle class="sc-l" cx="49" cy="9" r="4"/><path class="sc-l" d="M41 22 a8 7 0 0 1 16 0 Z"/><rect class="sc-ls" x="72" y="1" width="38" height="22" rx="5" fill="#fff" stroke-width="1.5"/><circle class="sc-l" cx="91" cy="9" r="4"/><path class="sc-l" d="M83 22 a8 7 0 0 1 16 0 Z"/><rect class="sc-ls" x="30" y="25" width="38" height="22" rx="5" fill="#fff" stroke-width="1.5"/><circle class="sc-l" cx="49" cy="33" r="4"/><path class="sc-l" d="M41 46 a8 7 0 0 1 16 0 Z"/><rect x="72" y="25" width="38" height="22" rx="5" fill="currentColor"/><rect x="88" y="29" width="6" height="10" rx="3" fill="#fff"/><path d="M85 35 a6 6 0 0 0 12 0" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M91 41 v3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="118" cy="36" r="3" fill="currentColor" opacity=".5"/><circle cx="126" cy="36" r="3" fill="currentColor" opacity=".3"/></svg>
           <span class="mode-scene-label">あなたが司会</span>
         </div>
         <div class="mode-body">
@@ -2825,26 +2843,40 @@ async function fetchLiveNews(){
   try{ renderScoop5(); }catch(e){ console.error(e); }
 }
 
-// ══ ① ホームの音楽：時間帯ごとの曲を流す（練習の画面では止める）══
+// ══ ① ホームの音楽：7曲を順に流す（時間帯では分けない。練習の画面では止める）══
 // 曲は audio/ に置き、ここに名前を書くと有効になる（空のままなら音楽もボタンも出ない。audio/README.md 参照）
-window.BGM_TRACKS = window.BGM_TRACKS || { morning: '', day: '', evening: '', night: '' };
-const BGM_VOLUME = 0.25;
+// 曲の音量（ラウドネス）は -18 LUFS にそろえてある
+window.BGM_TRACKS = window.BGM_TRACKS || [
+  'wooly-days-cafe.mp3', 'chill-morning.mp3', 'her-smile.mp3', 'bgm-loop-1.mp3',
+  'bgm-loop-2.mp3', 'calm-night.mp3', 'night-signal.mp3',
+];
+const BGM_VOLUME = 0.5;
 const BGM_ON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
 const BGM_OFF_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/><line x1="2" y1="3" x2="22" y2="21"/></svg>';
-const bgm = { audio: null, slot: '', fade: null, unlocked: false };
-function bgmSlot(d){
-  const h = (d || new Date()).getHours();
-  return h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 17 ? 'day' : h >= 17 && h < 21 ? 'evening' : 'night';
+const bgm = { audio: null, src: '', order: [], pos: -1, fails: 0, fade: null, unlocked: false, selfPauseAt: 0, startedAt: 0, retried: false };
+// 曲の一覧（配列でも、以前の { morning: …, … } の形でもよい）
+function bgmList(){
+  const T = window.BGM_TRACKS || [];
+  const names = (Array.isArray(T) ? T : Object.values(T)).filter(Boolean);
+  return [...new Set(names)].map(n => n.includes('/') ? n : 'audio/' + n);
 }
-// その時間帯の曲がなければ、近い時間帯の曲を使う
-function bgmTrack(slot){
-  const T = window.BGM_TRACKS || {};
-  const near = { morning: ['morning', 'day', 'night', 'evening'], day: ['day', 'morning', 'evening', 'night'], evening: ['evening', 'night', 'day', 'morning'], night: ['night', 'evening', 'morning', 'day'] }[slot];
-  const name = near.map(k => T[k]).find(Boolean);
-  return name ? (name.includes('/') ? name : 'audio/' + name) : '';
+// 流す順番：毎回シャッフルし、1周したら並べ直す（同じ曲が続かないようにする）
+function bgmNext(){
+  const list = bgmList();
+  if(!list.length) return '';
+  bgm.pos++;
+  if(bgm.pos >= bgm.order.length || bgm.order.length !== list.length){
+    const last = bgm.order[bgm.order.length - 1];
+    const order = list.map((_, i) => i);
+    for(let i = order.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+    if(order.length > 1 && order[0] === last) [order[0], order[1]] = [order[1], order[0]];
+    bgm.order = order; bgm.pos = 0;
+  }
+  return list[bgm.order[bgm.pos]];
 }
 function bgmMuted(){ try{ return localStorage.getItem('ns_bgm_muted') === '1'; }catch(e){ return false; } }
 function bgmOnHome(){ const el = document.getElementById('s-cat'); return !!(el && el.classList.contains('active')) && !document.hidden; }
+function bgmWanted(){ return bgmList().length > 0 && bgm.unlocked && !bgmMuted() && bgmOnHome(); }
 function bgmFade(to, done){
   const a = bgm.audio; if(!a) return;
   clearInterval(bgm.fade);
@@ -2858,7 +2890,7 @@ function bgmFade(to, done){
 }
 function renderBgmBtn(){
   const btn = document.getElementById('bgm-btn');
-  const has = !!bgmTrack(bgmSlot());
+  const has = bgmList().length > 0;
   btn.hidden = !has;
   if(!has) return;
   const muted = bgmMuted();
@@ -2868,30 +2900,48 @@ function renderBgmBtn(){
   btn.setAttribute('aria-pressed', String(muted));
   btn.classList.toggle('playing', !muted && !!bgm.audio && !bgm.audio.paused);
 }
+// 音量0で再生を始め（操作の直後でないと再生できない端末があるため）、少し待ってもホームにいれば音を上げる
+// （ホームのカテゴリーなどを押してすぐ別の画面に移るときに、一瞬だけ鳴らないように）
+function bgmStart(){
+  const a = bgm.audio;
+  if(!a || !a.paused || bgm.starting) return;
+  bgm.starting = true;
+  a.volume = 0;
+  bgm.retried = false;
+  a.play().then(() => setTimeout(() => { bgm.starting = false; if(bgmWanted()) bgmFade(BGM_VOLUME); else bgmPause(); }, 450)).catch(() => { bgm.starting = false; });
+}
+// 自分で止めたことを覚えておく（pause の知らせは少し遅れて届くため、時刻で見分ける）
+function bgmPause(){ if(!bgm.audio) return; bgm.selfPauseAt = Date.now(); bgm.audio.pause(); }
+// 曲が終わったら（読み込めなかったときも）次の曲へ
+function bgmAdvance(){
+  if(!bgm.audio) return;
+  bgm.src = bgmNext();
+  bgm.audio.src = bgm.src;
+  if(bgmWanted()) bgmStart();
+}
 // ホームにいて、消音でなければ流す。ブラウザの決まりで、画面を一度さわった後から流れる
 function updateBgm(){
-  const src = bgmTrack(bgmSlot());
-  const want = !!src && bgm.unlocked && !bgmMuted() && bgmOnHome();
-  if(want){
+  if(bgmWanted()){
     if(!bgm.audio){
-      bgm.audio = new Audio(); bgm.audio.loop = true; bgm.audio.preload = 'auto';
-      bgm.audio.addEventListener('playing', renderBgmBtn);
-      bgm.audio.addEventListener('pause', renderBgmBtn);
-      // 繰り返し再生に対応していない端末で曲が終わったときは、頭から流し直す
-      bgm.audio.addEventListener('ended', () => { if(bgmOnHome() && !bgmMuted() && bgm.unlocked){ bgm.audio.currentTime = 0; bgm.audio.play().catch(() => {}); } });
+      bgm.audio = new Audio(); bgm.audio.preload = 'auto';
+      bgm.audio.addEventListener('playing', () => { bgm.fails = 0; bgm.startedAt = Date.now(); renderBgmBtn(); });
+      // 流し始めた直後に、こちらが止めていないのに止まったときは、1回だけ流し直す（端末によって起きるため）
+      bgm.audio.addEventListener('pause', () => {
+        renderBgmBtn();
+        if(Date.now() - bgm.selfPauseAt < 1000 || bgm.retried || bgm.audio.ended || Date.now() - bgm.startedAt > 2000) return;
+        bgm.retried = true;
+        setTimeout(() => { if(bgmWanted() && bgm.audio.paused) bgm.audio.play().catch(() => {}); }, 200);
+      });
+      bgm.audio.addEventListener('ended', bgmAdvance);
+      bgm.audio.addEventListener('error', () => { if(++bgm.fails <= bgmList().length) setTimeout(bgmAdvance, 300); });
+      bgm.src = bgmNext();
+      bgm.audio.src = bgm.src;
     }
     const a = bgm.audio;
-    if(bgm.slot !== src){ bgm.slot = src; a.src = src; }
-    // 音量0で再生を始め（操作の直後でないと再生できない端末があるため）、少し待ってもホームにいれば音を上げる
-    // （ホームのカテゴリーなどを押してすぐ別の画面に移るときに、一瞬だけ鳴らないように）
-    if(a.paused && !bgm.starting){
-      bgm.starting = true;
-      a.volume = 0;
-      a.play().then(() => setTimeout(() => { bgm.starting = false; if(bgmOnHome() && !bgmMuted()) bgmFade(BGM_VOLUME); else a.pause(); }, 450)).catch(() => { bgm.starting = false; });
-    }
+    if(a.paused) bgmStart();
     else if(a.volume < BGM_VOLUME && !bgm.fade) bgmFade(BGM_VOLUME);
   }else if(bgm.audio && !bgm.audio.paused){
-    bgmFade(0, () => { if(bgm.audio) bgm.audio.pause(); renderBgmBtn(); });
+    bgmFade(0, () => { bgmPause(); renderBgmBtn(); });
   }
   renderBgmBtn();
 }
@@ -2907,8 +2957,6 @@ function toggleBgm(){
   document.addEventListener('visibilitychange', updateBgm);
   // 画面が切り替わったら（ホーム ⇔ 練習）流す・止める
   new MutationObserver(() => updateBgm()).observe(document.getElementById('s-cat'), { attributes: true, attributeFilter: ['class'] });
-  // 時間帯が変わったら曲を切り替える
-  setInterval(() => { if(bgm.audio && !bgm.audio.paused && bgm.slot !== bgmTrack(bgmSlot())) updateBgm(); }, 60000);
   renderBgmBtn();
 })();
 
@@ -7584,6 +7632,102 @@ function addUpgradeCard(container){
       video.currentTime = startTime;
     });
   });
+})();
+
+// ══ カテゴリーカードの動き（①＋③）══
+// ① ホームを開いて一覧が見えたとき、左上から順にポンと出て光が通る（開くたびに1回）
+// ③ そのあと1枚ずつ浮き上がり、そのカードの動画を数秒流す（再生するのは常に1本だけ）
+// 止めるとき：ホーム以外の画面・一覧が画面の外・タブが裏・マウスでカードに乗せている間・検索中・端末で「動きを減らす」
+// 動画を流さないとき：データセーバーがオン・回線がとても遅い（浮き上がりだけにする）
+const catMotion = { timer: null, idx: -1, cur: null, visible: false, hover: false, introPending: false, introReadyAt: 0, introT: null,
+  reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches };
+function catCards(){ return [...document.querySelectorAll('#cat-grid .cat-card')]; }
+function catHomeActive(){ const el = document.getElementById('s-cat'); return !!(el && el.classList.contains('active')); }
+function catGridShown(){ const g = document.getElementById('cat-grid'); return !!g && g.style.display !== 'none'; }
+function catMotionOk(){ return !catMotion.reduce && catMotion.visible && !catMotion.hover && !document.hidden && catHomeActive() && catGridShown(); }
+function catVideoOk(){ const c = navigator.connection; return !(c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || ''))); }
+function catVideoStart(v){ return v && v.dataset.start !== undefined ? (parseFloat(v.dataset.start) || 0) : 0.1; }
+function catIntro(){
+  const g = document.getElementById('cat-grid');
+  catMotion.introPending = false;
+  g.classList.remove('pre');
+  if(catMotion.reduce) return;
+  g.classList.remove('intro'); void g.offsetWidth; g.classList.add('intro');
+  clearTimeout(catMotion.introT);
+  catMotion.introT = setTimeout(() => g.classList.remove('intro'), 2100);
+}
+function catSpotOff(){
+  const c = catMotion.cur; catMotion.cur = null;
+  if(!c) return;
+  c.classList.remove('spot');
+  const v = c.querySelector('.cat-video');
+  if(v && !c.matches(':hover')){ v.pause(); try{ v.currentTime = catVideoStart(v); }catch(e){} }
+}
+function catSpotStep(){
+  clearTimeout(catMotion.timer); catMotion.timer = null;
+  catSpotOff();
+  if(!catMotionOk()) return;
+  const cards = catCards();
+  if(!cards.length) return;
+  catMotion.idx = (catMotion.idx + 1) % cards.length;
+  const c = cards[catMotion.idx];
+  catMotion.cur = c;
+  c.classList.add('spot');
+  const v = c.querySelector('.cat-video');
+  if(v && catVideoOk()){
+    v.muted = true;
+    try{ if(v.currentTime < catVideoStart(v)) v.currentTime = catVideoStart(v); }catch(e){}
+    v.play().catch(() => {});
+  }
+  catMotion.timer = setTimeout(() => { catSpotOff(); catMotion.timer = setTimeout(catSpotStep, 600); }, 3200);
+}
+// 条件が変わったら、止める・続きから再開する
+function catMotionUpdate(){
+  // ポンと出すのは、一覧が見えたらマウスの位置に関係なく（隠したままにならないように）
+  if(catMotion.introPending && catMotion.visible && Date.now() >= catMotion.introReadyAt && !document.hidden && catHomeActive() && catGridShown()) catIntro();
+  if(catMotionOk()){
+    if(!catMotion.timer) catMotion.timer = setTimeout(catSpotStep, catMotion.cur ? 600 : 1800);
+  }else{
+    clearTimeout(catMotion.timer); catMotion.timer = null;
+    catSpotOff();
+  }
+}
+// ホームを開いたら、カードをいったん隠し、一覧が見えたときにポンと出す
+// （開いた直後はニュースの読み込みで一覧の位置が動くため、0.6秒待ってから）
+function catHomeOpened(){
+  if(catMotion.reduce || !('IntersectionObserver' in window)) return;
+  catMotion.introPending = true;
+  catMotion.introReadyAt = Date.now() + 600;
+  document.getElementById('cat-grid').classList.add('pre');
+  setTimeout(catMotionUpdate, 650);
+  catMotionUpdate();
+}
+(function initCatMotion(){
+  const grid = document.getElementById('cat-grid');
+  if(!grid) return;
+  const cards = catCards();
+  // スマホでは、カードの大きさに合わせた軽い動画を使う（9本で約1MB。元の動画は合計約18MB）
+  if(window.matchMedia('(max-width: 600px)').matches){
+    cards.forEach(c => { const v = c.querySelector('.cat-video'); const src = v && v.getAttribute('src'); if(src && src.startsWith('videos/') && !src.startsWith('videos/sm/')) v.setAttribute('src', src.replace('videos/', 'videos/sm/')); });
+  }
+  cards.forEach((c, i) => {
+    c.style.setProperty('--i', i);
+    if(!c.querySelector('.cat-shine')) c.insertAdjacentHTML('beforeend', '<span class="cat-shine" aria-hidden="true"></span>');
+    c.addEventListener('mouseenter', () => { catMotion.hover = true; catMotionUpdate(); });
+    c.addEventListener('mouseleave', () => { catMotion.hover = false; catMotionUpdate(); });
+  });
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(entries => {
+      entries.forEach(e => { catMotion.visible = e.isIntersecting; });
+      catMotionUpdate();
+    }, { threshold: 0.2 }).observe(grid);
+  }else catMotion.visible = true;
+  document.addEventListener('visibilitychange', catMotionUpdate);
+  // 画面の切り替え（ホーム ⇔ 練習）と、検索で一覧が隠れたり出たりしたとき
+  let wasHome = catHomeActive();
+  new MutationObserver(() => { const now = catHomeActive(); if(now && !wasHome) catHomeOpened(); else catMotionUpdate(); wasHome = now; }).observe(document.getElementById('s-cat'), { attributes: true, attributeFilter: ['class'] });
+  new MutationObserver(catMotionUpdate).observe(grid, { attributes: true, attributeFilter: ['style'] });
+  if(catHomeActive()) catHomeOpened();
 })();
 </script>
 
