@@ -9,7 +9,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const dist = join(root, 'dist');
 const PUBLIC = [
   'index.html', 'i18n.js', 'auth-client.js', 'supabase-config.js', 'intro.css', 'intro-fx.css', 'intro-fx.js', 'pages.css', 'analytics.js',
-  'staticwebapp.config.json', 'themes', 'videos', 'auth', 'legal',
+  'staticwebapp.config.json', 'themes', 'videos', 'audio', 'auth', 'legal',
   'robots.txt', 'llms.txt', 'sitemap.xml', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'og-image.png',
 ];
 
